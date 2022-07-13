@@ -1,0 +1,1585 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE rfc [
+        <!ENTITY nbsp    "&#160;">
+        <!ENTITY zwsp   "&#8203;">
+        <!ENTITY nbhy   "&#8209;">
+        <!ENTITY wj     "&#8288;">
+        ]>
+<?xml-stylesheet type='text/xsl' href='http://xml.resource.org/authoring/rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc
+        xmlns:xi="http://www.w3.org/2001/XInclude"
+        category="std"
+        docName="draft-ietf-scim-events-00"
+        ipr="trust200902"
+        obsoletes="draft-hunt-idevent-scim-01"
+        updates=""
+        submissionType="IETF"
+        xml:lang="en"
+        tocInclude="true"
+        tocDepth="3"
+        symRefs="true"
+        sortRefs="true"
+        version="3" >
+    <!-- xml2rfc v2v3 conversion 3.12.1 -->
+    <front>
+        <title abbrev="draft-ietf-scim-events">SCIM Profile for Security Event Tokens</title>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-scim-events"/>
+        <author fullname="Phil Hunt" initials="P." role="editor" surname="Hunt">
+            <organization abbrev="IndependentId">Independent Identity Inc</organization>
+            <address>
+                <email>phil.hunt@independentid.com</email>
+            </address>
+        </author>
+        <author fullname="Nancy Cam-Winget" initials="N." surname="Cam-Winget">
+            <organization abbrev="Cisco Systems">Cisco Systems</organization>
+            <address>
+                <email>ncamwing@cisco.com</email>
+            </address>
+        </author>
+        <date year="2022"/>
+        <workgroup>SCIM</workgroup>
+
+        <keyword>Identity</keyword>
+        <keyword>Event</keyword>
+        <keyword>SET</keyword>
+        <keyword>Provisioning</keyword>
+        <keyword>Token</keyword>
+        <keyword>Internet-Draft</keyword>
+        <keyword>SCIM</keyword>
+        <abstract>
+            <t>This specification profiles the Security Event Token specification RFC8417,
+                to define a set of events for SCIM Protocol servers that can be used for asynchronous transaction
+                confirmations, replication, cross-domain provisioning co-ordination, and security signals.
+            </t>
+        </abstract>
+
+    </front>
+    <middle>
+        <section anchor="intro" toc="default" numbered="true">
+            <name>Introduction and Overview</name>
+            <t>
+                This specification profiles Security Event Tokens (SET)
+                <xref target="RFC8417" format="default"/>
+                to define Security Events and mechanisms for delivery with SCIM Protocol
+                <xref target="RFC7644" format="default"/> systems
+                that can be used for asynchronous transaction
+                confirmations, replication, cross-domain provisioning co-ordination, and security signals.
+            </t>
+            <t>
+                In a typical client-server relationship a SCIM Client issues commands to a SCIM Server using profiled
+                HTTP methods such as GET and POST among others <xref target="RFC7644" format="default"/>. In contrast,
+                rather than issue commands, SCIM Events are security messages that convey signals to be interpreted by
+                a receiver to aid in co-ordination of systems in multi-domain/server/client scenarios.</t>
+            <t>
+                While this specification makes some general recommendations, security and privacy considerations
+                regarding the transmission of SCIM Events, this specification does not prescribe actions
+                to be taken by receivers. The focus of this specification is strictly on communications
+                inter-operability of SCIM related Security Event Tokens.
+            </t>
+            <section>
+                <name>Requirements Language</name>
+                <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+                    "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT
+                    RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
+                    interpreted as described in BCP 14 <xref target="RFC2119"/>
+                    <xref target="RFC8174"/> when, and only when, they appear in
+                    all capitals, as shown here.</t>
+            </section>
+            <section anchor="notat" toc="default" numbered="true">
+                <name>Notational Conventions</name>
+                <t>
+                    For purposes of readability examples are not URL encoded.
+                    Implementers MUST percent encode URLs as described in <xref target="RFC3986" format="default">
+                    Section 2.1 of</xref>.
+                </t>
+                <t>
+                    Throughout this documents all figures MAY contain spaces and extra
+                    line-wrapping for readability and space limitations. Similarly, some
+                    URI's contained within examples, have been shortened for space and
+                    readability reasons.
+                </t>
+            </section>
+            <section anchor="defs" toc="default" numbered="true">
+                <name>Definitions</name>
+                <t>
+                    This specification uses definitions from the following specifications:
+                </t>
+                <ul>
+                    <li>Security Event Tokens <xref target="RFC8417"
+                                                    format="default"/>, and</li>
+                    <li>System for Cross-Domain Identity Management Protocol <xref target="RFC7644"/>.
+                    </li>
+                </ul>
+                <t>
+                    Additionally, the following terms are defined:
+                </t>
+                <dl newline="true">
+                    <dt>Attributes and Claims</dt>
+                    <dd>
+                        The JWT specification <xref target="RFC7519"/> upon which SET is based uses the term "claims" to
+                        refer to attributes in a JSON token. SCIM in contrast uses the term "attributes" to refer to
+                        JSON attributes.  For the purposes of this draft, the terms "attributes" and "claims" are equivalent.
+                    </dd>
+
+                    <dt>CP</dt>
+                    <dd>
+                        Abbreviation for "Co-ordinated Provisioning" as defined in <xref target="coordination"/>.
+                    </dd>
+
+                    <dt>DBR</dt>
+                    <dd>
+                        Abbreviation for "Domain Based Replication" as defined in <xref target="replication"/>.
+                    </dd>
+
+                    <dt>Event Feed</dt>
+                    <dd>
+                        This describes the notion that a feed MAY be individualized per client. A service provider MAY
+                        offer to allow Event Receiver's to "subscribe" to specific event types or events about specific
+                        resources.  If no option is offered, it is assumed the client will receive all events about all
+                        resources.
+                    </dd>
+
+                    <dt>Event Receiver</dt>
+                    <dd>
+                        A system that receives events for the purpose of subsequent action (e.g. such as
+                        replication), co-ordination of workflow, or signalling.
+                    </dd>
+
+                    <dt>Event Publisher</dt>
+                    <dd>
+                        A system that issues SETs based on a change that has occurred at a SCIM Service Provider.
+                        For example, events MAY originate from a SCIM Create, Modify, or Delete per <xref target="RFC7644"/>
+                        request. A SCIM Service Provider MAY be an Event Publisher or an independent service that aggregates
+                        events into Event Receiver feeds.
+                    </dd>
+
+                    <dt>Message Bus</dt>
+                    <dd>
+                        Any communications protocol or system that enables a message (e.g. a SET) to be sent to
+                        one or more receivers at the same time. Typically participants connect to a "bus" rather
+                        than in point-to-point transfer such as SET HTTP Push <xref target="RFC8935"/>. The "bus" takes
+                        care of fault-tolerance, routing, and delivery to recipients.
+                    </dd>
+
+                    <dt>RS</dt>
+                    <dd>
+                        Abbreviation for "Risk Signals" as defined in <xref target="risk"/>.
+                    </dd>
+
+                    <dt>SCIM Service Provider</dt>
+                    <dd>
+                        An HTTP server that implements SCIM Protocol <xref target="RFC7644"/> and SCIM Schema
+                        <xref target="RFC7643"/>.
+                    </dd>
+
+                    <dt>SET</dt>
+                    <dd>
+                        Abbreviation for "Security Event Token" as defined in <xref target="RFC8417"/>
+                    </dd>
+
+                </dl>
+            </section>
+        </section>
+        <section anchor="modes" numbered="true" toc="default">
+            <name>Processing Modes for Events</name>
+            <t>
+                This specification defines 4 classes of events for SCIM Security
+                Events that have different objectives, data requirements, and considerations for using Security Event
+                Tokens.
+            </t>
+
+            <section anchor="replication" toc="default" numbered="true">
+                <name>Domain Based Replication</name>
+                <t>
+                    The objective of DBR is to synchronize resource changes between SCIM replicas in a common
+                    administrative domain. In this mode, information about changes for resources are shared between
+                    replicas for immediate processing. The intention is that every replica node contains the same
+                    information content in a timely fashion.
+                </t>
+                <figure anchor="dbrSequence">
+                    <name>Domain Based Replication Sequence</name>
+                    <artset>
+                    <artwork type="ascii-art"><![CDATA[
+                    ┌────────────────┐
+┌────────┐          │SCIM            │   ┌────────────────────────┐
+│Client A│          │Service Provider│   │Service Provider Replica│
+└───┬────┘          └───────┬────────┘   └───────────┬────────────┘
+    │   "SCIM Operation"   ┌┴┐                       │
+    │ ────────────────────>│ │                       │
+    │                      │ │                       │
+    │   "SCIM Response"    │ │                      ┌┴┐
+    │ <────────────────────│ │                      │ │
+    │                      └┬┘                      │ │
+    │                       │  "Event SCIM:prov:<op>│ │
+    │                       │  id:xyz"              │ │
+    │                       │ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─>│ │
+    │                       │                       │ │
+    │                       │                       │ │
+    │                       │                       │ │────┐
+                                 "Update local node"│ │    │
+                                                    │ │<───┘
+                                                    └┬┘]]></artwork>
+                    <artwork align="center" type="svg">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 697.0 550.0">
+
+                            <!-- Generator: Sequence Diagram - v1.8.11-(198) - http://www.macsequencediagram.com -->
+
+                            <rect x="0.0" y="0.0" width="697.0" height="594.0" fill="#FFFFFF" fill-opacity="1.0"/>
+                            <g class="ParticipantView">
+                                <rect x="60.0" y="60.0" width="129.0" height="61.0" rx="5.0" ry="5.0" fill="#FFFFFF" stroke="#000000" stroke-width="1.0"/>
+                                <text x="124.5" y="90.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Client A</text>
+                            </g>
+                            <g class="ParticipantView">
+                                <rect x="209.0" y="50.0" width="180.0" height="82.0" rx="5.0" ry="5.0" fill="#FFFFFF" stroke="#000000" stroke-width="1.0"/>
+                                <text x="299.0" y="82.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">SCIM</text>
+                                <text x="299.0" y="99.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Service Provider</text>
+                            </g>
+                            <g class="ParticipantView">
+                                <rect x="409.0" y="60.0" width="228.0" height="61.0" rx="5.0" ry="5.0" fill="#FFFFFF" stroke="#000000" stroke-width="1.0"/>
+                                <text x="523.0" y="90.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Service Provider Replica</text>
+                            </g>
+                            <g class="LifelineView">
+                                <line x1="124.0" y1="121.0" x2="126.0" y2="472.0" stroke-dasharray="20.0, 10.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineView">
+                                <line x1="298.0" y1="132.0" x2="300.0" y2="462.0" stroke-dasharray="20.0, 10.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineView">
+                                <line x1="522.0" y1="121.0" x2="524.0" y2="472.0" stroke-dasharray="20.0, 10.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineActivationBoxView">
+                                <rect x="291.0" y="193.0" width="16.0" height="115.0" fill="#FFFFFF" fill-opacity="1.0" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineActivationBoxView">
+                                <rect x="515.0" y="300.0" width="16.0" height="56.0" fill="#FFFFFF" fill-opacity="1.0" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="208.0" y="180.5" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[1] SCIM Operation</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="208.0" y="225.5" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[2] SCIM Response</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="415.0" y="271.0" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[3] Event SCIM:prov:&lt;op&gt;</text>
+                                <text x="415.0" y="287.0" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">id:xyz</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="511.0" y="332.5" text-anchor="end" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[4] Update local node</text>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 281.0,192.0 L 291.0,197.5 L 281.0,202.0 L 281.0, 192.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="125.0" y1="197.5" x2="281.0" y2="197.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 135.0,237.0 L 125.0,242.5 L 135.0,247.0 L 135.0, 237.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="135.0" y1="242.5" x2="291.0" y2="242.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 505.0,299.0 L 515.0,304.5 L 505.0,309.0 L 505.0, 299.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="307.0" y1="304.5" x2="505.0" y2="304.5" stroke-dasharray="5.0, 3.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 541.0,342.0 L 530.5,346.5 L 541.0,352.0 L 541.0,342.0" fill="#000000" fill-opacity="1.0"/>
+                                <line x1="531.5" y1="324.5" x2="570.5" y2="324.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                                <line x1="570.5" y1="346.5" x2="541.0" y2="346.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                                <path d="M 570.5,324.5 Q 580.5,324.5 580.5, 334.5 L 580.5 336.5 Q 580.5,346.5 570.5,346.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+
+                            <!-- Generator: Sequence Diagram - v1.8.11-(198) - http://www.macsequencediagram.com -->
+
+                        </svg>
+
+                    </artwork>
+                    </artset>
+                </figure>
+                <t>
+                    In this mode, replication is a server-to-server process and it is assumed that access rights
+                    between servers is identical. Access to these messages MUST be limited to communication between
+                    replicating nodes with appropriate authorization.  From a Privacy Perspective, it is assumed that
+                    all replicas of the server are in the same administrative domain and that the sharing of information
+                    is primarily for performance and availability reasons and the sharing information between replicas
+                    does not by itself enable access to new parties (e.g. where a user may not have consented).
+                </t>
+            </section>
+            <section anchor="coordination" toc="default" numbered="true">
+                <name>Co-ordinated Provisioning</name>
+                <t>
+                    In "Co-ordinated Provisioning" (CP), SCIM resource change events are shared between domains
+                    with the restriction that the actual attribute value data is omitted. In any Event Publisher and Receiver
+                    relationship, the set of SCIM resources that are co-ordinated is managed within the context of a
+                    "Feed" and MAY be a subset of the total set of resources on either side. To support this, "feed" events
+                    are defined that indicate the addition and removal of SCIM resources from a feed. For example, when a user consents to
+                    the sharing of information between domains, events about the User MAY be added to the feed
+                    between the Event Publisher and Receiver.
+                </t>
+                <figure>
+                    <name>Co-Ordinated Provisioning Sequence</name>
+                    <artset>
+                        <artwork type="ascii-art" align="center"><![CDATA[
+               ┌────────────────┐  ┌──────────────┐  ┌─────────────┐
+┌───────────┐  │SCIM            │  │Client A      │  │Co-op Action │
+│SCIM Client│  │Service Provider│  │Co-op Receiver│  │Endpoint     │
+└─────┬─────┘  └───────┬────────┘  └──────┬───────┘  └───────┬─────┘
+      │ "SCIM Ope"    ┌┴┐                 │                  │
+      │──────────────>│ │                 │                  │
+      │               │ │                 │                  │
+      │ "SCIM Resp"   │ │                ┌┴┐                 │
+      │<──────────────│ │                │ │                 │
+      │               │ │                │ │                 │
+      │               │ │                │ │                 │
+      │      ╔═══════╤╪═╪════════════════╪═╪═════════════════╪════╗
+      │      ║ LOOP  ││ │                │ │                 │    ║
+      │      ╟───────┘└┬┘ Event:         │ │                 │    ║
+      │      ║         │   SCIM:prov:<op>│ │                 │    ║
+      │      ║         │  id:xyz         │ │                 │    ║
+      │      ║         │  ─ ─ ─ ─ ─ ─ ─ >│ │                 │    ║
+      │      ║         │                 │ │                 │    ║
+      │      ║         │    ╔════════════╧═╧══════════════╗  │    ║
+      │      ║         │    ║Receiver may accumulate      ║  │    ║
+      │      ║         │    ║events for periodic action.  ║  │    ║
+      │      ║         │    ╚════════════╤═╤══════════════╝  │    ║
+      │      ║         │ SCIM GET <id>   │ │                 │    ║
+      │      ║         │ <───────────────│ │                 │    ║
+      │      ║         │                 │ │                 │    ║
+      │      ║         │ Filtered        │ │                 │    ║
+      │      ║         │ Resource Resp   │ │                 │    ║
+      │      ║         │ ───────────────>│ │                 │    ║
+      │      ║         │                 │ │                 │    ║
+      │      ║         │                 │ │ "Co-ord Action" │    ║
+      │      ║         │                 │ │ ───────────────>│    ║
+      │      ╚═════════╪═════════════════╪═╪═════════════════╪════╝]]></artwork>
+                    <artwork type="svg" align="center">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 912.0 857.0">
+
+                            <!-- Generator: Sequence Diagram - v1.8.11-(198) - http://www.macsequencediagram.com -->
+
+                            <rect x="0.0" y="0.0" width="912.0" height="857.0" fill="#FFFFFF" fill-opacity="1.0"/>
+                            <g class="ParticipantView">
+                                <rect x="60.0" y="70.0" width="154.0" height="61.0" rx="5.0" ry="5.0" fill="#FFFFFF" stroke="#000000" stroke-width="1.0"/>
+                                <text x="137.0" y="100.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">SCIM Client</text>
+                            </g>
+                            <g class="ParticipantView">
+                                <rect x="234.0" y="60.0" width="180.0" height="82.0" rx="5.0" ry="5.0" fill="#FFFFFF" stroke="#000000" stroke-width="1.0"/>
+                                <text x="324.0" y="92.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">SCIM</text>
+                                <text x="324.0" y="109.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Service Provider</text>
+                            </g>
+                            <g class="ParticipantView">
+                                <rect x="434.0" y="60.0" width="177.0" height="82.0" rx="5.0" ry="5.0" fill="#FFFFFF" stroke="#000000" stroke-width="1.0"/>
+                                <text x="522.5" y="92.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Client A</text>
+                                <text x="522.5" y="109.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Co-op Receiver</text>
+                            </g>
+                            <g class="ParticipantView">
+                                <rect x="631.0" y="70.0" width="221.0" height="61.0" rx="5.0" ry="5.0" fill="#FFFFFF" stroke="#000000" stroke-width="1.0"/>
+                                <text x="741.5" y="100.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Co-op Action Endpoint</text>
+                            </g>
+                            <g class="LifelineView">
+                                <line x1="136.0" y1="131.0" x2="138.0" y2="735.0" stroke-dasharray="20.0, 10.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineView">
+                                <line x1="323.0" y1="142.0" x2="325.0" y2="725.0" stroke-dasharray="20.0, 10.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineView">
+                                <line x1="522.0" y1="142.0" x2="524.0" y2="725.0" stroke-dasharray="20.0, 10.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineView">
+                                <line x1="741.0" y1="131.0" x2="743.0" y2="735.0" stroke-dasharray="20.0, 10.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineActivationBoxView">
+                                <rect x="316.0" y="213.0" width="16.0" height="160.0" fill="#FFFFFF" fill-opacity="1.0" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineActivationBoxView">
+                                <rect x="515.0" y="365.0" width="16.0" height="234.0" fill="#FFFFFF" fill-opacity="1.0" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="InteractionFrameView">
+                                <rect x="269.0" y="287.0" width="528.0" height="328.0" fill="#FFFFFF" fill-opacity="0.0"/>
+                                <path d="M 269.0,287.0 L 324.0,287.0 L 324.0,295.0 L 318.0,303.0 L 269.0,303.0" fill="#FFFFFF" fill-opacity="1.0" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                                <rect x="269.0" y="287.0" width="528.0" height="328.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                                <text x="296.5" y="295.0" text-anchor="middle" font-family="sans-serif" font-size="12.0" fill="#000000" fill-opacity="1.0">    loop    </text>
+                                <text x="344.0" y="295.0" text-anchor="start" font-family="sans-serif" font-size="12.0" fill="#000000" fill-opacity="1.0"/>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="226.5" y="200.5" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[1] SCIM Operation</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="226.5" y="245.5" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[2] SCIM Response</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="427.5" y="336.0" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[3] Event SCIM:prov:&lt;op&gt;</text>
+                                <text x="427.5" y="352.0" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">id:xyz</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="419.5" y="471.5" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[4] SCIM GET &lt;id&gt;</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="419.5" y="517.0" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[5] Filtered</text>
+                                <text x="419.5" y="533.0" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">Resource Response</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="636.5" y="578.5" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[6] Co-ordinated Action</text>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 306.0,212.0 L 316.0,217.5 L 306.0,222.0 L 306.0, 212.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="137.0" y1="217.5" x2="306.0" y2="217.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 147.0,257.0 L 137.0,262.5 L 147.0,267.0 L 147.0, 257.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="147.0" y1="262.5" x2="316.0" y2="262.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 505.0,364.0 L 515.0,369.5 L 505.0,374.0 L 505.0, 364.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="332.0" y1="369.5" x2="505.0" y2="369.5" stroke-dasharray="5.0, 3.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 334.0,483.0 L 324.0,488.5 L 334.0,493.0 L 334.0, 483.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="334.0" y1="488.5" x2="515.0" y2="488.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 505.0,545.0 L 515.0,550.5 L 505.0,555.0 L 505.0, 545.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="324.0" y1="550.5" x2="505.0" y2="550.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 732.0,590.0 L 742.0,595.5 L 732.0,600.0 L 732.0, 590.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="531.0" y1="595.5" x2="732.0" y2="595.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="NoteView">
+                                <rect x="429.0" y="379.0" width="188.0" height="54.0" rx="5.0" ry="5.0" fill="#FFFFFF" fill-opacity="1.0" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                                <text x="443.0" y="397.5" text-anchor="start" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Receiver may accumulate</text>
+                                <text x="443.0" y="414.5" text-anchor="start" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">events for periodic action.</text>
+                            </g>
+
+                            <!-- Generator: Sequence Diagram - v1.8.11-(198) - http://www.macsequencediagram.com -->
+
+                        </svg>
+
+                    </artwork>
+                    </artset>
+                </figure>
+                <t>
+                    In CP mode, the receiver of an event must call back to the originating SCIM Service Provider
+                    (e.g. using a SCIM GET request) to reconcile the newly changed resource in
+                    order to obtain the changes.
+                </t>
+                <t>
+                    Co-ordinated provisioning has the following benefits:
+                </t>
+                <ul>
+                    <li>
+                        Differences in schema (e.g. attributes) between domains. For example, a receiving domain may
+                        only be interested or only be allowed access to a few attributes (e.g. role based access data) to enable access to an
+                        application.
+                    </li>
+                    <li>
+                        Different Event Receivers MAY have differing needs access to information and thus be assigned
+                        varying access rights. Minimal information events combined with call-backs for data allows
+                        data filtering to be applied.
+                    </li>
+                    <li>
+                        Receivers can take independent action. For example deciding which attributes or resource lifecycle
+                        changes to accept. For example, in the case of a conflict, a receiver can prioritize one domain
+                        source over another.
+                    </li>
+                    <li>
+                        A receiver MAY throttle or buffer changes rather than act immediately on a notification. For
+                        example, for a frequently changing resource, the
+                        receiver MAY choose to make scheduled SCIM GET for resources that have been marked "dirty" by
+                        events received in the last scheduled cycle.
+                    </li>
+                </ul>
+                <t>
+                    A disadvantage of the CP approach is that it may be considered costly in the sense that each event
+                    received might trigger a call back to the event issuer. This cost should be weighed against the cost
+                    producing filtered information in each event for each receiver. Further a receiver is not required
+                    to make a call-back on every provisioning event.
+                </t>
+
+                <t>
+                    It is assumed that an underlying relationship between domains exists that permits the exchange of
+                    personal information and credentials. For example the decision to perform SCIM provisioning operations
+                    at the SCIM Service Provider issuing change events, was previously authorized
+                    and appropriate confidentiality and privacy agreements have been met in cross-domain scenarios. Examples
+                    of this might be services for hire by an employer or a specific consent from an end-user as part
+                    of a online authorization where individual consent was obtained.
+                </t>
+
+            </section>
+            <section anchor="risk" toc="default" numbered="true">
+                <name>Risk Signals</name>
+                <t>
+                    The sharing of risk signals (RS) is intended for the purpose of co-ordinating change events between
+                    a SCIM Service Provider and another related security service. For example, when a password or other
+                    authentication factor has changed, a receiving security system can choose to terminate current User
+                    sessions to force a re-authentication against the modified User resource.
+                </t>
+                <t>
+                    These signals MAY also include those described in the
+                    <xref target="SSWG">OpenID Shared Signals Working Group Specifications</xref>.
+                </t>
+                <t>
+                    These events are intended for receivers where there is a prior relationship on behalf of the users
+                    described in the SCIM Service Provider. The intent of sharing information about security events is
+                    for the purpose of securing a user account and ensuring privacy.
+                </t>
+
+            </section>
+            <section anchor="async" toc="default" numbered="true">
+                <name>Async Requests</name>
+                <t>
+                    A SCIM provisioning client MAY wish to request "asynchronous" processing using the "Prefer Header
+                    for HTTP", Section 4.1 <xref target="RFC7240"/>. In this mode, a normal SCIM protocol POST, PUT,
+                    PATCH, or DELETE request is
+                    made, and the HTTP Header <tt>Prefer</tt> is included with the value <tt>respond-async</tt>.
+                    When a SCIM Client signals respond-async, the SCIM server response changes to HTTP Status 202 Accepted
+                    as defined in <xref target="RFC7231"/>. The <tt>Location</tt> header returned is the final resource
+                    location and no payload is present. Following acceptance of an asynchronous request, a notification of
+                    completion can be issued using the Async Event Notification per <xref target="asyncEvent"/>. The
+                    location returned SHALL correspond to the sub claim in the future Async Event SET message.
+                </t>
+                <figure>
+                    <name>Asychronous Request Sequence</name>
+                    <artset>
+                        <artwork align="center" type="ascii-art"><![CDATA[{
+                    ┌──────────────┐              ┌────────────────┐
+┌────────┐          │Client A      │              │SCIM            │
+│Client A│          │Event Receiver│              │Service Provider│
+└───┬────┘          └──────┬───────┘              └───────┬────────┘
+    │                  "SCIM Modify                      ┌┴┐
+    │                  w/Respond Async"                  │ │
+    │ ──────────────────────────────────────────────────>│ │
+    │                      │                             │ │
+    │               "Accepted Status 202"                │ │
+    │               "Location: /Users/xyz"               │ │
+    │ <──────────────────────────────────────────────────│ │
+    │                     │ │                            └┬┘
+    │                     │ │ "Event SCIM:misc:asyncResp  │
+    │                     │ │ sub: /Users/xyz             │
+    │                     │ │ id:xyz, method: PUT"        │
+    │                     │ │ <─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─│
+    │                     └┬┘                             │
+    │   "ID: xyz created"  │                              │
+    │ <─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─                              │  ]]>
+                        </artwork>
+                        <artwork align="center" type="svg">
+                        
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 670.0 600.0">
+
+                            <!-- Generator: Sequence Diagram - v1.8.11-(198) - http://www.macsequencediagram.com -->
+
+                            <rect x="0.0" y="0.0" width="670.0" height="653.0" fill="#FFFFFF" fill-opacity="1.0"/>
+                            <g class="ParticipantView">
+                                <rect x="60.0" y="70.0" width="129.0" height="61.0" rx="5.0" ry="5.0" fill="#FFFFFF" stroke="#000000" stroke-width="1.0"/>
+                                <text x="124.5" y="100.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Client A</text>
+                            </g>
+                            <g class="ParticipantView">
+                                <rect x="209.0" y="60.0" width="172.0" height="82.0" rx="5.0" ry="5.0" fill="#FFFFFF" stroke="#000000" stroke-width="1.0"/>
+                                <text x="295.0" y="92.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Client A</text>
+                                <text x="295.0" y="109.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Event Receiver</text>
+                            </g>
+                            <g class="ParticipantView">
+                                <rect x="430.0" y="60.0" width="180.0" height="82.0" rx="5.0" ry="5.0" fill="#FFFFFF" stroke="#000000" stroke-width="1.0"/>
+                                <text x="520.0" y="92.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">SCIM</text>
+                                <text x="520.0" y="109.5" text-anchor="middle" font-family="sans-serif" font-size="14.0" fill="#000000" fill-opacity="1.0">Service Provider</text>
+                            </g>
+                            <g class="LifelineView">
+                                <line x1="124.0" y1="131.0" x2="126.0" y2="521.0" stroke-dasharray="20.0, 10.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineView">
+                                <line x1="294.0" y1="142.0" x2="296.0" y2="511.0" stroke-dasharray="20.0, 10.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineView">
+                                <line x1="519.0" y1="142.0" x2="521.0" y2="511.0" stroke-dasharray="20.0, 10.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineActivationBoxView">
+                                <rect x="512.0" y="230.0" width="16.0" height="115.0" fill="#FFFFFF" fill-opacity="1.0" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="LifelineActivationBoxView">
+                                <rect x="287.0" y="337.0" width="16.0" height="53.0" fill="#FFFFFF" fill-opacity="1.0" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="318.5" y="201.0" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[1] SCIM Modify</text>
+                                <text x="318.5" y="217.0" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">w/Respond Async</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="318.5" y="262.5" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[2] Accepted Status 202</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="411.5" y="308.0" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[3] Event SCIM:misc:asyncResp</text>
+                                <text x="411.5" y="324.0" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">id:xyz, method: PUT</text>
+                            </g>
+                            <g class="SignalMessageView">
+                                <text x="206.0" y="369.5" text-anchor="middle" font-family="sans-serif" font-size="13.0" fill="#000000" fill-opacity="1.0">[4] ID: xyz created</text>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 502.0,229.0 L 512.0,234.5 L 502.0,239.0 L 502.0, 229.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="125.0" y1="234.5" x2="502.0" y2="234.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 135.0,274.0 L 125.0,279.5 L 135.0,284.0 L 135.0, 274.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="135.0" y1="279.5" x2="512.0" y2="279.5" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 313.0,336.0 L 303.0,341.5 L 313.0,346.0 L 313.0, 336.0" fill="#000000" fill-opacity="1.0"/>
+
+                                <line x1="313.0" y1="341.5" x2="512.0" y2="341.5" stroke-dasharray="5.0, 3.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+                            <g class="SignalLineView">
+                                <path d="M 135.0,381.0 L 125.0,386.5 L 135.0,391.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+
+                                <line x1="135.0" y1="386.5" x2="287.0" y2="386.5" stroke-dasharray="5.0, 3.0" fill="none" stroke="#000000" stroke-opacity="1.0" stroke-width="1.0"/>
+                            </g>
+
+                            <!-- Generator: Sequence Diagram - v1.8.11-(198) - http://www.macsequencediagram.com -->
+
+                        </svg>
+                    </artwork>
+                    </artset>
+                </figure>
+            </section>
+        </section>
+
+        <section anchor="scimEvents" numbered="true" toc="default">
+            <name>SCIM Events</name>
+            <t>
+                A SCIM event is a message, in the form of a Security Event Token
+                <xref target="RFC8417" format="default"/>, that conveys information about changes that have
+                occurred at a SCIM Service Provider that may be of interest to a receiving system. Examples of events include:
+            </t>
+            <ul>
+                <li>Resource lifecycle events including creation, activation, deactivation, and removal of a resource.
+                </li>
+                <li>Risk signal events (e.g. password reset, authentication factor change) which may be used by a
+                    receiver
+                    to take a security response such as resetting or revoking current user sessions and tokens.
+                </li>
+                <li>A Password update event is used to securely distribute a hashed value in an administrative domain.</li>
+                <li>A Async Event is used to acknowledge completion status of an Asynchronous SCIM Request.</li>
+            </ul>
+
+            <section anchor="attributes" numbered="true" toc="default">
+                <name>Common Event Attributes</name>
+                <t>The following attributes are available for all events defined. The values are contained within the event payload
+                    per Section 2 <xref target="RFC8417"/>.
+                </t>
+                <dl newline="true" spacing="normal">
+                    <dt>id</dt>
+                    <dd>
+                        A SCIM <tt>id</tt> attribute identifying the SCIM Service Provider's resource that was modified.
+                    This value is required.
+                    </dd>
+                    <dt>externalId</dt>
+                    <dd>
+                        If known, the <tt>externalId</tt> value of the SCIM Resource that MAY be used by a receiver to identify
+                    the corresponding resource in the Event Receiver's domain.
+                    </dd>
+                    <dt>txn</dt>
+                    <dd>
+                        For the purposes of SCIM, this SET claim should be used to identify unique transactions
+                        originating at a SCIM Service Provider. The purpose is to detect duplicate transactions that may have
+                        been received. If not provided, the SET <tt>jti</tt> claim MAY be used. The difference is that <tt>txn</tt>
+                        identifies uniqueness within a SCIM Service Provider whereas JTI only identifies a unique JWT token.
+                    </dd>
+                    <dt>data</dt>
+                    <dd>
+                        Defined in SCIM Bulk Operations, Section 3.7 <xref target="RFC7644"/>, contains the information
+                        necessary to propagate the transaction to the receiving node. For example, after processing a SCIM
+                        Create operation, the data contained includes the final representation of the created entity
+                        by the SCIM Service Provider including the assigned <tt>id</tt> value.
+                    </dd>
+
+                    <dt>attributes</dt>
+                    <dd>
+                        An array of attributes that were added, revised, or removed. For example: <br/>
+                         <tt>"attributes": ["username","emails"]</tt>
+                    </dd>
+                </dl>
+                <t>
+                    Depending on the Processing Mode or Event definition, usually only one of <tt>data</tt> or
+                    <tt>attributes</tt> is provided.
+                </t>
+                <t>
+                    The <tt>sub</tt> claim SHALL hold the SCIM Service Provider's Resource URI value of the affected
+                    object.  Note: that the SCIM Bulk <tt>path</tt> attribute is SHALL NOT be used as this duplicates
+                    the <tt>sub</tt> claim.
+                </t>
+
+                <t>This specifications defines a new schema URI prefix <tt>urn:ietf:params:event:SCIM</tt> which is used
+                as the prefix for the following defined SCIM Events.</t>
+            </section>
+
+            <section anchor="scimFeedEvents" numbered="true" toc="default">
+                <name>SCIM Feed Events</name>
+                <t>
+                    This section defines events related to notices about which resources are being added or removed from
+                    an event feed. These events are used in Co-operative Provisioning scenarios where only a sub-set of
+                    entities are shared across an Event Feed. The URI prefix for these events is:
+                    <tt>urn:ietf:params:event:SCIM:feed</tt>
+                </t>
+                <section anchor="feedAdd" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:feed:add</name>
+                    <t>The specified resource was added to the Event Feed. A <tt>feed:add</tt> does not indicate a
+                        resource is new or has been recently created. For example,
+                        an existing user has had a new role (e.g. CRM_User) added to
+                        their profile which has caused their resource to join a feed.
+                    </t>
+                    <figure anchor="exampleFeedAddEvent">
+                        <name>Example SCIM Feed Add Event</name>
+                        <artwork type="" align="left" alt=""><![CDATA[{
+  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+  "sub": "/Users/2b2f880af6674ac284bae9381673d462",
+  "txn": "b7b953f11cc6489bbfb87834747cc4c1",
+  "events":{
+    "urn:ietf:params:event:SCIM:feed:add": {
+        "id":"2b2f880af6674ac284bae9381673d462"
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                    </figure>
+                </section>
+                <section anchor="feedRemove" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:feed:remove</name>
+                    <t>The specified
+                        resource has been removed from the feed. Removal does not indicate
+                        that the resource was deleted or otherwise deactivated. This
+                        event has minimal disclosure.
+                    </t>
+                    <figure anchor="exampleRemoveEvent">
+                        <name>Example SCIM Feed Remove Event</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+  "sub": "/Users/2b2f880af6674ac284bae9381673d462",
+  "events":{
+    "urn:ietf:params:event:SCIM:feed:remove": {
+        "id": "2b2f880af6674ac284bae9381673d462"
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                    </figure>
+                </section>
+            </section>
+            <section anchor="scimProvEvents" numbered="true" toc="default">
+                <name>SCIM Provisioning Events</name>
+                <t>
+                    This section defines provisioning events that have occurred within a
+                    SCIM Service Provider. These events are used in both Domain Based Replication (DBR) and Co-operative
+                    Provisioning (CP) mode. The URI prefix for these events is:
+                    <tt>urn:ietf:params:event:SCIM:prov</tt>
+                </t>
+                <section anchor="provCreate" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:prov:create</name>
+                    <t>
+                        Indicates a new SCIM resource has been created by the SCIM Service Provider
+                        and has been added to the Event Feed. Note that when a <tt>create</tt> event is sent,
+                        a corresponding <tt>urn:ietf:params:event:SCIM:feed:add</tt> event SHOULD NOT be issued in the
+                        same feed. In DBR mode mode, all claims of the new resource are included. In CP mode,
+                        the <tt>attributes</tt> returned discloses what attributes were created at the publisher. In
+                        DBR mode, the set of values reflecting the final
+                        state of the resource at the service provider are provided
+                        using the "data" attribute. Note that because this is a replication request, the <tt>id</tt>
+                        attribute that was assigned by the SCIM Service Provider is shared so that all replicas in the
+                        domain use the same resource identifier.
+                    </t>
+                    <figure anchor="exampleCreateEvent">
+                        <name>Example SCIM Create (Domain Replication Mode)</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "4d3559ec67504aaba65d40b0363faad8",
+
+  "iat": 1458496404,
+  "iss":"https://scim.example.com",
+  "aud":[
+    "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754",
+    "https://scim.example.com/Feeds/5d7604516b1d08641d7676ee7"
+  ],
+  "sub": "/Users/44f6142df96bd6ab61e7521d9",
+  "events":{
+    "urn:ietf:params:event:SCIM:prov:create":{
+      "id":"44f6142df96bd6ab61e7521d9",
+      "externalId":"jdoe",
+      "data":{
+        "schemas":[ "urn:ietf:params:scim:schemas:core:2.0:User"],
+        "emails":[
+          {"type":"work","value":"jdoe@example.com"}
+        ],
+        "userName":"jdoe",
+        "name":{
+          "givenName":"John",
+          "familyName":"Doe"
+        }
+      }
+    }
+  }
+}]]></artwork>
+                    </figure>
+
+                    <figure anchor="exampleCreateEventDef">
+                        <name>Example SCIM Create Event (CP Mode)</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "4d3559ec67504aaba65d40b0363faad8",
+  "iat": 1458496404,
+  "iss":"https://scim.example.com",
+  "aud":[
+    "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754",
+    "https://scim.example.com/Feeds/5d7604516b1d08641d7676ee7"
+  ],
+  "sub": "/Users/44f6142df96bd6ab61e7521d9",
+  "events": {
+    "urn:ietf:params:event:SCIM:prov:create": {
+      "id": "44f6142df96bd6ab61e7521d9",
+      "externalId": "jdoe",
+      "attributes": [
+        "id",
+        "name",
+        "userName",
+        "password",
+        "emails"
+      ]
+    }
+  }
+}]]></artwork>
+                    </figure>
+                    <t>
+                        The event above notifies the Event Receiver which attributes
+                        have changed but does not convey
+                        the actual information. The Event Receiver MAY retrieve that information
+                        by performing a SCIM GET to the <tt>sub</tt> value specified.
+                    </t>
+                </section>
+
+                <section anchor="provPatch" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:prov:patch</name>
+                    <t>The specified
+                        resource has been updated using SCIM PATCH. When in DBR mode, the
+                        <tt>data</tt> attribute contains the PATCH Request body. In CP mode, only
+                        the modified attribute name is included.
+                    </t>
+                    <figure anchor="examplePatchEventFull">
+                        <name>Example SCIM Patch Event (DBR Mode)</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+  "sub": "/Groups/acbf3ae7-8463-...-9b4da3f908ce",
+  "events":{
+    "urn:ietf:params:event:SCIM:prov:patch": {
+      "id": "acbf3ae7-8463-...-9b4da3f908ce",
+      "externalId":"crmUsers",
+      "version": "a330bc54f0671c9",
+      "data": {
+        "schemas":
+      ["urn:ietf:params:scim:api:messages:2.0:PatchOp"],
+        "Operations":[{
+          "op":"add",
+          "path":"members",
+          "value":[{
+             "display": "Babs Jensen",
+             "$ref": "/Users/2819c223...413861904646",
+             "value": "2819c223-7f76-453a-919d-413861904646"
+          }]
+        }]
+      }
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                    </figure>
+                    <figure anchor="examplePatchEventBrief">
+                        <name>Example SCIM Patch Event (CP Mode)</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+  "sub": "/Groups/acbf3ae7-8463-...-9b4da3f908ce",
+  "events":{
+    "urn:ietf:params:event:SCIM:prov:patch": {
+      "id": "acbf3ae7-8463-...-9b4da3f908ce",
+      "externalId":"crmUsers",
+      "attributes": ["members"],
+      "version": "a330bc54f0671c9"
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                    </figure>
+                </section>
+                <section anchor="provPut" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:prov:put</name>
+                    <t>
+                        The specified resource has been updated (e.g. one or more attributes has
+                        changed). In DBR mode, the SCIM PUT request body is included in the <tt>data</tt>
+                        attribute; or, In CP mode the modified attributes are listed using <tt>attributes</tt>.
+                    </t>
+                    <figure anchor="examplePutEventFull">
+                        <name>Example SCIM Put Event (DBR Mode)</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+  "sub": "/Users/2819c223-7f76-453a-919d-413861904646",
+  "events":{
+    "urn:ietf:params:event:SCIM:prov:patch": {
+      "id": "2819c223-7f76-453a-919d-413861904646",
+      "version": "a330bc54f0671c9",
+      "data": {
+        "schemas":["urn:ietf:params:scim:schemas:core:2.0:User"],
+        "id":"2819c223-7f76-453a-919d-413861904646",
+        "userName":"jdoe",
+        "externalId":"jdoe",
+        "name":{
+           "formatted":"Mr. Jon Jack Doe III",
+           "familyName":"Doe",
+           "givenName":"Jon",
+           "middleName":"Jack"
+        },
+        "roles":[],
+        "emails":[
+          {"value":"jdoe@example.com"},
+          {"value":"anon@jdoe.org"}
+        ]
+      }
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                    </figure>
+                    <figure anchor="examplePutEventBrief">
+                        <name>Example SCIM Put Event (CP Mode)</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+  "sub": "/Users/2819c223-7f76-453a-919d-413861904646",
+  "events":{
+    "urn:ietf:params:event:SCIM:prov:patch": {
+      "id": "2819c223-7f76-453a-919d-413861904646",
+      "version": "a330bc54f0671c9",
+      "attributes": ["userName","externalId","name","roles","emails"]
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                    </figure>
+
+                </section>
+
+                <section anchor="provDelete" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:prov:delete</name>
+                    <t>
+                        The specified resource has been deleted from the SCIM publisher.
+                        The resource is also removed from the feed. When a
+                        DELETE is sent, a corresponding <tt>feedRemove</tt> is not issued. A delete
+                        event has minimal disclosure profile only.
+                    </t>
+
+                    <figure anchor="exampleDeleteEvent">
+                        <name>Example SCIM Delete Event</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+  "sub": "/Users/2b2f880af6674ac284bae9381673d462",
+  "events":{
+    "urn:ietf:params:event:SCIM:prov:delete": {
+        "id": "2b2f880af6674ac284bae9381673d462",
+        "externalId": "jDoe"
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                    </figure>
+                </section>
+                <section anchor="provActivate" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:prov:activate</name>
+                    <t>
+                        The specified resource (e.g. User) has been activated. This event
+                        indicates a high-level change in state as agreed
+                        between the Event Publisher and Event Receiver. For example, an activated
+                        resource is one that can now have an active session (may log in)
+                        from a security perspective.
+                    </t>
+                    <figure anchor="exampleActivateEvent">
+                        <name>Example SCIM Activate Event</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+  "sub": "/Users/2b2f880af6674ac284bae9381673d462",
+  "events":{
+    "urn:ietf:params:event:SCIM:prov:activate": {
+      "id": "2b2f880af6674ac284bae9381673d462"
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                    </figure>
+                </section>
+                <section anchor="provDeactivate" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:prov:deactivate</name>
+                    <t>
+                        The specified resource (e.g. User) has been deactivated and
+                        disabled. The exact meaning must be agreed to by the Event Publisher
+                        and its corresponding Event Receiver. Typically this means the sub
+                        may no longer have an active security session. As with the activate
+                        event, this event has minimal disclosure requirements.
+                    </t>
+                </section>
+            </section>
+            <section anchor="scimSignals" numbered="true" toc="default">
+                <name>SCIM Signals Events</name>
+                <t>
+                    This section defines security signal events that have occured within a
+                    SCIM Service Provider.The URI prefix for these events is:
+                    <tt>urn:ietf:params:event:SCIM:signal</tt>
+                </t>
+                <section anchor="authMethod" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:sig:authMethod</name>
+                    <t>
+                        A new authentication method has been added to the User profile. As attackers often use new
+                        authentication methods to lock-out Users from their account, this signal can be used by the
+                        receiver that the chance of account them may be temporarily elevated. The receiver MAY also
+                        wish to take action such as resetting current authorizations or sessions.
+                    </t>
+                    <figure anchor="exampleAuthMethod">
+                        <name>Example SCIM Authentication Factor Change Event</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "3d0c3cf797584bd193bd0fb1bd4e7d30",
+  "sub": "/Users/44f6142df96bd6ab61e7521d9",
+  "events":{
+    "urn:ietf:params:event:SCIM:sig:authMethod": {
+        "id": "44f6142df96bd6ab61e7521d9"
+    }
+  },
+  "iat": 1458496025,
+  "iss": "https://scim.example.com"
+}]]></artwork>
+                    </figure>
+                </section>
+                <section anchor="sigPassReset" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:sig:pwdReset</name>
+                    <t>
+                        The specified resource (e.g. User) has changed its password or the password
+                        has been reset. When the password has changed, the
+                        <tt>attributes</tt>
+                        attribute is supplied with the value "password".
+                    </t>
+                    <figure anchor="examplePassword">
+                        <name>Example SCIM Password Change Event</name>
+                        <artwork name="" type="" align="left" alt=""><![CDATA[{
+  "jti": "3d0c3cf797584bd193bd0fb1bd4e7d30",
+  "sub": "/Users/44f6142df96bd6ab61e7521d9",
+  "events": {
+    "urn:ietf:params:event:SCIM:sig:pwdReset": {
+      "id": "44f6142df96bd6ab61e7521d9"
+    }
+  },
+  "iat": 1458496025,
+  "iss": "https://scim.example.com",
+  "aud":[
+    "https://jhub.example.com/Feeds/98d52461fa5bbc879593b7754",
+    "https://jhub.example.com/Feeds/5d7604516b1d08641d7676ee7"
+  ]
+}]]></artwork>
+                    </figure>
+                </section>
+            </section>
+            <section anchor="scimMisc" numbered="true" toc="default">
+                <name>Miscellaneous Events</name>
+                <t>
+                    This section defines events related miscellaneous events such as Asynchronous Request complettion that have occured within a
+                    SCIM Service Provider. The URI prefix for these events is:
+                    <tt>urn:ietf:params:event:SCIM:misc</tt>
+                </t>
+                <section anchor="asyncEvent" numbered="true" toc="default">
+                    <name>urn:ietf:params:event:SCIM:misc:asyncResp</name>
+                    <t>
+                        This event signals the completion of a SCIM request. The payload contains the attributes
+                        defined in SCIM Bulk Section 3.7 <xref target="RFC7644"/> and is the same a single SCIM Bulk Response
+                        Operation as per Section 3.7.3.
+                    </t>
+
+                    <figure anchor="exampleAsyncEvent">
+                        <name>Example SCIM Async Response Event</name>
+                        <artwork type="" align="left" alt=""><![CDATA[{
+  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+  "sub": "/Users/b7c14771-226c-4d05-8860-134711653041",
+  "txn": "7880fc68a2f0428ebbb5a906e5aeae53",
+  "events":{
+    "urn:ietf:params:event:SCIM:misc:asyncResp": {
+        "id":"b7c14771-226c-4d05-8860-134711653041",
+        "method": "PUT",
+        "version": "W\/\"huJj29dMNgu3WXPD\"",
+        "status": "200"
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                    </figure>
+                </section>
+            </section>
+
+        </section>
+        <section anchor="distribution" numbered="true" toc="default">
+            <name>Event Delivery</name>
+            <t>
+                As Security Event Tokens are based on JWT tokens, it is possible to exchange events by a number of transfer
+                mechanisms such as: XMPP <xref target="RFC6120"/>, HTTP <xref target="RFC7540"/>, and Message Buses (e.g.
+                <xref target="RFC3259"/>, Apache Kafka <xref target="Kafka"/>). This draft discusses 2 general
+                delivery methods: Message Bus and Point-to-Point.
+            </t>
+            <section anchor="jwtFormats">
+                <name>Security Event Token Signing and Encryption</name>
+                <t>
+                    This specification uses Security Event Tokens as the message format for SCIM Events. As SETs are based
+                    on JWT tokens <xref target="RFC7519"/>,
+                    they can be transmitted unsecurity, signed, or encrypted. For more information see the JWT Cookbook
+                    specification <xref target="RFC7520"/> for examples. The decision on whether to use JWS and JWE depends
+                    on operational considerations. For each SCIM Feed relationship, it is up to deployers to decide on
+                    signing, encryption and algorithm requirements. Deployers SHOULD be aware that too much emphasis on
+                    turning on every possible encryption feature may cause operational performance to suffer. Deployers
+                    MUST weigh the security trade-offs of up-to-date SCIM services, vs. the potential information loss
+                    of an event.
+                </t>
+                <dl newline="true">
+                    <dt>Unsecured</dt>
+                    <dd>
+                        Per Section 6 <xref target="RFC7519"/>, tokens MAY be generated with <tt>{"alg":"none"}</tt>.
+                        This mode speeds up processing and is best used in DBR scenarios. Unencrypted tokens MUST be
+                        transferred over authenticated TLS layer encryption and SHOULD only be used in a restricted
+                        network environment.
+                    </dd>
+                    <dt>Signed</dt>
+                    <dd>
+                        JWS (<xref target="RFC7515"/>) signed SETs are useful when it is important to be able to verify
+                        the issuer of a SET as valid.
+                        In addition, some systems MAY wish to validate the authenticity of the event in a review
+                        process which may occur at a later date. While the content can be validated as originating from
+                        the correct issuer and is unmodified, the message contents remain unsecure. Signed SETs MUST
+                        be transferred over encrypted transport.
+                    </dd>
+                    <dt>Encrypted</dt>
+                    <dd>
+                        JWE (<xref target="RFC7516"/>) are encrypted SETs and are useful when the transport mechanism is
+                        not fully securable (e.g. messages carried by a third party). The use of JWEs ensures only the
+                        designated receiver can read the event and provides mutual authentication within the SET mesage
+                        itself.
+                    </dd>
+                </dl>
+            </section>
+
+            <section anchor="setDelivery" numbered="true" toc="default">
+                <name>Point-to-Point Delivery Over HTTP</name>
+                <t>
+                    Security Event Tokens MAY be delivered using push-based HTTP delivery <xref target="RFC8935"/>, or
+                    pull-based HTTP Polling <xref target="RFC8936"/>.  Both of these protocols define a method of
+                    transfer and acknowledgement to prevent loss-of-information and to provide re-transmission and
+                    recover. The method of transfer is best decided by considering the following advantages and disadvantages
+                    in a production scenario:</t>
+                <t>
+                    Push-based delivery has the following advantages:
+                </t>
+                <ul>
+                    <li>
+                        Message transfer is instant (when compared to using a common Event Publisher acting as a relay),
+                        and in high event frequency scenarios, HTTP connections can be kept open.
+                    </li>
+                    <li>
+                        Scales well when an SCIM Event Publisher has thousands of event receivers and TCP resources may
+                        be limited.
+                    </li>
+                    <li>
+                        Does not require events to be routed to a single publisher node. SCIM Events may be issued by
+                        SCIM Service Provider nodes where the transaction occurred.
+                    </li>
+                    <li>
+                        SCIM Events only need to be retained until they have been delivered to designated receivers.
+                    </li>
+                </ul>
+                <t>
+                    Push-delivery has the following disadvantages:
+                </t>
+                <ul>
+                    <li>
+                        A SCIM Event Publisher system needs authorization credentials enabling it to access the HTTP
+                        SCIM Event delivery endpoint.
+                    </li>
+                    <li>
+                        When synchronizing business data that is behind protected firewalls, a virtual network or
+                        other firewall policy may be required to allow external network based SCIM providers to
+                        deliver SCIM Events to internally hosted systems.
+                    </li>
+                </ul>
+
+                <t>
+                    Delivery by HTTP Polling has the following advantages:
+                </t>
+                <ul>
+                    <li>
+                        It is possible for a SCIM Event Receiver to use the same SCIM credentials it uses when
+                        access the normal SCIM Service Provider service defined by <xref target="RFC7644"/>.
+                    </li>
+                    <li>
+                        Systems behind protected network boundaries can reach externally hosted systems without
+                        requiring special firewall or network configuration.
+                    </li>
+                    <li>
+                        Instantaneous transfer can be used using HTTP Long-polling as described Section 2.1 of
+                        <xref target="RFC8936"/>.
+                    </li>
+                </ul>
+                <t>
+                    Polling-based delivery has the following disadvantages:
+                </t>
+                <ul>
+                    <li>
+                        Long-polling requires the use of persistent connections for which TCP resources may be
+                        limited. HTTP Long-polling is best used in scenarios when there are relatively few Event
+                        Receivers.
+                    </li>
+                    <li>
+                        The SCIM Event Publisher MUST retain events for the Event Receiver until delivered.
+                    </li>
+                </ul>
+
+            </section>
+            <section>
+                <name>Using Message Bus Delivery</name>
+                <t>
+                    Security Event Tokens MAY be delivered using a message bus. While this draft will not talk about any
+                    particular message bus, it will discuss the pros and cons for message buses in general and any
+                    anticipated issues and requirements.
+                </t>
+                <t>
+                    Message buses have the following advantages:
+                </t>
+                <ul>
+                    <li>
+                        Connection management and credentials may be greatly simplified as participants only need to
+                        authenticate to the "bus" to issue and receive events.
+                    </li>
+                    <li>
+                        Message buses can have "broadcast" features that are able to deliver the same event
+                        to many recipients such as in a global deployment of replicated SCIM servers.  Issuers save
+                        resources by only having to publish once to a bus rather than to each receiver directly.
+                    </li>
+                    <li>
+                        Depending on the implementation, a Message Bus can be used as a buffer and in some cases for data
+                        recovery. For example, some buses may have infinite retention of events.
+                    </li>
+                    <li>
+                        Message-buses can support bi-directional and other more complex flow relationships (e.g. sharding).
+                    </li>
+                </ul>
+                <t>
+                    Message buses may have following disadvantages:
+                </t>
+                <ul>
+                    <li>
+                        A message bus may have some delivery delays (seconds to minutes) when compared to point-to-point systems.
+                    </li>
+                    <li>
+                        Message buses may require significant infrastructure commitments in order to meet delivery
+                        reliability. However it may also be true that a point-to-point system may also impose
+                        significant resource requirements requiring a SCIM service provider to assume the same work.
+                    </li>
+                    <li>
+                        Multi-issuer scenarios may require more conflict resolution processing. E.g. such as prioritizing
+                        specific nodes as "masters" for specific SCIM attributes.
+                    </li>
+                </ul>
+
+            </section>
+        </section>
+        <section anchor="processing" toc="default" numbered="true">
+            <name>Event Handling</name>
+            <section anchor="conflicts" toc="default" numbered="true">
+                <name>Conflict Resolution</name>
+                <t>
+                    In scenarios where there may be multiple issuers of SCIM Events, it becomes possible that conflicts can
+                    arise when the same version of a resource is modified by multiple parties.
+                </t>
+                <t>Editors note: TO BE COMPLETED</t>
+            </section>
+            <section anchor="optimization" toc="default" numbered="true">
+                <name>Optimizing Events</name>
+                <t>
+                    In cases where resources change frequently, SCIM Service Providers MAY choose to release events on
+                    an interval basis in order to reduce traffic. For example, a large Group with millions of members may
+                    have hundreds of changes per minute. For optimization, a SCIM Service Provider MAY choose to issue
+                    a cumulative event once per minute instead of for each change event.
+                </t>
+                <t>Editors note: TO BE COMPLETED</t>
+            </section>
+        </section>
+        <section anchor="Security" toc="default" numbered="true">
+            <name>Security Considerations</name>
+            <t>[[TO BE COMPLETED]]</t>
+        </section>
+        <section anchor="Privacy" toc="default" numbered="true">
+            <name>Privacy Considerations</name>
+            <t>[[TO BE COMPLETED]]</t>
+        </section>
+        <section anchor="IANA" numbered="true" toc="default">
+            <name>IANA Considerations</name>
+            <t>This section registers the schema extensions found in
+                <xref target="scimEvents" format="default"/>
+                in the "Event" registry as per
+                <xref target="RFC8417" format="default">Section 4.2</xref>.
+            </t>
+            <dl newline="false" spacing="normal">
+                <dt>Schema URI:</dt>
+                <dd>See<xref target="scimEvents" format="default"/>.
+                </dd>
+                <dt>Schema Name:</dt>
+                <dd>See corresponding names under<xref target="scimEvents" format="default"/>.
+                </dd>
+                <dt>Intented ResourceType:</dt>
+                <dd>N/A. Events are not intended to be persisted in SCIM.</dd>
+                <dt>Purpose:</dt>
+                <dd>See each description in<xref target="scimEvents" format="default"/>.
+                </dd>
+                <dt>Single-valued Attributes:</dt>
+                <dd>None.</dd>
+                <dt>Multi-valued Attributes:</dt>
+                <dd>All schemas in this specification share the same attributes. See<xref target="attributes"
+                                                                                          format="default"/>.
+                </dd>
+            </dl>
+            <t keepWithNext="true">Summary of schema URI registrations:</t>
+            <table align="center">
+                <thead>
+                    <tr>
+                        <th align="left">Schema URI</th>
+                        <th align="left">Name</th>
+                        <th align="left">Reference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td align="left">urn:ietf:params:event:SCIM:feed:add</td>
+                        <td align="left">Resource added to Feed Event</td>
+                        <td align="left">
+                            <xref target="feedAdd" format="default"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">urn:ietf:params:event:SCIM:feed:remove</td>
+                        <td align="left">Remove resouce From Feed Event</td>
+                        <td align="left">
+                            <xref target="feedRemove" format="default"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">urn:ietf:params:event:SCIM:prov:create</td>
+                        <td align="left">New Resource Event</td>
+                        <td align="left">
+                            <xref target="provCreate" format="default"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">urn:ietf:params:event:SCIM:prov:patch</td>
+                        <td align="left">Resource Patch Event</td>
+                        <td align="left">
+                            <xref target="provPatch" format="default"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">urn:ietf:params:event:SCIM:prov:put</td>
+                        <td align="left">Resource Put Event</td>
+                        <td align="left">
+                            <xref target="provPut" format="default"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">urn:ietf:params:event:SCIM:prov:delete</td>
+                        <td align="left">Resource Deleted Event</td>
+                        <td align="left">
+                            <xref target="provDelete" format="default"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">urn:ietf:params:event:SCIM:prov:activate</td>
+                        <td align="left">Resource Activated Event</td>
+                        <td align="left">
+                            <xref target="provActivate" format="default"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">urn:ietf:params:event:SCIM:prov:deactivate</td>
+                        <td align="left">Resource Deactivated Event</td>
+                        <td align="left">
+                            <xref target="provDeactivate" format="default"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">urn:ietf:params:event:SCIM:sig:authMethod</td>
+                        <td align="left">New authentication method added</td>
+                        <td align="left">
+                            <xref target="authMethod" format="default"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left">urn:ietf:params:event:SCIM:sig:pwdReset</td>
+                        <td align="left">Password Reset Event</td>
+                        <td align="left">
+                            <xref target="sigPassReset" format="default"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </middle>
+    <back>
+        <references>
+            <name>References</name>
+            <references>
+                <name>Normative References</name>
+
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3986.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7240.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7231.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7515.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7516.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7519.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7520.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7643.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7644.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8417.xml"/>
+
+                <referencegroup anchor="SSWG">
+                    <reference anchor="SSEF">
+                        <front>
+                            <title>OpenID Shared Signals and Events Framework Specification 1.0 - draft 01</title>
+                            <author fullname="A. Tulshibagwale">
+                                <organization>Google</organization>
+                            </author>
+                            <author fullname="T. Cappalli">
+                                <organization>Microsoft</organization>
+                            </author>
+                            <author fullname="M. Scurtescu">
+                                <organization>Coinbase</organization>
+                            </author>
+                            <author fullname="A. Backman">
+                                <organization>Amazon</organization>
+                            </author>
+                            <author fullname="J. Bradley">
+                                <organization>Yubico</organization>
+                            </author>
+                            <date year="2021" month="June" day="8"/>
+                            <abstract>
+                                <t>
+                                    This Shared Signals and Events (SSE) Framework enables sharing of signals and events between cooperating peers. It enables multiple applications such as Risk Incident Sharing and Coordination (RISC) and the Continuous Access Evaluation Profile,
+                                </t>
+                            </abstract>
+
+                        </front>
+                        <format target="https://openid.net/specs/openid-sse-framework-1_0-ID1.html"
+                                type="HTML"/>
+                    </reference>
+                    <reference anchor="CAEP">
+                        <front>
+
+                            <title>OpenID Continuous Access Evaluation Profile 1.0 - draft 02</title>
+                            <author fullname="T. Cappalli">
+                                <organization>Microsoft</organization>
+                            </author>
+                            <author fullname="AA. Tulshibagwale">
+                                <organization>Google</organization>
+                            </author>
+                            <date year="2021" month="June" day="8"/>
+                            <abstract>
+                                <t>
+                                    This document defines the Continuous Access Evaluation Profile (CAEP) of the Shared Signals and Events Framework. It specifies a set of event types conforming to the SSE Framework. These event types are intended to be used between cooperating Transmitters and Receivers such that Transmitters may send continuous updates using which Receivers can attenuate access to shared human or robotic users, devices, sessions and applications.
+                                </t>
+                            </abstract>
+
+                        </front>
+                        <format target="https://openid.net/specs/openid-caep-specification-1_0-ID1.html"
+                                type="HTML"/>
+                    </reference>
+
+                </referencegroup>
+
+            </references>
+
+            <references>
+                <name>Informative References</name>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3259.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6120.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7540.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8935.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8936.xml"/>
+                <reference anchor="Kafka">
+                    <front>
+
+                        <title>Apache Kafka </title>
+                        <author><organization>Apache Software Foundation</organization></author>
+                        <date year="2017"/>
+                    </front>
+                    <format target="https://kafka.apache.org"
+                            type="HTML"/>
+                </reference>
+            </references>
+        </references>
+
+        <section numbered="true" toc="default">
+            <name>Acknowledgments</name>
+            <t>
+                Thanks to Morteza Ansari who contributed significantly to draft-hunt-idevent-scim-00, upon which this
+                draft is based.</t>
+            <t>
+                The editor would like to thank the participants in the the SCIM
+                working group and the id-event list for their support of this specification.
+            </t>
+        </section>
+        <section numbered="true" toc="default">
+            <name>Change Log</name>
+            <t>Draft 00 - PH - First Draft</t>
+        </section>
+    </back>
+</rfc>
