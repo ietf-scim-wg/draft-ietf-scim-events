@@ -58,10 +58,9 @@
         <keyword>SCIM</keyword>
         <abstract>
             <t>
-                This specification defines a series of events as defined by the Security Event Token specification RFC8417.
-                These events can be used by SCIM Service Providers and client domains to exchange security event
-                signals used for: request confirmations, replication, cross-domain provisioning co-ordination, and other
-                security signals.
+                This specification defines a set of Security Event types using the Security Event Token format (RFC8417).
+                These events can be used across domains by SCIM Service Providers and receivers to exchange security event
+                signals used for: request confirmations, replication, provisioning co-ordination, and security signals.
             </t>
         </abstract>
 
@@ -70,22 +69,22 @@
         <section anchor="intro" toc="default" numbered="true">
             <name>Introduction and Overview</name>
             <t>
-                This specification defines Security Events for SCIM service providers and consumers as specified by the
+                This specification defines Security Events for SCIM service providers and receivers as specified by the
                 Security Event Tokens (SET) <xref target="RFC8417" format="default"/> specificaiton. These events include:
-                asynchronous transaction confirmations, replication, cross-domain provisioning co-ordination, and
+                asynchronous transaction confirmations, replication, provisioning co-ordination, and
                 security signals.
             </t>
             <t>
                 In a typical HTTP client-server relationship a SCIM Protocol Client issues commands to a SCIM Server
                 using HTTP methods such as GET, POST, PATCH, and DELETE <xref target="RFC7644" format="default"/> in many
-                cases to effect a state change. Subsequently, when
-                multiple entities are updating resources in a SCIM Service Provider, a client may need to be informed of
-                changes that are occurring over time. This is done through the use of Security Event Tokens (SET). SET
-                tokens convey messages about changes that have occured in a publishing domain that may be
-                of interest to a receiving domain. Unlike SCIM Protocol, Security Events do
-                not describe actions that a receiver must take but are simple statements of fact about changes that have
-                already occurred. The intent, is to allow the event receiver to determine the best action to take within
-                the context of the receiving domain. This gives each domain independent operation and control.
+                cases to effect a state change. Subsequently, when multiple SCIM protocol client entities update SCIM
+                resources, an individual client may need to be informed of changes that occur over time. This may be
+                achieved through the use of event messages or signals in the form of Security Event Tokens (SET). SET
+                tokens convey information about changes that have occured in a publishing domain that may be
+                of interest to a receiving domain. Unlike SCIM Protocol requests, Security Events do
+                not describe actions that a receiver must take, rather they are simple statements of fact about changes that have
+                already occurred. The intent, is to allow the event receiver to determine the best follow-uip action to
+                take within the context of the receiving domain. This gives each domain independent operation and control.
             </t>
 
             <section>
@@ -153,8 +152,11 @@
 
                     <dt>Event Receiver</dt>
                     <dd>
-                        A system that receives events for the purpose of subsequent action (e.g. such as
-                        replication), co-ordination of workflow, or signalling.
+                        A service that receives events for the purpose of subsequent action (e.g. such as
+                        replication), co-ordination of workflow, or signalling.  In the case of SET Push Transfer
+                        <xref target="RFC8935"/>, the Event Receiver is an HTTP Service Endpoint that receives requests.
+                        In the case of SET Poll-Based Transfer <xref target="RFC8936"/>, the receiver is an HTTP client
+                        that initiates HTTP request to an Event Publisher endpoint.
                     </dd>
 
                     <dt>Event Publisher</dt>
@@ -162,12 +164,21 @@
                         A system that issues SETs based on a change that has occurred at a SCIM Service Provider.
                         For example, events MAY originate from a SCIM Create, Modify, or Delete per <xref target="RFC7644"/>
                         request. A SCIM Service Provider MAY be an Event Publisher or an independent service that aggregates
-                        events into Event Receiver feeds.
+                        events into Event Receiver feeds. As described above, when using <xref target="RFC8935"/>, the
+                        Event Publisher is an HTTP Client that initiates HTTP POST requests to a defined Event Receiver
+                        endpoint. When using <xref target="RFC8936"/>, the Event Publisher provides an HTTP endpoint
+                        which a receiver MAY use to "poll" for Security Events.
                     </dd>
 
                     <dt>RS</dt>
                     <dd>
                         Abbreviation for "Risk Signals" as defined in <xref target="s_risk" />.
+                    </dd>
+
+                    <dt>SCIM Client</dt>
+                    <dd>
+                        An HTTP client that initiates SCIM Protocol <xref target="RFC7644"/> requests and receives
+                        responses.
                     </dd>
 
                     <dt>SCIM Service Provider</dt>
@@ -311,8 +322,9 @@
                     with the restriction that the actual attribute value data is omitted. In any Event Publisher and Receiver
                     relationship, the set of SCIM resources (e.g. Users) that are linked or co-ordinated is managed
                     within the context of a an event feed and which MAY be a subset of the total set of resources on
-                    either side. To support this, "feed" specific events are also defined to indicate the addition and
-                    removal of SCIM resources from a feed. For example, when a user consents to
+                    either side. For example, an event feed could be limited to users who have consented to the sharing
+                    of information between domains. To support capability, "feed" specific events are defined to indicate
+                    the addition and removal of SCIM resources from a feed. For example, when a user consents to
                     the sharing of information between domains, events about the User MAY be added to the feed
                     between the Event Publisher and Receiver.
                 </t>
@@ -658,25 +670,26 @@
             <name>SCIM Events</name>
             <t>
                 A SCIM event is a message, in the form of a Security Event Token
-                <xref target="RFC8417" format="default"/>. This specification defines a number of SCIM event attributes
-                used across all SCIM Events, as well as a number of categories of events.
+                <xref target="RFC8417" format="default"/>. A SET event consists of a set of standard JWT "top-level"
+                claims, plus one or more Event Payload claims that contains additional information relevant to a
+                defined event.
             </t>
             <section anchor="sub-id" numbered="true" toc="default">
                 <name>Identifying the Subject of an Event</name>
                 <t>
-                    In order to help distinguish SET events from JWT tokens, the JWT "sub" claim SHALL NOT be used.
                     SCIM Events SHALL use the "sub_id" claim defined by <xref target="SUBID">Subject Identifiers for
-                    Security Event Tokens</xref>  specification.
+                    Security Event Tokens</xref> specification to identify the subject of events.  To distinguish SET
+                    Events from JWT tokens, the JWT "sub" claim MUST NOT be used.
                 </t>
                 <figure anchor="example_subid">
-                    <name>SCIM Subject Id</name>
+                    <name>SCIM Subject Id Example</name>
                     <artwork type="" align="left" alt=""><![CDATA[{
      "iss": "issuer.example.com",
      "iat": 1508184845,
      "aud": "aud.example.com",
      "sub_id": {
         "format": "scim",
-        "id": "2b2f880af6674ac284bae9381673d462",
+        "uri": "/Users/2b2f880af6674ac284bae9381673d462",
         "externalId": "alice@example.com"
      },
      "events": {
@@ -685,20 +698,23 @@
 }]]></artwork>
                 </figure>
                 <t>
-                    The top-level attribute "sub_id" contains a sub-attribute "format" which is set to "scim" to indicate
-                    the other attributes present are SCIM schema attributes. The following sub_id attributes are defined:
+                    The top-level claim "sub_id" contains a sub-claim "format" whose value is set to <tt>scim</tt> to indicate
+                    the other attributes present are SCIM attributes. The following sub_id attributes are defined:
                 </t>
                 <dl newline="true" spacing="normal">
-                    <dt>id</dt>
+                    <dt>uri</dt>
                     <dd>
-                        The SCIM <tt>id</tt> attribute identifying the SCIM Service Provider's resource that was modified.
-                        This value is required.
+                        The SCIM relative path for the resource which usually consists of the resource type endpoint
+                        plus the resource <tt>id</tt>.  For example <tt>/Users/2b2f880af6674ac284bae9381673d462</tt>.
+                        This attributes SHOULD always be present in a SCIM <tt>sub_id</tt> claim.
                     </dd>
                     <dt>externalId</dt>
                     <dd>
                         If known, the <tt>externalId</tt> value of the SCIM Resource that MAY be used by a receiver to identify
                         the corresponding resource in the Event Receiver's domain.
                     </dd>
+                    <dt>id</dt>
+                    <dd>The SCIM Id attribute MAY be used for backwards compatibility reasons in addition to the <tt>uri</tt> claim.</dd>
                 </dl>
             </section>
             <section anchor="attributes" numbered="true" toc="default">
@@ -709,11 +725,12 @@
                 <dl newline="true" spacing="normal">
                     <dt>txn</dt>
                     <dd>
-                        For the purposes of SCIM, this SET top-level claim SHOULD be used to identify unique transactions
-                        originating at a SCIM Service Provider. The purpose is to detect duplicate transactions that may have
-                        been received. If not provided, the SET <tt>jti</tt> claim MAY be used. The difference is that <tt>txn</tt>
-                        identifies uniqueness within a SCIM Service Provider whereas JTI only identifies a unique SET token
-                        and where multiple SETs where issued stemming from the same originating transaction.
+                        For the purposes of SCIM, this SET defined claim SHOULD be used to identify unique transactions
+                        originating at a SCIM Service Provider. The claim is used to detect duplicate transactions that may have
+                        been received (e.g. in the case of a re-transmitted or recovered event). If not provided, the
+                        SET <tt>jti</tt> claim MAY be used. Where <tt>txn</tt> identifies uniqueness
+                        within a SCIM Service Provider, multiple SETs may be issued each with distinct JTI's stemming from
+                        a common originating transaction with identical <tt>txn</tt> values.
                     </dd>
                     <dt>data</dt>
                     <dd>
@@ -760,7 +777,7 @@
   "txn": "b7b953f11cc6489bbfb87834747cc4c1",
   "sub_id": {
     "format": "scim",
-    "id": "2b2f880af6674ac284bae9381673d462"
+    "uri": "/Users/2b2f880af6674ac284bae9381673d462"
   },
   "events":{
     "urn:ietf:params:event:SCIM:feed:add": {}
@@ -786,7 +803,7 @@
   "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
   "sub_id": {
     "format": "scim",
-    "id": "2b2f880af6674ac284bae9381673d462"
+    "uri": "/Users/2b2f880af6674ac284bae9381673d462"
   },
   "events":{
     "urn:ietf:params:event:SCIM:feed:remove": {}
@@ -818,7 +835,7 @@
                         the <tt>attributes</tt> returned discloses what attributes were created at the publisher. In
                         DBR mode, the set of values reflecting the final
                         state of the resource at the service provider are provided
-                        using the "data" attribute. Note that because this is a replication request, the <tt>id</tt>
+                        using the "data" attribute. Note that because this is a replication request, the <tt>uri</tt>
                         attribute that was assigned by the SCIM Service Provider is shared so that all replicas in the
                         domain use the same resource identifier.
                     </t>
@@ -833,11 +850,12 @@
     "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754",
     "https://scim.example.com/Feeds/5d7604516b1d08641d7676ee7"
   ],
-  "sub": "/Users/44f6142df96bd6ab61e7521d9",
-
+  "sub_id": {
+    "format": "scim",
+    "uri": "/Users/44f6142df96bd6ab61e7521d9"
+  }
   "events":{
     "urn:ietf:params:event:SCIM:prov:create":{
-      "id":"44f6142df96bd6ab61e7521d9",
       "externalId":"jdoe",
       "data":{
         "schemas":[ "urn:ietf:params:scim:schemas:core:2.0:User"],
@@ -867,7 +885,7 @@
   ],
   "sub_id": {
     "format": "scim",
-    "id": "44f6142df96bd6ab61e7521d9",
+    "uri": "/Users/44f6142df96bd6ab61e7521d9",
     "externalId": "jdoe"
   },
   "events": {
@@ -904,7 +922,7 @@
   "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
   "sub_id": {
     "format": "scim",
-    "id": "176f397ec4c44b94b2cfcb759780b8c2",
+    "uri": "/Groups/176f397ec4c44b94b2cfcb759780b8c2",
     "externalId": "crmUsers"
   },
   "events":{
@@ -938,10 +956,9 @@
   "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
   "sub_id": {
     "format": "scim",
-    "id": "176f397ec4c44b94b2cfcb759780b8c2",
+    "uri": "/Groups/176f397ec4c44b94b2cfcb759780b8c2",
     "externalId": "crmUsers"
   },
-  "sub": "/Groups/acbf3ae7-8463-...-9b4da3f908ce",
   "events":{
     "urn:ietf:params:event:SCIM:prov:patch": {
       "attributes": ["members"],
@@ -969,7 +986,7 @@
   "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
   "sub_id": {
     "format": "scim",
-    "id": "2819c223-7f76-453a-919d-413861904646"
+    "uri": "/Users/2819c223-7f76-453a-919d-413861904646"
   },
   "events":{
     "urn:ietf:params:event:SCIM:prov:put": {
@@ -1005,7 +1022,7 @@
   "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
   "sub_id": {
     "format": "scim",
-    "id": "2819c223-7f76-453a-919d-413861904646"
+    "uri": "/Users/2819c223-7f76-453a-919d-413861904646"
   },
   "events":{
     "urn:ietf:params:event:SCIM:prov:put": {
@@ -1038,7 +1055,7 @@
   "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
   "sub_id": {
     "format": "scim",
-    "id": "2b2f880af6674ac284bae9381673d462",
+    "uri": "/Users/2b2f880af6674ac284bae9381673d462",
     "externalId": "jDoe"
   },
   "events":{
@@ -1067,7 +1084,7 @@
   "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
   "sub_id": {
     "format": "scim",
-    "id": "2b2f880af6674ac284bae9381673d462"
+    "uri": "/Users/2b2f880af6674ac284bae9381673d462"
   },
   "events":{
     "urn:ietf:params:event:SCIM:prov:activate": {}
@@ -1112,7 +1129,7 @@
   "jti": "3d0c3cf797584bd193bd0fb1bd4e7d30",
   "sub_id": {
     "format": "scim",
-    "id": "44f6142df96bd6ab61e7521d9"
+    "uri": "/Users/44f6142df96bd6ab61e7521d9"
   },
   "events":{
     "urn:ietf:params:event:SCIM:sig:authMethod": {}
@@ -1136,7 +1153,7 @@
   "jti": "3d0c3cf797584bd193bd0fb1bd4e7d30",
   "sub_id": {
     "format": "scim",
-    "id": "44f6142df96bd6ab61e7521d9"
+    "uri": "/Users/44f6142df96bd6ab61e7521d9"
   },
   "events": {
     "urn:ietf:params:event:SCIM:sig:pwdReset": {}
@@ -1172,7 +1189,7 @@
   "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
   "sub_id": {
     "format": "scim",
-    "id": "b7c14771-226c-4d05-8860-134711653041"
+    "uri": "/Users/b7c14771-226c-4d05-8860-134711653041"
   },
   "txn": "7880fc68a2f0428ebbb5a906e5aeae53",
   "events":{
@@ -1398,11 +1415,59 @@
         </section>
         <section anchor="Security" toc="default" numbered="true">
             <name>Security Considerations</name>
-            <t>[[TO BE COMPLETED]]</t>
+            <t>
+                This specification depends on the Security Considerations for <xref target="RFC8417"/>. </t>
+            <t>
+                The use of Json Web Encryption (JWE) <xref target="RFC7516"/> can impose performance limitations when
+                used high frequency event scenarios. JWE is primarily useful only when the transfer of SETs involves an
+                unsecured transfer method (e.g. URL) that would not otherwise be protected by the transfer protocol (e.g.
+                SET Transfer over TLS <xref target="RFC5246"/>).</t>
+            <t>
+                For SCIM Provisioning events, the long-term series of changes may be critical to both sides. As such
+                Event Publishers SHOULD consider storing events for receivers for longer periods of time in the case of
+                an extended SET Transfer service failure. Similarly Event Receivers MUST ensure events are persisted
+                directly or indirectly sufficient to meet local recovery needs before acknowledging received SET Events.
+            </t>
+            <t>
+                When SET Events are stored for future delivery or retained local recovery MUST be limited only to the
+                parties needed to support recovery or SET forwarding.
+            </t>
+            <t>
+                JWS <xref target="RFC7515"/> signed SET Events SHOULD be used to verify authenticity of the origin of
+                a SET Event. Validating event signatures is both useful on the initial transfer of SET Events, and
+                may also be useful for auditing purposes.
+            </t>
+            <t>
+                In operation, some SCIM resources such as SCIM Groups may have a high rate of change. Implementors and
+                operators SHOULD consider use of throttling techniques to balance immediacy and frequency. For example, a
+                large group whose members change dozens of times per second may not need discrete SET Patch Events per change.
+                Instead, issuing a single consolidated change per second or even minute may be beneficial to keeping Event Receivers
+                up-to-date. Likewise, a Co-ordinated Provisioning Event Receiver (Section 2.2), does not necessarily need to retrieve
+                the full Group on every change request. It MAY choose to do lookups on a less frequent scale for reconciliation.
+            </t>
         </section>
         <section anchor="Privacy" toc="default" numbered="true">
             <name>Privacy Considerations</name>
-            <t>[[TO BE COMPLETED]]</t>
+            <t>This specification enables the sharing of information between domains. The specification assumes
+            that implementers and deployers are operating under one of the following scenarios:
+            </t>
+            <ul>
+                <li>A common administrative domain where there is one administrative owner of the data. In these cases
+                the objective is to protect privacy and security of the owner and user data by keeping information
+                systems co-ordinated and up-to-date. For example, the domains decide to use Domain Based Replication
+                mode in order to keep employee information synchronized.</li>
+                <li>In a co-operative or co-ordinated relationship, parties have decided to share a limited amount
+                of data and or signals for the benefits of their users. Depending on end-user consent, information
+                is shared on an as authorized and/or as needed basis. For example, the domains agree to use Co-ordinated
+                Provision mode that exchanges things like account status, or specific minimal attribute information needed
+                that must be fetched on request after receiving notice of a change. This enables authorization to
+                be verified each time data is transferred.</li>
+            </ul>
+            <t>In general the sharing of SCIM Event information SHOULD fall within a pre-existing SCIM Client and Service
+            Provider relationship. In the case of SCIM Risk Signals Events, the existing relationship may need to be
+            reviewed. By their nature, however, SCIM Signals carry no personal information and aid parties in ensuring
+            the protection of privacy information and account security.</t>
+            <t>Privacy considerations of <xref target="RFC8417"/> MUST also be observed.</t>
         </section>
         <section anchor="IANA" numbered="true" toc="default">
             <name>IANA Considerations</name>
@@ -1605,6 +1670,7 @@
             <references>
                 <name>Informative References</name>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3259.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5246.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6120.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7540.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8935.xml"/>
