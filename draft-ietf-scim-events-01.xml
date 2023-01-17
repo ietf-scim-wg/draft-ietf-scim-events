@@ -134,12 +134,19 @@
 
                     <dt>CP</dt>
                     <dd>
-                        Abbreviation for "Co-ordinated Provisioning" as defined in <xref target="coordination"/>.
+                        Abbreviation for "Co-ordinated Provisioning" as defined in <xref target="coordination"/>. In these
+                        relationships an Event Publisher and Receiver typically exchange resource change events without
+                        exchanging change data. For a receiver to know the value of the data, the Event Receiver usually
+                        has to call back to the Event Publisher domain to receive a new copy of data (e.g. Using a SCIM GET
+                        request).
                     </dd>
 
                     <dt>DBR</dt>
                     <dd>
-                        Abbreviation for "Domain Based Replication" as defined in <xref target="replication"/>.
+                        Abbreviation for "Domain Based Replication" as defined in <xref target="replication"/>. In this
+                        mode because there is an administrative relationship spanning multiple operational domains, data
+                        shared in Events typically includes all of the change data. This eliminates the need for a call
+                        back (e.g. a SCIM GET request), to retrieve raw data.
                     </dd>
 
                     <dt>Event Feed</dt>
@@ -241,6 +248,9 @@
                         plus the resource <tt>id</tt>.  For example <tt>/Users/2b2f880af6674ac284bae9381673d462</tt>.
                         This attributes MUST be provided in a SCIM Event <tt>sub_id</tt> claim. Note the relative path
                         is the path component after the SCIM Service Provider Base URI as defined in Section 1.3 <xref target="RFC7644"/>.
+                        In cases where the Event Receiver is unable to match a URI, the Event Receiver MAY issue a call-back
+                        to a previously agreedn SCIM Service Provider Base URI plus the relative <tt>uri</tt> value and
+                        perform a SCIM GET request per Section 3.4.1 <xref target="RFC7644"/>.
                     </dd>
                     <dt>externalId</dt>
                     <dd>
@@ -249,6 +259,10 @@
                     </dd>
                     <dt>id</dt>
                     <dd>The SCIM Id attribute MAY be used for backwards compatibility reasons in addition to the <tt>uri</tt> claim.</dd>
+                    <dt>emails,username, ...</dt>
+                    <dd>A SCIM attribute which is uniquely identifiable (e.g. username, emails). Used in situtations
+                        where the normal SCIM identifiers ( <tt>id</tt> and <tt>externalId</tt>) are insufficient to
+                        identfy a common resource between an Event Publisher and Event Receiver.</dd>
                 </dl>
             </section>
             <section anchor="attributes" numbered="true" toc="default">
@@ -259,19 +273,20 @@
                 <dl newline="true" spacing="normal">
                     <dt>txn</dt>
                     <dd>
-                        For the purposes of SCIM, this SET defined claim SHOULD be used to identify unique transactions
-                        originating at a SCIM Service Provider. The claim is used to detect duplicate transactions that may have
-                        been received (e.g. in the case of a re-transmitted or recovered event). If not provided, the
-                        SET <tt>jti</tt> claim MAY be used. Where <tt>txn</tt> identifies uniqueness
-                        within a SCIM Service Provider, multiple SETs may be issued each with distinct JTI's stemming from
-                        a common originating transaction with identical <tt>txn</tt> values.
+                        For the purposes of SCIM, this SET defined "top-level" claim identifies a unique transaction
+                        originating at a SCIM Service Provider and/or its underlying data repository or database. The
+                        claim is used to detect duplicate transactions that may have been received (e.g. in the case of
+                        a re-transmitted or recovered event). If not provided, the SET <tt>jti</tt> claim MAY be used.
+                        Where <tt>txn</tt> identifies uniqueness within a SCIM Service Provider, multiple SETs may be
+                        issued each with distinct JTI's stemming from a common originating transaction with identical
+                        <tt>txn</tt> values.
                     </dd>
                     <dt>data</dt>
                     <dd>
-                        Defined in SCIM Bulk Operations, Section 3.7 <xref target="RFC7644"/>, thie payload attribute contains the information
-                        necessary to propagate the transaction to the receiving node. For example, after processing a SCIM
-                        Create operation, the data contained includes the final representation of the created entity
-                        by the SCIM Service Provider including the assigned <tt>id</tt> value.
+                        Defined in SCIM Bulk Operations, Section 3.7 <xref target="RFC7644"/>, thie payload attribute
+                        contains the equivalent SCIM command processed by the SCIM Service provider. For example, after
+                        processing a SCIM Create operation, the data contained includes the final representation of the
+                        created entity by the SCIM Service Provider including the assigned <tt>id</tt> value.
                     </dd>
 
                     <dt>attributes</dt>
@@ -281,11 +296,11 @@
                     </dd>
                 </dl>
                 <t>
-                    Usually only one of <tt>data</tt> or
-                    <tt>attributes</tt> is provided depending on the event definition.
+                    Only one of <tt>data</tt> or
+                    <tt>attributes</tt> claims SHALL be provided depending on the event definition.
                 </t>
 
-                <t>This specifications defines a new schema URI prefix <tt>urn:ietf:params:event:SCIM</tt> which is used
+                <t>This specifications defines a new URI prefix <tt>urn:ietf:params:event:SCIM</tt> which is used
                 as the prefix for the following defined SCIM Events.</t>
             </section>
 
@@ -311,7 +326,8 @@
   "txn": "b7b953f11cc6489bbfb87834747cc4c1",
   "sub_id": {
     "format": "scim",
-    "uri": "/Users/2b2f880af6674ac284bae9381673d462"
+    "uri": "/Users/2b2f880af6674ac284bae9381673d462",
+    "externalId": "jdoe"
   },
   "events":{
     "urn:ietf:params:event:SCIM:feed:add": {}
@@ -338,6 +354,7 @@
   "sub_id": {
     "format": "scim",
     "uri": "/Users/2b2f880af6674ac284bae9381673d462"
+    "externalId": "jdoe",
   },
   "events":{
     "urn:ietf:params:event:SCIM:feed:remove": {}
@@ -386,11 +403,11 @@
   ],
   "sub_id": {
     "format": "scim",
-    "uri": "/Users/44f6142df96bd6ab61e7521d9"
+    "uri": "/Users/44f6142df96bd6ab61e7521d9",
+     "externalId":"jdoe"
   }
   "events":{
     "urn:ietf:params:event:SCIM:prov:create":{
-      "externalId":"jdoe",
       "data":{
         "schemas":[ "urn:ietf:params:scim:schemas:core:2.0:User"],
         "emails":[
@@ -953,7 +970,7 @@
                 This specification depends on the Security Considerations for <xref target="RFC8417"/>. </t>
             <t>
                 The use of Json Web Encryption (JWE) <xref target="RFC7516"/> can impose performance limitations when
-                used high frequency event scenarios. JWE is primarily useful only when the transfer of SETs involves an
+                used in high event frequency scenarios. JWE is primarily useful only when the transfer of SETs involves an
                 unsecured transfer method (e.g. URL) that would not otherwise be protected by the transfer protocol (e.g.
                 SET Transfer over TLS <xref target="RFC5246"/>).</t>
             <t>
@@ -997,7 +1014,7 @@
                 that must be fetched on request after receiving notice of a change. This enables authorization to
                 be verified each time data is transferred.</li>
             </ul>
-            <t>In general the sharing of SCIM Event information SHOULD fall within a pre-existing SCIM Client and Service
+            <t>In general the sharing of SCIM Event information falls within a pre-existing SCIM Client and Service
             Provider relationship. In the case of SCIM Risk Signals Events, the existing relationship may need to be
             reviewed. By their nature, however, SCIM Signals carry no personal information and aid parties in ensuring
             the protection of privacy information and account security.</t>
