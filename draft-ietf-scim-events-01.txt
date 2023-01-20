@@ -1743,9 +1743,8 @@ Appendix B.  Acknowledgments
    Thanks to Morteza Ansari who contributed significantly to draft-hunt-
    idevent-scim-00, upon which this draft is based.
 
-   The editor would like to thank the participants in the the SCIM
-   working group and the id-event list for their support of this
-   specification.
+   The editor would like to thank the participants in the SCIM working
+   group and the id-event list for their support of this specification.
 
 Appendix C.  Change Log
 
@@ -1761,6 +1760,7 @@ Authors' Addresses
    Nancy Cam-Winget
    Cisco Systems
    Email: ncamwing@cisco.com
+
 
 
 
