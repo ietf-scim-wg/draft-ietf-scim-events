@@ -6,8 +6,8 @@ SCIM                                                        P. Hunt, Ed.
 Internet-Draft                                             IndependentId
 Obsoletes: draft-hunt-idevent-scim-01 (if                  N. Cam-Winget
            approved)                                       Cisco Systems
-Intended status: Standards Track                         14 January 2023
-Expires: 18 July 2023
+Intended status: Standards Track                         20 January 2023
+Expires: 24 July 2023
 
 
                  SCIM Profile for Security Event Tokens
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 July 2023.
+   This Internet-Draft will expire on 24 July 2023.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                  [Page 1]
+Hunt & Cam-Winget         Expires 24 July 2023                  [Page 1]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                  [Page 2]
+Hunt & Cam-Winget         Expires 24 July 2023                  [Page 2]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -165,7 +165,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                  [Page 3]
+Hunt & Cam-Winget         Expires 24 July 2023                  [Page 3]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -221,7 +221,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                  [Page 4]
+Hunt & Cam-Winget         Expires 24 July 2023                  [Page 4]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -277,7 +277,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                  [Page 5]
+Hunt & Cam-Winget         Expires 24 July 2023                  [Page 5]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -333,7 +333,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                  [Page 6]
+Hunt & Cam-Winget         Expires 24 July 2023                  [Page 6]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -389,7 +389,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                  [Page 7]
+Hunt & Cam-Winget         Expires 24 July 2023                  [Page 7]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -445,7 +445,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                  [Page 8]
+Hunt & Cam-Winget         Expires 24 July 2023                  [Page 8]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -501,7 +501,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                  [Page 9]
+Hunt & Cam-Winget         Expires 24 July 2023                  [Page 9]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -557,7 +557,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 10]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 10]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -613,7 +613,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 11]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 11]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -669,7 +669,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 12]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 12]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -725,7 +725,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 13]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 13]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -781,7 +781,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 14]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 14]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -837,7 +837,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 15]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 15]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -893,7 +893,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 16]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 16]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -949,7 +949,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 17]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 17]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1005,7 +1005,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 18]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 18]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1061,7 +1061,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 19]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 19]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1117,7 +1117,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 20]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 20]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1173,7 +1173,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 21]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 21]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1229,7 +1229,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 22]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 22]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1285,7 +1285,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 23]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 23]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1341,7 +1341,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 24]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 24]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1397,7 +1397,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 25]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 25]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1453,7 +1453,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 26]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 26]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1509,7 +1509,7 @@ A.1.  Domain Based Replication
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 27]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 27]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1565,7 +1565,7 @@ A.2.  Co-ordinated Provisioning
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 28]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 28]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1621,7 +1621,7 @@ Internet-Draft           draft-ietf-scim-events             January 2023
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 29]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 29]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1677,7 +1677,7 @@ A.3.  Risk Signals
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 30]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 30]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1733,7 +1733,7 @@ A.4.  Async Requests
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 31]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 31]
 
 Internet-Draft           draft-ietf-scim-events             January 2023
 
@@ -1789,4 +1789,4 @@ Authors' Addresses
 
 
 
-Hunt & Cam-Winget         Expires 18 July 2023                 [Page 32]
+Hunt & Cam-Winget         Expires 24 July 2023                 [Page 32]
