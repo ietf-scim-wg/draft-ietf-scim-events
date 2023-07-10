@@ -66,9 +66,9 @@
         <abstract>
             <t>
                 This specification defines a set of SCIM Security Events using the Security Event Token Specification
-                <xref target="RFC8417"/> that enable the asynchronous exchange of events between SCIM Service Providers
-                and receivers used for: asynchronous request completion, resource replication, provisioning co-ordination,
-                and shared security signals.
+                <xref target="RFC8417"/> to enable the asynchronous exchange of messages between SCIM Service Providers
+                and receivers. SCIM Security Events are typically used for: asynchronous request completion, resource
+                replication, provisioning co-ordination, and shared security signals.
             </t>
         </abstract>
 
@@ -77,27 +77,37 @@
         <section anchor="intro" toc="default" numbered="true">
             <name>Introduction and Overview</name>
             <t>
-                This specification defines Security Events for SCIM service providers and receivers as specified by the
-                Security Event Tokens (SET) <xref target="RFC8417" format="default"/> specification. These events include:
-                asynchronous request completion, resource replication, provisioning co-ordination, and
-                security signals.
+                This specification defines Security Events for SCIM Service Providers and receivers as specified by the
+                Security Event Tokens (SET) <xref target="RFC8417" format="default"/> specification. Scim Security
+                Events in this specification include: asynchronous request completion, resource replication,
+                provisioning co-ordination, and security signals.
             </t>
             <t>
                 This specification also profiles the use of the HTTP Header "<tt>Prefer: Async-response</tt>" <xref target="RFC7240"/>
-                allowing a SCIM Client to request an asynchronous response (see <xref target="asyncRequest"/>).
+                to allow a SCIM Protocol Client <xref target="RFC7644"/> to request an asynchronous response (see <xref target="asyncRequest"/>).
             </t>
             <t>
-                In a typical HTTP client-server relationship, a SCIM Protocol Client issues commands to a SCIM Server
-                using HTTP methods such as POST, PATCH, and DELETE <xref target="RFC7644" format="default"/> that cause
-                a state change to a SCIM Resource. When multiple independent SCIM Clients update SCIM
-                resources, some clients may need to be informed of changes for co-ordination or reconciliation purposes.
-                This may be achieved through the use of Security Event Tokens (SET). SET tokens convey signals about
-                state changes that have occurred in a publishing SCIM Service Provider that may be of interest to a
-                receiving client or domain. Unlike SCIM Protocol requests which convey protocol commands, Security
-                Events do not describe actions that a receiver must take, rather they describe statements of fact about
-                changes that have already occurred at the SCIM Provider. The intent, is to allow the event receiver to
-                determine the best local follow-uip action to take within the context of the receiver. When the receiver
-                is another domain it allows each domain independent operation and control.
+                In a typical HTTP client-server relationship, a SCIM Protocol Client issues commands to a SCIM Service
+                Provider using HTTP methods such as POST, PATCH, and DELETE <xref target="RFC7644" format="default"/>
+                that cause a state change to a SCIM Resource. When multiple independent SCIM Clients update SCIM
+                resources, individual clients become out of date as state changes occur. Some clients may need to be
+                informed of these changes for co-ordination or reconciliation purposes. This could be done using SCIM
+                periodic SCIM GET requests over time, but this rapidly problematic as the number of changes and the
+                number of resources increases.
+            </t>
+            <t>
+                Security Event Tokens <xref target="RFC8417"/> and SCIM Events offers the ability to exchange
+                messages that act as triggers for receivers to monitor over time in an asynchronous approach. This
+                enables greater scale and timeliness, where only changed information is exchanged between parties.
+            </t>
+            <t>
+                A SET token conveys a signal about a state changes that has occurred in a publishing SCIM Service Provider.
+                That token may be of interest to one or more receivers and can be delivered asynchronously to the originating
+                SCIM client making the change. Unlike SCIM Protocol requests which convey protocol commands, Security
+                Events describe statements of fact about changes that have already occurred at the SCIM Provider. This
+                approach allows the event receiver to determine the best local follow-up action to take within the
+                context of the receiver. For example, the receiver can reconcile intentional schema and population
+                differences between the domain as the receiver.
             </t>
 
             <section>
@@ -129,11 +139,21 @@
                     This specification uses definitions from the following specifications:
                 </t>
                 <ul>
-                    <li>Security Event Tokens <xref target="RFC8417"
+                    <li>Json Web Tokens (JWT) <xref target="RFC7519"/>, </li>
+                    <li>Security Event Tokens (SET) <xref target="RFC8417"
                                                     format="default"/>, and</li>
                     <li>System for Cross-Domain Identity Management Protocol <xref target="RFC7644"/>.
                     </li>
                 </ul>
+                <t>
+                    In Json Web Tokens and Security Event Tokens the term "claim" is used to refer to JSON attribute
+                    values in a Json Web Token <xref target="RFC7519"/> structure. The term "claim" in tokens is used
+                    to indicate that an attribute value may not be verified and its accuracy can be questioned. In the
+                    context of SCIM, claims are referred to as attributes. For the purposes of this specification claims
+                    and attributes are inter-changeable. For consistency, JWT and SET IANA registered attributes will
+                    continue to be called claims, while event attributes (i.e. those in an event payload) will be
+                    referred to as attributes.
+                </t>
                 <t>
                     Additionally, the following terms are defined:
                 </t>
@@ -222,7 +242,7 @@
             <t>
                 A SCIM event is a signal, in the form of a Security Event Token <xref target="RFC8417" format="default"/>
                 that describe some event that has occurred. A SET event consists of a set of standard JWT "top-level"
-                claims, an "events" claim that contains on or more event URI sub-claims (JSON attributes) each with a
+                claims, an "events" claim that contains one or more event URI subclaims (JSON attributes) each with a
                 JSON object containing relevant event information.
             </t>
             <section anchor="sub-id" numbered="true" toc="default">
@@ -252,7 +272,7 @@
 }]]></artwork>
                 </figure>
                 <t>
-                    The top-level claim "sub_id" SHALL contain the sub-claim "format" whose value is set to <tt>scim</tt> to indicate
+                    The top-level claim "sub_id" SHALL contain the subclaim "format" whose value is set to <tt>scim</tt> to indicate
                     the other attributes present are SCIM attributes. The following sub_id attributes are defined:
                 </t>
                 <dl newline="true" spacing="normal">
@@ -1090,7 +1110,7 @@ Location:
                         <dt>eventUris</dt>
                         <dd>
                             <t>
-                                A multi-valued string listing the SET Event URIs (defined in <xref target="RFC8417"/>)
+                                A multivalued string listing the SET Event URIs (defined in <xref target="RFC8417"/>)
                                 the server is capable of generating and deliverable via a SET Stream (see <xref target="RFC8935"/> and <xref target="RFC8936"/>).
                                 This information is informational only. Stream registration and configuration is out of scope of this specification.
                             </t>
@@ -1341,14 +1361,14 @@ Location:
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8417.xml"/>
                 <reference anchor="SUBID">
                     <front>
-                        <title>Subject Identifiers for Security Event Tokens (Draft 16)</title>
+                        <title>Subject Identifiers for Security Event Tokens (Draft 18)</title>
                         <author fullname="A. Backman, Ed">
                             <organization>Amazon</organization></author>
                         <author fullname="M. Scurtescu">
                             <organization>Coinbase</organization>
                         </author>
                         <author fullname="P. Jain"><organization>Fastly</organization></author>
-                        <date year="2022" day="27" month="October"/>
+                        <date year="2023" day="24" month="June"/>
                     </front>
                     <format target="https://www.ietf.org/archive/id/draft-ietf-secevent-subject-identifiers-18.txt"
                             type="HTML"/>

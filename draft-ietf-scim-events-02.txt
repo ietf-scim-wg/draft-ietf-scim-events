@@ -17,10 +17,11 @@ Expires: 11 January 2024                                       Sailpoint
 Abstract
 
    This specification defines a set of SCIM Security Events using the
-   Security Event Token Specification [RFC8417] that enable the
-   asynchronous exchange of events between SCIM Service Providers and
-   receivers used for: asynchronous request completion, resource
-   replication, provisioning co-ordination, and shared security signals.
+   Security Event Token Specification [RFC8417] to enable the
+   asynchronous exchange of messages between SCIM Service Providers and
+   receivers.  SCIM Security Events are typically used for: asynchronous
+   request completion, resource replication, provisioning co-ordination,
+   and shared security signals.
 
 Status of This Memo
 
@@ -44,12 +45,11 @@ Copyright Notice
    Copyright (c) 2023 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
-
-
-
-
-
-
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
 
 
 
@@ -58,11 +58,6 @@ Hunt, et al.             Expires 11 January 2024                [Page 1]
 Internet-Draft           draft-ietf-scim-events                July 2023
 
 
-   This document is subject to BCP 78 and the IETF Trust's Legal
-   Provisions Relating to IETF Documents (https://trustee.ietf.org/
-   license-info) in effect on the date of publication of this document.
-   Please review these documents carefully, as they describe your rights
-   and restrictions with respect to this document.  Code Components
    extracted from this document must include Revised BSD License text as
    described in Section 4.e of the Trust Legal Provisions and are
    provided without warranty as described in the Revised BSD License.
@@ -73,39 +68,44 @@ Table of Contents
      1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
      1.2.  Notational Conventions  . . . . . . . . . . . . . . . . .   4
      1.3.  Definitions . . . . . . . . . . . . . . . . . . . . . . .   4
-   2.  SCIM Events . . . . . . . . . . . . . . . . . . . . . . . . .   5
+   2.  SCIM Events . . . . . . . . . . . . . . . . . . . . . . . . .   6
      2.1.  Identifying the Subject of an Event . . . . . . . . . . .   6
      2.2.  Common Event Attributes . . . . . . . . . . . . . . . . .   7
      2.3.  SCIM Feed Events  . . . . . . . . . . . . . . . . . . . .   8
        2.3.1.  urn:ietf:params:SCIM:event:feed:add . . . . . . . . .   8
-       2.3.2.  urn:ietf:params:SCIM:event:feed:remove  . . . . . . .   8
-     2.4.  SCIM Provisioning Events  . . . . . . . . . . . . . . . .   9
+       2.3.2.  urn:ietf:params:SCIM:event:feed:remove  . . . . . . .   9
+     2.4.  SCIM Provisioning Events  . . . . . . . . . . . . . . . .  10
        2.4.1.
-               urn:ietf:params:SCIM:event:prov:create:{notice|full}    9
+               urn:ietf:params:SCIM:event:prov:create:{notice|full}   10
        2.4.2.
-               urn:ietf:params:SCIM:event:prov:patch:{notice|full} .  11
-       2.4.3.  urn:ietf:params:SCIM:event:prov:put:{notice|full} . .  13
-       2.4.4.  urn:ietf:params:SCIM:event:prov:delete  . . . . . . .  15
-       2.4.5.  urn:ietf:params:SCIM:event:prov:activate  . . . . . .  16
-       2.4.6.  urn:ietf:params:SCIM:event:prov:deactivate  . . . . .  16
-     2.5.  SCIM Signals Events . . . . . . . . . . . . . . . . . . .  16
-       2.5.1.  urn:ietf:params:SCIM:event:sig:authMethod . . . . . .  17
-       2.5.2.  urn:ietf:params:SCIM:event:sig:pwdReset . . . . . . .  17
-     2.6.  Miscellaneous Events  . . . . . . . . . . . . . . . . . .  18
-       2.6.1.  Asynchronous Events . . . . . . . . . . . . . . . . .  18
-   3.  Event Delivery Feeds  . . . . . . . . . . . . . . . . . . . .  20
-     3.1.  Security Event Token Signing and Encryption . . . . . . .  22
-     3.2.  Point-to-Point Delivery Over HTTP . . . . . . . . . . . .  23
-   4.  Events Discovery Schema for Service Provider Configuration  .  24
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  25
-   6.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  26
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  27
-     7.1.  SCIM Async Txn Header Registration  . . . . . . . . . . .  27
-     7.2.  SCIM Events Registry  . . . . . . . . . . . . . . . . . .  27
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  29
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  29
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  30
-   Appendix A.  Use Cases  . . . . . . . . . . . . . . . . . . . . .  31
+               urn:ietf:params:SCIM:event:prov:patch:{notice|full} .  12
+       2.4.3.  urn:ietf:params:SCIM:event:prov:put:{notice|full} . .  14
+       2.4.4.  urn:ietf:params:SCIM:event:prov:delete  . . . . . . .  16
+       2.4.5.  urn:ietf:params:SCIM:event:prov:activate  . . . . . .  17
+       2.4.6.  urn:ietf:params:SCIM:event:prov:deactivate  . . . . .  17
+     2.5.  SCIM Signals Events . . . . . . . . . . . . . . . . . . .  17
+       2.5.1.  urn:ietf:params:SCIM:event:sig:authMethod . . . . . .  18
+       2.5.2.  urn:ietf:params:SCIM:event:sig:pwdReset . . . . . . .  18
+     2.6.  Miscellaneous Events  . . . . . . . . . . . . . . . . . .  19
+       2.6.1.  Asynchronous Events . . . . . . . . . . . . . . . . .  19
+   3.  Event Delivery Feeds  . . . . . . . . . . . . . . . . . . . .  21
+     3.1.  Security Event Token Signing and Encryption . . . . . . .  23
+     3.2.  Point-to-Point Delivery Over HTTP . . . . . . . . . . . .  24
+   4.  Events Discovery Schema for Service Provider Configuration  .  25
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  26
+   6.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  27
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  28
+     7.1.  SCIM Async Txn Header Registration  . . . . . . . . . . .  28
+     7.2.  SCIM Events Registry  . . . . . . . . . . . . . . . . . .  28
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  30
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  30
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  31
+   Appendix A.  Use Cases  . . . . . . . . . . . . . . . . . . . . .  32
+     A.1.  Domain Based Replication  . . . . . . . . . . . . . . . .  32
+     A.2.  Co-ordinated Provisioning . . . . . . . . . . . . . . . .  33
+     A.3.  Risk Signals  . . . . . . . . . . . . . . . . . . . . . .  35
+   Appendix B.  Acknowledgments  . . . . . . . . . . . . . . . . . .  36
+   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  36
 
 
 
@@ -114,41 +114,46 @@ Hunt, et al.             Expires 11 January 2024                [Page 2]
 Internet-Draft           draft-ietf-scim-events                July 2023
 
 
-     A.1.  Domain Based Replication  . . . . . . . . . . . . . . . .  31
-     A.2.  Co-ordinated Provisioning . . . . . . . . . . . . . . . .  32
-     A.3.  Risk Signals  . . . . . . . . . . . . . . . . . . . . . .  34
-   Appendix B.  Acknowledgments  . . . . . . . . . . . . . . . . . .  35
-   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  35
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  35
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  36
 
 1.  Introduction and Overview
 
-   This specification defines Security Events for SCIM service providers
+   This specification defines Security Events for SCIM Service Providers
    and receivers as specified by the Security Event Tokens (SET)
-   [RFC8417] specification.  These events include: asynchronous request
-   completion, resource replication, provisioning co-ordination, and
-   security signals.
+   [RFC8417] specification.  Scim Security Events in this specification
+   include: asynchronous request completion, resource replication,
+   provisioning co-ordination, and security signals.
 
    This specification also profiles the use of the HTTP Header "Prefer:
-   Async-response" [RFC7240] allowing a SCIM Client to request an
-   asynchronous response (see Section 2.6.1.1).
+   Async-response" [RFC7240] to allow a SCIM Protocol Client [RFC7644]
+   to request an asynchronous response (see Section 2.6.1.1).
 
    In a typical HTTP client-server relationship, a SCIM Protocol Client
-   issues commands to a SCIM Server using HTTP methods such as POST,
-   PATCH, and DELETE [RFC7644] that cause a state change to a SCIM
+   issues commands to a SCIM Service Provider using HTTP methods such as
+   POST, PATCH, and DELETE [RFC7644] that cause a state change to a SCIM
    Resource.  When multiple independent SCIM Clients update SCIM
-   resources, some clients may need to be informed of changes for co-
-   ordination or reconciliation purposes.  This may be achieved through
-   the use of Security Event Tokens (SET).  SET tokens convey signals
-   about state changes that have occurred in a publishing SCIM Service
-   Provider that may be of interest to a receiving client or domain.
-   Unlike SCIM Protocol requests which convey protocol commands,
-   Security Events do not describe actions that a receiver must take,
-   rather they describe statements of fact about changes that have
-   already occurred at the SCIM Provider.  The intent, is to allow the
-   event receiver to determine the best local follow-uip action to take
-   within the context of the receiver.  When the receiver is another
-   domain it allows each domain independent operation and control.
+   resources, individual clients become out of date as state changes
+   occur.  Some clients may need to be informed of these changes for co-
+   ordination or reconciliation purposes.  This could be done using SCIM
+   periodic SCIM GET requests over time, but this rapidly problematic as
+   the number of changes and the number of resources increases.
+
+   Security Event Tokens [RFC8417] and SCIM Events offers the ability to
+   exchange messages that act as triggers for receivers to monitor over
+   time in an asynchronous approach.  This enables greater scale and
+   timeliness, where only changed information is exchanged between
+   parties.
+
+   A SET token conveys a signal about a state changes that has occurred
+   in a publishing SCIM Service Provider.  That token may be of interest
+   to one or more receivers and can be delivered asynchronously to the
+   originating SCIM client making the change.  Unlike SCIM Protocol
+   requests which convey protocol commands, Security Events describe
+   statements of fact about changes that have already occurred at the
+   SCIM Provider.  This approach allows the event receiver to determine
+   the best local follow-up action to take within the context of the
+   receiver.  For example, the receiver can reconcile intentional schema
+   and population differences between the domain as the receiver.
 
 1.1.  Requirements Language
 
@@ -157,11 +162,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    "OPTIONAL" in this document are to be interpreted as described in BCP
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
-
-
-
-
-
 
 
 
@@ -186,9 +186,22 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    This specification uses definitions from the following
    specifications:
 
-   *  Security Event Tokens [RFC8417], and
+   *  Json Web Tokens (JWT) [RFC7519],
+
+   *  Security Event Tokens (SET) [RFC8417], and
 
    *  System for Cross-Domain Identity Management Protocol [RFC7644].
+
+   In Json Web Tokens and Security Event Tokens the term "claim" is used
+   to refer to JSON attribute values in a Json Web Token [RFC7519]
+   structure.  The term "claim" in tokens is used to indicate that an
+   attribute value may not be verified and its accuracy can be
+   questioned.  In the context of SCIM, claims are referred to as
+   attributes.  For the purposes of this specification claims and
+   attributes are inter-changeable.  For consistency, JWT and SET IANA
+   registered attributes will continue to be called claims, while event
+   attributes (i.e. those in an event payload) will be referred to as
+   attributes.
 
    Additionally, the following terms are defined:
 
@@ -198,6 +211,20 @@ Internet-Draft           draft-ietf-scim-events                July 2023
       contrast uses the term "attributes" to refer to JSON attributes.
       For the purposes of this draft, the terms "attributes" and
       "claims" are equivalent.
+
+
+
+
+
+
+
+
+
+
+Hunt, et al.             Expires 11 January 2024                [Page 4]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
 
    CP
       Abbreviation for "Co-ordinated Provisioning" as defined in
@@ -215,16 +242,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
       Events typically uses the full mode variation of change events
       including the data payload attribute.  This eliminates the need
       for a call back to retrieve additional data.
-
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024                [Page 4]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    Event Feed / Event Stream
       This describes the quality that a feed (aka stream) MAY be managed
@@ -256,6 +273,15 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    RS
       Abbreviation for "Risk Signals" as defined in Appendix A.3.
 
+
+
+
+
+Hunt, et al.             Expires 11 January 2024                [Page 5]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    SCIM Client
       An HTTP client that initiates SCIM Protocol [RFC7644] requests and
       receives responses.
@@ -272,15 +298,8 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    A SCIM event is a signal, in the form of a Security Event Token
    [RFC8417] that describe some event that has occurred.  A SET event
    consists of a set of standard JWT "top-level" claims, an "events"
-   claim that contains on or more event URI sub-claims (JSON attributes)
+   claim that contains one or more event URI subclaims (JSON attributes)
    each with a JSON object containing relevant event information.
-
-
-
-Hunt, et al.             Expires 11 January 2024                [Page 5]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
 2.1.  Identifying the Subject of an Event
 
@@ -309,7 +328,17 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
                      Figure 1: SCIM Subject Id Example
 
-   The top-level claim "sub_id" SHALL contain the sub-claim "format"
+
+
+
+
+
+Hunt, et al.             Expires 11 January 2024                [Page 6]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
+   The top-level claim "sub_id" SHALL contain the subclaim "format"
    whose value is set to scim to indicate the other attributes present
    are SCIM attributes.  The following sub_id attributes are defined:
 
@@ -329,14 +358,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
       If known, the externalId value of the SCIM Resource that MAY be
       used by a receiver to identify the corresponding resource in the
       Event Receiver's domain.
-
-
-
-
-Hunt, et al.             Expires 11 January 2024                [Page 6]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    id
       The SCIM Id attribute MAY be used for backwards compatibility
@@ -366,6 +387,13 @@ Internet-Draft           draft-ietf-scim-events                July 2023
       MAY be issued each with distinct JTI's stemming from a common
       originating transaction with identical txn values.
 
+
+
+Hunt, et al.             Expires 11 January 2024                [Page 7]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    data
       This event payload attribute contains information described in
       SCIM Bulk Operations data attribute, Section 3.7 [RFC7644].  The
@@ -387,13 +415,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    urn:ietf:params:SCIM:event which is used as the prefix for the
    following defined SCIM Events (see Section 7.2).
 
-
-
-Hunt, et al.             Expires 11 January 2024                [Page 7]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
-
 2.3.  SCIM Feed Events
 
    This section defines events related to changes in the content of an
@@ -409,6 +430,25 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    not indicate a resource is new or has been recently created.  For
    example, an existing user has had a new role (e.g.  CRM_User) added
    to their profile which has caused their resource to join a feed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hunt, et al.             Expires 11 January 2024                [Page 8]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
 
    {
      "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
@@ -436,20 +476,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    not indicate that the resource was deleted or otherwise deactivated.
    This event has minimal disclosure.
 
-
-
-
-
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024                [Page 8]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
-
    {
      "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
      "sub_id": {
@@ -468,6 +494,17 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    }
 
                   Figure 3: Example SCIM Feed Remove Event
+
+
+
+
+
+
+
+Hunt, et al.             Expires 11 January 2024                [Page 9]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
 
 2.4.  SCIM Provisioning Events
 
@@ -501,7 +538,26 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024                [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 10]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -557,7 +613,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 10]
+Hunt, et al.             Expires 11 January 2024               [Page 11]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -613,7 +669,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 11]
+Hunt, et al.             Expires 11 January 2024               [Page 12]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -669,7 +725,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 12]
+Hunt, et al.             Expires 11 January 2024               [Page 13]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -725,7 +781,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 13]
+Hunt, et al.             Expires 11 January 2024               [Page 14]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -781,7 +837,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 14]
+Hunt, et al.             Expires 11 January 2024               [Page 15]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -837,7 +893,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 15]
+Hunt, et al.             Expires 11 January 2024               [Page 16]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -893,7 +949,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 16]
+Hunt, et al.             Expires 11 January 2024               [Page 17]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -949,7 +1005,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 17]
+Hunt, et al.             Expires 11 January 2024               [Page 18]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1005,7 +1061,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 18]
+Hunt, et al.             Expires 11 January 2024               [Page 19]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1061,7 +1117,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 19]
+Hunt, et al.             Expires 11 January 2024               [Page 20]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1117,7 +1173,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 20]
+Hunt, et al.             Expires 11 January 2024               [Page 21]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1173,7 +1229,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 21]
+Hunt, et al.             Expires 11 January 2024               [Page 22]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1229,7 +1285,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 22]
+Hunt, et al.             Expires 11 January 2024               [Page 23]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1285,7 +1341,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 23]
+Hunt, et al.             Expires 11 January 2024               [Page 24]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1341,7 +1397,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 24]
+Hunt, et al.             Expires 11 January 2024               [Page 25]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1357,7 +1413,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
             when requested by the SCIM Client.
 
       eventUris
-         A multi-valued string listing the SET Event URIs (defined in
+         A multivalued string listing the SET Event URIs (defined in
          [RFC8417]) the server is capable of generating and deliverable
          via a SET Stream (see [RFC8935] and [RFC8936]).  This
          information is informational only.  Stream registration and
@@ -1397,7 +1453,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 25]
+Hunt, et al.             Expires 11 January 2024               [Page 26]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1453,7 +1509,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 26]
+Hunt, et al.             Expires 11 January 2024               [Page 27]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1509,7 +1565,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 27]
+Hunt, et al.             Expires 11 January 2024               [Page 28]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1565,7 +1621,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 28]
+Hunt, et al.             Expires 11 January 2024               [Page 29]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1621,7 +1677,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 29]
+Hunt, et al.             Expires 11 January 2024               [Page 30]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1653,8 +1709,8 @@ Internet-Draft           draft-ietf-scim-events                July 2023
               Access Evaluation Profile 1.0 - draft 02", 8 June 2021.
 
    [SUBID]    Ed, A. B., Scurtescu, M., and P. Jain, "Subject
-              Identifiers for Security Event Tokens (Draft 16)", 27
-              October 2022.
+              Identifiers for Security Event Tokens (Draft 18)", 24 June
+              2023.
 
 8.2.  Informative References
 
@@ -1677,7 +1733,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 30]
+Hunt, et al.             Expires 11 January 2024               [Page 31]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1733,7 +1789,7 @@ A.1.  Domain Based Replication
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 31]
+Hunt, et al.             Expires 11 January 2024               [Page 32]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1789,7 +1845,7 @@ A.2.  Co-ordinated Provisioning
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 32]
+Hunt, et al.             Expires 11 January 2024               [Page 33]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1845,7 +1901,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 33]
+Hunt, et al.             Expires 11 January 2024               [Page 34]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1901,7 +1957,7 @@ A.3.  Risk Signals
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 34]
+Hunt, et al.             Expires 11 January 2024               [Page 35]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1957,4 +2013,4 @@ Authors' Addresses
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 35]
+Hunt, et al.             Expires 11 January 2024               [Page 36]
