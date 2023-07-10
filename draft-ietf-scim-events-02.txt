@@ -16,12 +16,11 @@ Expires: 11 January 2024                                       Sailpoint
 
 Abstract
 
-   This specification defines a set of Security Events URIs as defined
-   in the Security Event Token Specification (RFC8417) which will enable
-   the asynchronous exchange of events between SCIM Service Providers
-   and interested receivers in order to deliver security events used
-   for: asynchronous request completion, resource replication,
-   provisioning co-ordination, and general security signals support.
+   This specification defines a set of SCIM Security Events using the
+   Security Event Token Specification [RFC8417] that enable the
+   asynchronous exchange of events between SCIM Service Providers and
+   receivers used for: asynchronous request completion, resource
+   replication, provisioning co-ordination, and shared security signals.
 
 Status of This Memo
 
@@ -45,11 +44,12 @@ Copyright Notice
    Copyright (c) 2023 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
-   This document is subject to BCP 78 and the IETF Trust's Legal
-   Provisions Relating to IETF Documents (https://trustee.ietf.org/
-   license-info) in effect on the date of publication of this document.
-   Please review these documents carefully, as they describe your rights
-   and restrictions with respect to this document.  Code Components
+
+
+
+
+
+
 
 
 
@@ -58,6 +58,11 @@ Hunt, et al.             Expires 11 January 2024                [Page 1]
 Internet-Draft           draft-ietf-scim-events                July 2023
 
 
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
    extracted from this document must include Revised BSD License text as
    described in Section 4.e of the Trust Legal Provisions and are
    provided without warranty as described in the Revised BSD License.
@@ -66,7 +71,7 @@ Table of Contents
 
    1.  Introduction and Overview . . . . . . . . . . . . . . . . . .   3
      1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
-     1.2.  Notational Conventions  . . . . . . . . . . . . . . . . .   3
+     1.2.  Notational Conventions  . . . . . . . . . . . . . . . . .   4
      1.3.  Definitions . . . . . . . . . . . . . . . . . . . . . . .   4
    2.  SCIM Events . . . . . . . . . . . . . . . . . . . . . . . . .   5
      2.1.  Identifying the Subject of an Event . . . . . . . . . . .   6
@@ -84,28 +89,23 @@ Table of Contents
        2.4.5.  urn:ietf:params:SCIM:event:prov:activate  . . . . . .  16
        2.4.6.  urn:ietf:params:SCIM:event:prov:deactivate  . . . . .  16
      2.5.  SCIM Signals Events . . . . . . . . . . . . . . . . . . .  16
-       2.5.1.  urn:ietf:params:SCIM:event:sig:authMethod . . . . . .  16
+       2.5.1.  urn:ietf:params:SCIM:event:sig:authMethod . . . . . .  17
        2.5.2.  urn:ietf:params:SCIM:event:sig:pwdReset . . . . . . .  17
-     2.6.  Miscellaneous Events  . . . . . . . . . . . . . . . . . .  17
+     2.6.  Miscellaneous Events  . . . . . . . . . . . . . . . . . .  18
        2.6.1.  Asynchronous Events . . . . . . . . . . . . . . . . .  18
-   3.  Event Delivery  . . . . . . . . . . . . . . . . . . . . . . .  20
-     3.1.  Security Event Token Signing and Encryption . . . . . . .  23
-     3.2.  Point-to-Point Delivery Over HTTP . . . . . . . . . . . .  24
-   4.  Events Discovery Schema for Service Provider Configuration  .  25
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  26
-   6.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  27
+   3.  Event Delivery Feeds  . . . . . . . . . . . . . . . . . . . .  20
+     3.1.  Security Event Token Signing and Encryption . . . . . . .  22
+     3.2.  Point-to-Point Delivery Over HTTP . . . . . . . . . . . .  23
+   4.  Events Discovery Schema for Service Provider Configuration  .  24
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  25
+   6.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  26
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  27
      7.1.  SCIM Async Txn Header Registration  . . . . . . . . . . .  27
-     7.2.  SCIM Events Registry  . . . . . . . . . . . . . . . . . .  28
+     7.2.  SCIM Events Registry  . . . . . . . . . . . . . . . . . .  27
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  29
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .  29
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  31
-   Appendix A.  Use Cases  . . . . . . . . . . . . . . . . . . . . .  32
-     A.1.  Domain Based Replication  . . . . . . . . . . . . . . . .  32
-     A.2.  Co-ordinated Provisioning . . . . . . . . . . . . . . . .  33
-     A.3.  Risk Signals  . . . . . . . . . . . . . . . . . . . . . .  35
-   Appendix B.  Acknowledgments  . . . . . . . . . . . . . . . . . .  36
-   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  36
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  30
+   Appendix A.  Use Cases  . . . . . . . . . . . . . . . . . . . . .  31
 
 
 
@@ -114,7 +114,12 @@ Hunt, et al.             Expires 11 January 2024                [Page 2]
 Internet-Draft           draft-ietf-scim-events                July 2023
 
 
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  36
+     A.1.  Domain Based Replication  . . . . . . . . . . . . . . . .  31
+     A.2.  Co-ordinated Provisioning . . . . . . . . . . . . . . . .  32
+     A.3.  Risk Signals  . . . . . . . . . . . . . . . . . . . . . .  34
+   Appendix B.  Acknowledgments  . . . . . . . . . . . . . . . . . .  35
+   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  35
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  35
 
 1.  Introduction and Overview
 
@@ -124,25 +129,26 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    completion, resource replication, provisioning co-ordination, and
    security signals.
 
-   This specification also profiles the use of [RFC7240] allowing a SCIM
-   Client to indicate an asynchronous response is preferred (see
-   Section 2.6.1.1).
+   This specification also profiles the use of the HTTP Header "Prefer:
+   Async-response" [RFC7240] allowing a SCIM Client to request an
+   asynchronous response (see Section 2.6.1.1).
 
    In a typical HTTP client-server relationship, a SCIM Protocol Client
-   issues commands to a SCIM Server using HTTP methods such as GET,
-   POST, PATCH, and DELETE [RFC7644] in many cases to effect a state
-   change.  Subsequently, when multiple SCIM protocol client entities
-   update SCIM resources, an individual client may need to be informed
-   of changes that occur over time.  This may be achieved through the
-   use of event signals in the form of Security Event Tokens (SET).  SET
-   tokens convey information about changes that have occurred in a
-   publishing domain that may be of interest to a receiving domain.
-   Unlike SCIM Protocol requests, Security Events do not describe
-   actions that a receiver must take, rather they are simple statements
-   of fact about changes that have already occurred.  The intent, is to
-   allow the event receiver to determine the best follow-uip action to
-   take within the context of the receiving domain.  This gives each
-   domain independent operation and control.
+   issues commands to a SCIM Server using HTTP methods such as POST,
+   PATCH, and DELETE [RFC7644] that cause a state change to a SCIM
+   Resource.  When multiple independent SCIM Clients update SCIM
+   resources, some clients may need to be informed of changes for co-
+   ordination or reconciliation purposes.  This may be achieved through
+   the use of Security Event Tokens (SET).  SET tokens convey signals
+   about state changes that have occurred in a publishing SCIM Service
+   Provider that may be of interest to a receiving client or domain.
+   Unlike SCIM Protocol requests which convey protocol commands,
+   Security Events do not describe actions that a receiver must take,
+   rather they describe statements of fact about changes that have
+   already occurred at the SCIM Provider.  The intent, is to allow the
+   event receiver to determine the best local follow-uip action to take
+   within the context of the receiver.  When the receiver is another
+   domain it allows each domain independent operation and control.
 
 1.1.  Requirements Language
 
@@ -151,6 +157,18 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    "OPTIONAL" in this document are to be interpreted as described in BCP
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
+
+
+
+
+
+
+
+
+Hunt, et al.             Expires 11 January 2024                [Page 3]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
 
 1.2.  Notational Conventions
 
@@ -162,13 +180,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    line-wrapping for readability and space limitations.  Similarly, some
    URI's contained within examples, have been shortened for space and
    readability reasons.
-
-
-
-Hunt, et al.             Expires 11 January 2024                [Page 3]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
 1.3.  Definitions
 
@@ -192,9 +203,9 @@ Internet-Draft           draft-ietf-scim-events                July 2023
       Abbreviation for "Co-ordinated Provisioning" as defined in
       Appendix A.2.  In these relationships an Event Publisher and
       Receiver typically exchange resource change events without
-      exchanging change data.  For a receiver to know the value of the
-      data, the Event Receiver usually has to call back to the Event
-      Publisher domain to receive a new copy of data (e.g.  Using a SCIM
+      exchanging data.  For a receiver to know the value of the data,
+      the Event Receiver usually has calls back to the SCIM Event
+      Publisher domain to receive a new copy of data (e.g.  Uses a SCIM
       GET request).
 
    DBR
@@ -204,17 +215,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
       Events typically uses the full mode variation of change events
       including the data payload attribute.  This eliminates the need
       for a call back to retrieve additional data.
-
-   Event Feed
-      This describes the notion that a feed MAY be individualized per
-      client.  A service provider MAY offer to allow Event Receiver's to
-      "subscribe" to specific event types or events about specific
-      resources.  If no option is offered, it is assumed the client will
-      receive all events about all resources.
-
-
-
-
 
 
 
@@ -226,26 +226,32 @@ Hunt, et al.             Expires 11 January 2024                [Page 4]
 Internet-Draft           draft-ietf-scim-events                July 2023
 
 
+   Event Feed / Event Stream
+      This describes the quality that a feed (aka stream) MAY be managed
+      per receiving client.  A SET transfer (see [RFC8935] [RFC8936])
+      service provider MAY offer to allow Event Receiver's to
+      "subscribe" to specific event types or events about specific
+      resources (see Feed Management events Section 2.3).
+
    Event Receiver
-      A service that receives events for the purpose of subsequent
-      action (e.g. such as replication), co-ordination of workflow, or
-      signalling.  In the case of SET Push Transfer [RFC8935], the Event
-      Receiver is an HTTP Service Endpoint that receives requests.  In
-      the case of SET Poll-Based Transfer [RFC8936], the receiver is an
-      HTTP client that initiates HTTP request to an Event Publisher
-      endpoint.
+      An entity receives events typically via [RFC8935], [RFC8936], or
+      HTTP GET (see Section 2.6.1.1).  In the case of SET Push Transfer
+      [RFC8935], the Event Receiver is an HTTP Service Endpoint that
+      receives requests.  In the case of SET Poll-Based Transfer
+      [RFC8936], the receiver is an HTTP client that initiates HTTP
+      request to an Event Publisher endpoint.
 
    Event Publisher
-      A system that issues SETs based on a change that has occurred at a
-      SCIM Service Provider.  For example, events MAY originate from a
-      SCIM Create, Modify, or Delete per [RFC7644] request.  A SCIM
-      Service Provider MAY be an Event Publisher or an independent
-      service that aggregates events into Event Receiver feeds.  As
-      described above, when using [RFC8935], the Event Publisher is an
-      HTTP Client that initiates HTTP POST requests to a defined Event
-      Receiver endpoint.  When using [RFC8936], the Event Publisher
-      provides an HTTP endpoint which a receiver MAY use to "poll" for
-      Security Events.
+      A system that issues SET tokens based on a resource state changes
+      that have occurred at a SCIM Service Provider.  For example,
+      events MAY be the result of a SCIM Create, Modify, or Delete as
+      defined in [RFC7644].  A SCIM Service Provider MAY be an Event
+      Publisher or an independent service that aggregates events into
+      Event Receiver feeds.  As described above, when using [RFC8935],
+      the Event Publisher is an HTTP Client that initiates HTTP POST
+      requests to a defined Event Receiver endpoint.  When using
+      [RFC8936], the Event Publisher provides an HTTP endpoint which a
+      receiver MAY use to "poll" for Security Events.
 
    RS
       Abbreviation for "Risk Signals" as defined in Appendix A.3.
@@ -263,17 +269,11 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 2.  SCIM Events
 
-   A SCIM event is a message, in the form of a Security Event Token
-   [RFC8417].  A SET event consists of a set of standard JWT "top-level"
-   claims, an "events" claim that contains on or more event URI sub-
-   claims (JSON attributes) each with a JSON object containing relevant
-   event information.
-
-
-
-
-
-
+   A SCIM event is a signal, in the form of a Security Event Token
+   [RFC8417] that describe some event that has occurred.  A SET event
+   consists of a set of standard JWT "top-level" claims, an "events"
+   claim that contains on or more event URI sub-claims (JSON attributes)
+   each with a JSON object containing relevant event information.
 
 
 
@@ -286,12 +286,12 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
    SCIM Events SHALL use the "sub_id" claim defined by Subject
    Identifiers for Security Event Tokens [SUBID] specification to
-   identify the subject of events.  Since it is possible to issue a SCIM
-   SET Event with multiple events, the sub_id claim MUST NOT be
-   contained within an Event payload.  A SET with multiple event URI's
-   SHALL indicate that the events originate from the same transaction or
-   resource state change.  Finally, to distinguish SET Events from JWT
-   tokens, the JWT "sub" claim MUST NOT be used.
+   identify the subject of events.  The sub_id claim MUST be contained
+   within the main JWT claims body and SHALL NOT be located within an
+   Event payload within the events claim.  A SET with multiple event
+   URI's indicates that the events arise from the same transaction or
+   resource state change for a single resource or subject.  Finally, as
+   recommended in [RFC8417] the JWT "sub" claim SHALL NOT be used.
 
    {
         "iss": "issuer.example.com",
@@ -343,17 +343,17 @@ Internet-Draft           draft-ietf-scim-events                July 2023
       reasons in addition to the uri claim.
 
    emails,username, ...
-      A SCIM attribute which is uniquely identifiable (e.g. username,
-      emails).  Used in situations where the normal SCIM identifiers (
-      id and externalId) are insufficient to identify a common resource
-      between an Event Publisher and Event Receiver.
+      A SCIM attribute that is unique to both the Event Publisher and
+      Receiver.  Typically, attributes like email or usernames are used
+      in situations where normal SCIM identifiers ( id and externalId)
+      are insufficient to identify a common resource between an Event
+      Publisher and Event Receiver.
 
 2.2.  Common Event Attributes
 
    The following attributes are available for all events defined.  Some
    attributes are defined as SET/JWT claims, while others are "Event
-   Payload" clai
-   ms as defined in Section 1.2 [RFC8417].
+   Payload" claims as defined in Section 1.2 [RFC8417].
 
    txn
       For the purposes of SCIM, this SET defined claim identifies a
@@ -361,16 +361,16 @@ Internet-Draft           draft-ietf-scim-events                July 2023
       its underlying data repository or database.  The claim is used to
       detect duplicate transactions that may have been received (e.g. in
       the case of a re-transmitted or recovered event).  If not
-      provided, the SET jti claim MAY be used.  Where txn identifies
-      uniqueness within a SCIM Service Provider, multiple SETs may be
-      issued each with distinct JTI's stemming from a common originating
-      transaction with identical txn values.
+      provided, the SET jti claim MAY be used.  Where txn identifies a
+      unique transaction within a SCIM Service Provider, multiple SETs
+      MAY be issued each with distinct JTI's stemming from a common
+      originating transaction with identical txn values.
 
    data
-      The content of this attribute corresponds to the JSON object
-      format described in SCIM Bulk Operations, Section 3.7 [RFC7644].
-      The JSON object contains the equivalent SCIM command processed by
-      the SCIM Service provider.  For example, after processing a SCIM
+      This event payload attribute contains information described in
+      SCIM Bulk Operations data attribute, Section 3.7 [RFC7644].  The
+      JSON object contains the equivalent SCIM command processed by the
+      SCIM Service provider.  For example, after processing a SCIM
       Create operation, the data contained includes the final
       representation of the created entity by the SCIM Service Provider
       including the assigned id value.
@@ -385,8 +385,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
    This specifications defines a new URI prefix
    urn:ietf:params:SCIM:event which is used as the prefix for the
-   following defined SCIM Events.
-
+   following defined SCIM Events (see Section 7.2).
 
 
 
@@ -397,11 +396,12 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 2.3.  SCIM Feed Events
 
-   This section defines events related to notices about which resources
-   are being added or removed from an event feed.  These events are used
-   in Co-operative Provisioning scenarios where only a sub-set of
-   entities are shared across an Event Feed.  The URI prefix for these
-   events is: urn:ietf:params:SCIM:event:feed
+   This section defines events related to changes in the content of an
+   event feed.  For example, SCIM resources that are being added or
+   removed from an event feed.  For example, the events may be used in
+   Co-operative Provisioning scenarios where only a sub-set of entities
+   are shared across an Event Feed.  The URI prefix for these events is:
+   urn:ietf:params:SCIM:event:feed
 
 2.3.1.  urn:ietf:params:SCIM:event:feed:add
 
@@ -445,7 +445,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-
 Hunt, et al.             Expires 11 January 2024                [Page 8]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
@@ -472,7 +471,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 2.4.  SCIM Provisioning Events
 
-   This section defines provisioning events that have occurred within a
+   This section defines resource changes that have occurred within a
    SCIM Service Provider.  These events are used in both Domain Based
    Replication (DBR) and Co-operative Provisioning (CP) mode.  The URI
    prefix for these events is: urn:ietf:params:SCIM:event:prov
@@ -481,15 +480,15 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
    Indicates a new SCIM resource has been created by the SCIM Service
    Provider and has been added to the Event Feed.  When the data payload
-   attribute is included the event uri SHALL end with full otherwise,
-   the event URI ends with notice.  In full mode, all claims of the new
-   resource are included.  In notice mode, attributes is returned
-   disclosing what attributes were created at the publisher.  In full
-   mode, the set of values reflecting the final state of the resource at
-   the service provider are provided using the data attribute.  Note
-   that because this is a replication request, the id attribute that was
-   assigned by the SCIM Service Provider is shared so that all replicas
-   in the domain MAY use the same resource identifier.
+   attribute is included, the event uri SHALL end with full otherwise,
+   the event URI ends with notice.  In full mode, the set of values
+   reflecting the final state of the resource at the service provider
+   are provided using the data attribute.  In notice mode, attributes is
+   returned disclosing the list of attributes included in the create
+   request.  Note that because the event MAY be used for replication,
+   the final id attribute that was assigned by the SCIM Service Provider
+   is shared so that all replicas in the domain MAY use the same
+   resource identifier.
 
 
 
@@ -538,7 +537,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
      }
    }
 
-                 Figure 4: Example SCIM Create (Full data)
+                    Figure 4: Example SCIM Create (Full)
 
 
 
@@ -599,8 +598,8 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 2.4.2.  urn:ietf:params:SCIM:event:prov:patch:{notice|full}
 
    The specified resource has been updated using SCIM PATCH.  In full
-   mode, the data payload attribute is included otherwise, the event URI
-   ends with notice and the list of attributes changed are provided.
+   mode, the data payload attribute is included.  When the event URI
+   ends with notice, the list of attributes changed is provided.
 
 
 
@@ -651,7 +650,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
      ]
    }
 
-            Figure 6: Example SCIM Patch Event (Full data mode)
+                 Figure 6: Example SCIM Patch Event (Full)
 
 
 
@@ -695,13 +694,13 @@ Internet-Draft           draft-ietf-scim-events                July 2023
      ]
    }
 
-              Figure 7: Example SCIM Patch Event (Notice Mode)
+                Figure 7: Example SCIM Patch Event (Notice)
 
 2.4.3.  urn:ietf:params:SCIM:event:prov:put:{notice|full}
 
    The specified resource has been updated (e.g. one or more attributes
    has changed).  In full mode, the SCIM PUT request body is included in
-   the data attribute; or, in notice mode the modified attributes are
+   the data attribute.  In notice mode the modified attributes are
    listed using attributes.
 
 
@@ -765,7 +764,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
      ]
    }
 
-                Figure 8: Example SCIM Put Event (Full Mode)
+                  Figure 8: Example SCIM Put Event (Full)
 
 
 
@@ -806,14 +805,14 @@ Internet-Draft           draft-ietf-scim-events                July 2023
      ]
    }
 
-               Figure 9: Example SCIM Put Event (Notice Mode)
+                 Figure 9: Example SCIM Put Event (Notice)
 
 2.4.4.  urn:ietf:params:SCIM:event:prov:delete
 
-   The specified resource has been deleted from the SCIM publisher.  The
-   resource is also removed from the feed.  When a DELETE is sent, a
-   corresponding feedRemove is not issued.  A delete event has minimal
-   disclosure profile only.  Note that because the delete event has no
+   The specified resource has been deleted from the SCIM Service
+   Provider.  The resource is also removed from the feed.  When a DELETE
+   is sent, a corresponding feedRemove is not issued.  A delete event
+   has no payload attributes.  Note that because the delete event has no
    attributes, the qualifiers full and notice SHALL NOT be used.
 
    {
@@ -845,11 +844,12 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 2.4.5.  urn:ietf:params:SCIM:event:prov:activate
 
-   The specified resource (e.g.  User) has been activated.  This event
-   indicates a high-level change in state as agreed between the Event
-   Publisher and Event Receiver.  For example, an activated resource is
-   one that can now have an active session (may log in) from a security
-   perspective.
+   The specified resource (e.g.  User) has been "activated".  This does
+   not necessarily reflect any particular state change at the SCIM
+   Service Provider but may simply indicate the account defined by the
+   SCIM resource is ready for use as agreed upon by the Event Publisher
+   and Event Receiver.  For example, an activated resource represents an
+   account that may be logged in.
 
    {
      "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
@@ -872,16 +872,31 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 2.4.6.  urn:ietf:params:SCIM:event:prov:deactivate
 
    The specified resource (e.g.  User) has been deactivated and
-   disabled.  The exact meaning must be agreed to by the Event Publisher
-   and its corresponding Event Receiver.  Typically, this means the sub
-   may no longer have an active security session.  As with the activate
-   event, this event has minimal disclosure requirements.
+   disabled.  The exact meaning SHOULD be agreed to by the Event
+   Publisher and its corresponding Event Receiver.  Typically, this
+   means the sub may no longer have an active security session.  As with
+   the activate event, this event has minimal disclosure requirements.
 
 2.5.  SCIM Signals Events
 
    This section defines security signal events that have occurred within
    a SCIM Service Provider.The URI prefix for these events is:
    urn:ietf:params:SCIM:event:signal
+
+
+
+
+
+
+
+
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 16]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
 
 2.5.1.  urn:ietf:params:SCIM:event:sig:authMethod
 
@@ -891,13 +906,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    chance of account them may be temporarily elevated.  The receiver MAY
    also wish to take action such as resetting current authorizations or
    sessions.
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 16]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    {
      "jti": "3d0c3cf797584bd193bd0fb1bd4e7d30",
@@ -939,15 +947,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
                Figure 13: Example SCIM Password Change Event
 
-2.6.  Miscellaneous Events
-
-   This section defines events related miscellaneous events such as
-   Asynchronous Request completion that have occurred within a SCIM
-   Service Provider.  The URI prefix for these events is:
-   urn:ietf:params:SCIM:event:misc
-
-
-
 
 
 Hunt, et al.             Expires 11 January 2024               [Page 17]
@@ -955,13 +954,20 @@ Hunt, et al.             Expires 11 January 2024               [Page 17]
 Internet-Draft           draft-ietf-scim-events                July 2023
 
 
+2.6.  Miscellaneous Events
+
+   This section defines events related miscellaneous events such as
+   Asynchronous Request completion that have occurred within a SCIM
+   Service Provider.  The URI prefix for these events is:
+   urn:ietf:params:SCIM:event:misc
+
 2.6.1.  Asynchronous Events
 
 2.6.1.1.  Making an Asynchronous SCIM Request
 
-   A SCIM provisioning client using SCIM requests defined in [RFC7644]
-   MAY request "asynchronous" processing using the "Prefer" HTTP Header
-   as defined in Section 4.1 [RFC7240].  The client may do this for a
+   A SCIM client making SCIM HTTP requests defined in [RFC7644] MAY
+   request "asynchronous" processing using the "Prefer" HTTP Header as
+   defined in Section 4.1 [RFC7240].  The client may do this for a
    number of reasons such as: avoiding holding HTTP connections open
    during long requests, because the result of the request is not
    needed, or for co-ordination reasons where the result is delivered to
@@ -969,15 +975,18 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
    To initiate an async SCIM request, a normal SCIM protocol POST, PUT,
    PATCH, or DELETE request is performed with the HTTP Header Prefer
-   with a value of respond-async as defined in [RFC7231].
+   with a value of respond-async as defined in [RFC7231].  The HTTP
+   Accept header SHALL be ignored.
 
    In response, and as indicated in the SCIM Service Provider
    Configuration (see Section 4, The SCIM Service Provider responds with
-   either a normal SCIM response, or responds asynchronously by
-   returning HTTP Status 202 Accepted.  The HTTP response header "Set-
-   txn" is returned for which the value corresponds to a future Security
-   Event Token to be received whose "txn" claim will match.  The
-   Location header returned SHALL be one of the following:
+   either a normal SCIM response, or respond asynchronously by returning
+   HTTP Status 202 Accepted.  The asynchronous response SHOULD contain
+   no response body.  To enable correlation of the future event, the
+   HTTP response header "Set-txn" is returned.  The value SHALL
+   correspond to a future Security Event Token to be received whose
+   "txn" claim SHALL match.  The Location header returned SHALL be one
+   of the following:
 
    *  A location URI where the completion token MAY be retrieved using
       HTTP GET, or
@@ -996,16 +1005,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-
-
-
-
-
-
-
-
-
-
 Hunt, et al.             Expires 11 January 2024               [Page 18]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
@@ -1014,33 +1013,25 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    PUT /Users/2819c223-7f76-453a-919d-413861904646
    Host: scim.example.com
    Prefer: respond-async
-   Accept: application/scim+json
    Content-Type: application/scim+json
    Authorization: Bearer h480djs93hd8
-
    {
      "schemas":["urn:ietf:params:scim:schemas:core:2.0:User"],
      "id":"2819c223-7f76-453a-919d-413861904646",
      "userName":"bjensen",
      "externalId":"bjensen",
      "name":{
-       "formatted":"Ms. Barbara J Jensen III",
-       "familyName":"Jensen",
-       "givenName":"Barbara",
-       "middleName":"Jane"
+       "formatted":"Ms. Barbara J Jensen III"
      },
      "roles":[],
      "emails":[
        {
            "value":"bjensen@example.com"
-       },
-       {
-           "value":"babs@jensen.org"
        }
      ]
    }
 
-                  Figure 14: Example Asynchronous Request
+           Figure 14: Example Asynchronous SCIM Protocol Request
 
    The SCIM Service Provider responds with HTTP 202 Accepted and
    includes the Set-txn header:
@@ -1052,6 +1043,14 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
                                  Figure 15
 
+2.6.1.2.  urn:ietf:params:SCIM:event:misc:asyncResp
+
+   The Async Response event signals the completion of a SCIM request.
+   The event payload contains the attributes defined in SCIM Bulk
+   Section 3.7 [RFC7644] and is the same a single SCIM Bulk Response
+   Operation as per Section 3.7.3.  In the event, the "txn" claim must
+   be set to the value originally returned to the requesting SCIM client
+   (see Section 2.6.1.1).
 
 
 
@@ -1066,15 +1065,6 @@ Hunt, et al.             Expires 11 January 2024               [Page 19]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
-
-2.6.1.2.  urn:ietf:params:SCIM:event:misc:asyncResp
-
-   The Async Response event signals the completion of a SCIM request.
-   The payload contains the attributes defined in SCIM Bulk Section 3.7
-   [RFC7644] and is the same a single SCIM Bulk Response Operation as
-   per Section 3.7.3.  In the event, the "txn" claim must be set to the
-   value originally returned to the original SCIM client requestor (see
-   Section 2.6.1.1).
 
    {
      "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
@@ -1099,29 +1089,16 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
                 Figure 16: Example SCIM Async Response Event
 
-3.  Event Delivery
+3.  Event Delivery Feeds
 
-   For the purposes of SCIM, this draft uses the following methods
-   exchange of events using the Security Event Token exchange methods:
+   In addition to retrieving a single security event as described in
+   Section 2.6.1.1, Event Feeds (or Streams) provide the ability
+   exchange a series of events between pre-arranged endpoints using the
+   following Security Event Token exchange methods:
 
    [RFC8935]
       Push-Based Security Event Token (SET) Delivery delivers tokens to
       an Event Receiver with an accessible HTTP Endpoint.
-
-
-
-
-
-
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 20]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    [RFC8936]
       Poll-Based Security Event Token (SET) Delivery enables an event
@@ -1137,47 +1114,17 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    Security Event Transfer mechanism.  SCIM Service providers MAY choose
    to implement SET transfer directly, or they may use a method of
    allowing a single Event Publisher to assemble streams of events for
-   transfer to a receiver.  Likewise, on the receiving side, the only
-   normative requirement is to be able to receive events and implement
-   storage of Events to local recovery needs.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 21]
+Hunt, et al.             Expires 11 January 2024               [Page 20]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
+
+   transfer to a receiver.  Likewise, on the receiving side, the only
+   normative requirement is to be able to receive events and implement
+   storage of Events to local recovery needs.
 
         ┌───────────────┐  ┌───────────────┐     ┌───────────────┐
         │               │  │               │     │               │
@@ -1223,17 +1170,18 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    service for distribution to 1 or more receivers.  The Event Publisher
    MAY be incorporated directly into each SCIM Server, or a Local Event
    Delivery System might be used to collect events for an Event
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 21]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    Publisher service for forwarding.  How this is done is up to the
    implementer.  This specification is only concerned with the
    interoperability of SET transfer between domains using [RFC8935] and
    [RFC8936].
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 22]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    The SET Transfer specifications provide a short-term method of
    recovery to ensure SET Events are successfully transferred.  Once a
@@ -1273,6 +1221,19 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    of up-to-date SCIM services, vs. the potential information loss of an
    event.
 
+
+
+
+
+
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 22]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    Unsecured
       Per Section 6 [RFC7519], tokens MAY be generated with
       {"alg":"none"}.  This mode speeds up processing and is best used
@@ -1283,14 +1244,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    Signed
       JWS ([RFC7515]) signed SETs are useful when it is important to be
       able to verify the issuer of a SET as valid.  In addition, some
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 23]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
-
       systems MAY wish to validate the authenticity of the event in a
       review process which may occur at a later date.  While the content
       can be validated as originating from the correct issuer and is
@@ -1329,6 +1282,14 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    *  SCIM Events only need to be retained until they have been
       delivered to designated receivers.
 
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 23]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    Push-delivery has the following disadvantages:
 
    *  A SCIM Event Publisher system needs authorization credentials
@@ -1338,14 +1299,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
       firewalls, a virtual network or other firewall policy may be
       required to allow external network based SCIM providers to deliver
       SCIM Events to internally hosted systems.
-
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 24]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    Delivery by HTTP Polling has the following advantages:
 
@@ -1386,6 +1339,13 @@ Internet-Draft           draft-ietf-scim-events                July 2023
       asyncRequest
          A string value specifying one of the following:
 
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 24]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
          *  NONE indicates async SCIM requests defined in
             Section 2.6.1.1 are not supported;
 
@@ -1395,13 +1355,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
          *  REQUEST indicates the request SHALL complete asynchronously
             when requested by the SCIM Client.
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 25]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
       eventUris
          A multi-valued string listing the SET Event URIs (defined in
@@ -1441,6 +1394,14 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    In operation, some SCIM resources such as SCIM Groups may have a high
    rate of change.  Implementors and operators SHOULD consider use of
    throttling techniques to balance immediacy and frequency.  For
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 25]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    example, a large group whose members change dozens of times per
    second may not need discrete SET Patch Events per change.  Instead,
    issuing a single consolidated change per second or even minute may be
@@ -1449,15 +1410,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    necessarily need to retrieve the full Group on every change request.
    It MAY choose to do lookups on a less frequent scale for
    reconciliation.
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 26]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    When using Asynchronous SCIM Requests (see Section 2.6.1.1), and
    location returned in a SCIM Accepted response is a URI for retrieving
@@ -1498,6 +1450,14 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
    Privacy considerations of [RFC8417] MUST also be observed.
 
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 26]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
 7.  IANA Considerations
 
 7.1.  SCIM Async Txn Header Registration
@@ -1507,13 +1467,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
    Header field name:
       Set-txn
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 27]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    Applicable Protocol:
       HTTP
@@ -1553,6 +1506,14 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    Multi-valued Attributes:  All schemas in this specification share the
       same attributes.  SeeSection 2.2.
 
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 27]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    Summary of schema URI registrations:
 
    +==========================================+===============+=======+
@@ -1563,14 +1524,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    +------------------------------------------+---------------+-------+
    |urn:ietf:params:SCIM:event:feed:remove    |Remove resouce |Section|
    |                                          |From Feed Event|2.3.2  |
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 28]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
-
    +------------------------------------------+---------------+-------+
    |urn:ietf:params:SCIM:event:prov:create:   |New Resource   |Section|
    |notice                                    |Event (notice  |2.4.1  |
@@ -1609,6 +1562,14 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    |urn:ietf:params:SCIM:event:sig:authMethod |New            |Section|
    |                                          |authentication |2.5.1  |
    |                                          |method added   |       |
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 28]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    +------------------------------------------+---------------+-------+
    |urn:ietf:params:SCIM:event:sig:pwdReset   |Password Reset |Section|
    |                                          |Event          |2.5.2  |
@@ -1619,13 +1580,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 8.  References
 
 8.1.  Normative References
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 29]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1663,6 +1617,15 @@ Internet-Draft           draft-ietf-scim-events                July 2023
               DOI 10.17487/RFC7520, May 2015,
               <https://www.rfc-editor.org/info/rfc7520>.
 
+
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 29]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and C.
               Mortimore, "System for Cross-domain Identity Management:
               Core Schema", RFC 7643, DOI 10.17487/RFC7643, September
@@ -1672,16 +1635,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
               and C. Mortimore, "System for Cross-domain Identity
               Management: Protocol", RFC 7644, DOI 10.17487/RFC7644,
               September 2015, <https://www.rfc-editor.org/info/rfc7644>.
-
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 30]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -1721,6 +1674,14 @@ Internet-Draft           draft-ietf-scim-events                July 2023
               DOI 10.17487/RFC5246, August 2008,
               <https://www.rfc-editor.org/info/rfc5246>.
 
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 30]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, DOI 10.17487/RFC6120,
               March 2011, <https://www.rfc-editor.org/info/rfc6120>.
@@ -1729,15 +1690,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
               Transfer Protocol Version 2 (HTTP/2)", RFC 7540,
               DOI 10.17487/RFC7540, May 2015,
               <https://www.rfc-editor.org/info/rfc7540>.
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 31]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    [RFC8935]  Backman, A., Ed., Jones, M., Ed., Scurtescu, M., Ansari,
               M., and A. Nadalin, "Push-Based Security Event Token (SET)
@@ -1762,6 +1714,30 @@ A.1.  Domain Based Replication
    about changes for resources are shared between replicas for immediate
    processing.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 31]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
                        ┌────────────────┐
    ┌────────┐          │SCIM            │   ┌────────────────────────┐
    │Client A│          │Service Provider│   │Service Provider Replica│
@@ -1783,17 +1759,6 @@ A.1.  Domain Based Replication
                                                        └┬┘
 
                 Figure 18: Domain Based Replication Sequence
-
-
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 32]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
    From a security perspective, it is assumed that servers sharing DBR
    events are secured by a common access policy and all servers are
@@ -1824,29 +1789,7 @@ A.2.  Co-ordinated Provisioning
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 33]
+Hunt, et al.             Expires 11 January 2024               [Page 32]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1902,7 +1845,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 34]
+Hunt, et al.             Expires 11 January 2024               [Page 33]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -1958,7 +1901,7 @@ A.3.  Risk Signals
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 35]
+Hunt, et al.             Expires 11 January 2024               [Page 34]
 
 Internet-Draft           draft-ietf-scim-events                July 2023
 
@@ -2014,4 +1957,4 @@ Authors' Addresses
 
 
 
-Hunt, et al.             Expires 11 January 2024               [Page 36]
+Hunt, et al.             Expires 11 January 2024               [Page 35]

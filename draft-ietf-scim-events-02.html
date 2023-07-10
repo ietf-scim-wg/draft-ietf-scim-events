@@ -10,10 +10,10 @@
 <meta content="Mike Kiser" name="author">
 <meta content="
        
-                This specification defines a set of Security Events URIs as defined in the Security Event Token Specification (RFC8417)
-                which will enable the asynchronous exchange of events between SCIM Service Providers and interested receivers in order to deliver
-                security events used for: asynchronous request completion, resource replication, provisioning co-ordination,
-                and general security signals support.
+                This specification defines a set of SCIM Security Events using the Security Event Token Specification
+                  that enable the asynchronous exchange of events between SCIM Service Providers
+                and receivers used for: asynchronous request completion, resource replication, provisioning co-ordination,
+                and shared security signals.
        
     " name="description">
 <meta content="xml2rfc 3.17.4" name="generator">
@@ -1264,10 +1264,10 @@ li > p:last-of-type:only-child {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">
-                This specification defines a set of Security Events URIs as defined in the Security Event Token Specification (RFC8417)
-                which will enable the asynchronous exchange of events between SCIM Service Providers and interested receivers in order to deliver
-                security events used for: asynchronous request completion, resource replication, provisioning co-ordination,
-                and general security signals support.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+                This specification defines a set of SCIM Security Events using the Security Event Token Specification
+                <span>[<a href="#RFC8417" class="cite xref">RFC8417</a>]</span> that enable the asynchronous exchange of events between SCIM Service Providers
+                and receivers used for: asynchronous request completion, resource replication, provisioning co-ordination,
+                and shared security signals.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1396,7 +1396,7 @@ li > p:last-of-type:only-child {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-event-delivery" class="internal xref">Event Delivery</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-event-delivery-feeds" class="internal xref">Event Delivery Feeds</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-security-event-token-signin" class="internal xref">Security Event Token Signing and Encryption</a></p>
@@ -1475,19 +1475,20 @@ li > p:last-of-type:only-child {
                 asynchronous request completion, resource replication, provisioning co-ordination, and
                 security signals.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">
-                This specification also profiles the use of <span>[<a href="#RFC7240" class="cite xref">RFC7240</a>]</span> allowing a SCIM Client to indicate an
-                asynchronous response is preferred (see <a href="#asyncRequest" class="auto internal xref">Section 2.6.1.1</a>).<a href="#section-1-2" class="pilcrow">¶</a></p>
+                This specification also profiles the use of the HTTP Header "<code>Prefer: Async-response</code>" <span>[<a href="#RFC7240" class="cite xref">RFC7240</a>]</span>
+                allowing a SCIM Client to request an asynchronous response (see <a href="#asyncRequest" class="auto internal xref">Section 2.6.1.1</a>).<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">
                 In a typical HTTP client-server relationship, a SCIM Protocol Client issues commands to a SCIM Server
-                using HTTP methods such as GET, POST, PATCH, and DELETE <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span> in many
-                cases to effect a state change. Subsequently, when multiple SCIM protocol client entities update SCIM
-                resources, an individual client may need to be informed of changes that occur over time. This may be
-                achieved through the use of event signals in the form of Security Event Tokens (SET). SET
-                tokens convey information about changes that have occurred in a publishing domain that may be
-                of interest to a receiving domain. Unlike SCIM Protocol requests, Security Events do
-                not describe actions that a receiver must take, rather they are simple statements of fact about changes that have
-                already occurred. The intent, is to allow the event receiver to determine the best follow-uip action to
-                take within the context of the receiving domain. This gives each domain independent operation and control.<a href="#section-1-3" class="pilcrow">¶</a></p>
+                using HTTP methods such as POST, PATCH, and DELETE <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span> that cause
+                a state change to a SCIM Resource. When multiple independent SCIM Clients update SCIM
+                resources, some clients may need to be informed of changes for co-ordination or reconciliation purposes.
+                This may be achieved through the use of Security Event Tokens (SET). SET tokens convey signals about
+                state changes that have occurred in a publishing SCIM Service Provider that may be of interest to a
+                receiving client or domain. Unlike SCIM Protocol requests which convey protocol commands, Security
+                Events do not describe actions that a receiver must take, rather they describe statements of fact about
+                changes that have already occurred at the SCIM Provider. The intent, is to allow the event receiver to
+                determine the best local follow-uip action to take within the context of the receiver. When the receiver
+                is another domain it allows each domain independent operation and control.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <section id="section-1.1">
         <h3 id="name-requirements-language">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-requirements-language" class="section-name selfRef">Requirements Language</a>
@@ -1534,16 +1535,16 @@ li > p:last-of-type:only-child {
           <dd style="margin-left: 1.5em" id="section-1.3-4.2">
                         The JWT specification <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span> upon which SET is based uses the term "claims" to
                         refer to attributes in a JSON token. SCIM in contrast uses the term "attributes" to refer to
-                        JSON attributes.  For the purposes of this draft, the terms "attributes" and "claims" are equivalent.<a href="#section-1.3-4.2" class="pilcrow">¶</a>
+                        JSON attributes. For the purposes of this draft, the terms "attributes" and "claims" are equivalent.<a href="#section-1.3-4.2" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
 <dt id="section-1.3-4.3">CP</dt>
           <dd style="margin-left: 1.5em" id="section-1.3-4.4">
                         Abbreviation for "Co-ordinated Provisioning" as defined in <a href="#coordination" class="auto internal xref">Appendix A.2</a>. In these
                         relationships an Event Publisher and Receiver typically exchange resource change events without
-                        exchanging change data. For a receiver to know the value of the data, the Event Receiver usually
-                        has to call back to the Event Publisher domain to receive a new copy of data (e.g. Using a SCIM GET
-                        request).<a href="#section-1.3-4.4" class="pilcrow">¶</a>
+                        exchanging data. For a receiver to know the value of the data, the Event Receiver usually
+                        has calls back to the SCIM Event Publisher domain to receive a new copy of data (e.g. Uses a
+                        SCIM GET request).<a href="#section-1.3-4.4" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
 <dt id="section-1.3-4.5">DBR</dt>
@@ -1555,18 +1556,18 @@ li > p:last-of-type:only-child {
                         back to retrieve additional data.<a href="#section-1.3-4.6" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.3-4.7">Event Feed</dt>
+<dt id="section-1.3-4.7">Event Feed / Event Stream</dt>
           <dd style="margin-left: 1.5em" id="section-1.3-4.8">
-                        This describes the notion that a feed MAY be individualized per client. A service provider MAY
+                        This describes the quality that a feed (aka stream) MAY be managed per receiving client.
+                        A SET transfer (see <span>[<a href="#RFC8935" class="cite xref">RFC8935</a>]</span> <span>[<a href="#RFC8936" class="cite xref">RFC8936</a>]</span>) service provider MAY
                         offer to allow Event Receiver's to "subscribe" to specific event types or events about specific
-                        resources.  If no option is offered, it is assumed the client will receive all events about all
-                        resources.<a href="#section-1.3-4.8" class="pilcrow">¶</a>
+                        resources (see Feed Management events <a href="#scimFeedEvents" class="auto internal xref">Section 2.3</a>).<a href="#section-1.3-4.8" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
 <dt id="section-1.3-4.9">Event Receiver</dt>
           <dd style="margin-left: 1.5em" id="section-1.3-4.10">
-                        A service that receives events for the purpose of subsequent action (e.g. such as
-                        replication), co-ordination of workflow, or signalling.  In the case of SET Push Transfer
+                        An entity receives events typically via <span>[<a href="#RFC8935" class="cite xref">RFC8935</a>]</span>, <span>[<a href="#RFC8936" class="cite xref">RFC8936</a>]</span>, or
+                        HTTP GET (see <a href="#asyncRequest" class="auto internal xref">Section 2.6.1.1</a>). In the case of SET Push Transfer
                         <span>[<a href="#RFC8935" class="cite xref">RFC8935</a>]</span>, the Event Receiver is an HTTP Service Endpoint that receives requests.
                         In the case of SET Poll-Based Transfer <span>[<a href="#RFC8936" class="cite xref">RFC8936</a>]</span>, the receiver is an HTTP client
                         that initiates HTTP request to an Event Publisher endpoint.<a href="#section-1.3-4.10" class="pilcrow">¶</a>
@@ -1574,13 +1575,13 @@ li > p:last-of-type:only-child {
           <dd class="break"></dd>
 <dt id="section-1.3-4.11">Event Publisher</dt>
           <dd style="margin-left: 1.5em" id="section-1.3-4.12">
-                        A system that issues SETs based on a change that has occurred at a SCIM Service Provider.
-                        For example, events MAY originate from a SCIM Create, Modify, or Delete per <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span>
-                        request. A SCIM Service Provider MAY be an Event Publisher or an independent service that aggregates
-                        events into Event Receiver feeds. As described above, when using <span>[<a href="#RFC8935" class="cite xref">RFC8935</a>]</span>, the
-                        Event Publisher is an HTTP Client that initiates HTTP POST requests to a defined Event Receiver
-                        endpoint. When using <span>[<a href="#RFC8936" class="cite xref">RFC8936</a>]</span>, the Event Publisher provides an HTTP endpoint
-                        which a receiver MAY use to "poll" for Security Events.<a href="#section-1.3-4.12" class="pilcrow">¶</a>
+                        A system that issues SET tokens based on a resource state changes that have occurred at a SCIM
+                        Service Provider. For example, events MAY be the result of a SCIM Create, Modify, or Delete
+                        as defined in <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span>. A SCIM Service Provider MAY be an Event Publisher or an
+                        independent service that aggregates events into Event Receiver feeds. As described above, when
+                        using <span>[<a href="#RFC8935" class="cite xref">RFC8935</a>]</span>, the Event Publisher is an HTTP Client that initiates HTTP POST
+                        requests to a defined Event Receiver endpoint. When using <span>[<a href="#RFC8936" class="cite xref">RFC8936</a>]</span>, the Event
+                        Publisher provides an HTTP endpoint which a receiver MAY use to "poll" for Security Events.<a href="#section-1.3-4.12" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
 <dt id="section-1.3-4.13">RS</dt>
@@ -1616,10 +1617,10 @@ li > p:last-of-type:only-child {
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-scim-events" class="section-name selfRef">SCIM Events</a>
       </h2>
 <p id="section-2-1">
-                A SCIM event is a message, in the form of a Security Event Token
-                <span>[<a href="#RFC8417" class="cite xref">RFC8417</a>]</span>. A SET event consists of a set of standard JWT "top-level"
-                claims, an "events" claim that contains on or more event URI sub-claims (JSON attributes) each with a JSON object
-                containing relevant event information.<a href="#section-2-1" class="pilcrow">¶</a></p>
+                A SCIM event is a signal, in the form of a Security Event Token <span>[<a href="#RFC8417" class="cite xref">RFC8417</a>]</span>
+                that describe some event that has occurred. A SET event consists of a set of standard JWT "top-level"
+                claims, an "events" claim that contains on or more event URI sub-claims (JSON attributes) each with a
+                JSON object containing relevant event information.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <div id="sub-id">
 <section id="section-2.1">
         <h3 id="name-identifying-the-subject-of-">
@@ -1627,11 +1628,11 @@ li > p:last-of-type:only-child {
         </h3>
 <p id="section-2.1-1">
                     SCIM Events SHALL use the "sub_id" claim defined by <span><a href="#SUBID" class="internal xref">Subject Identifiers for
-                    Security Event Tokens</a> [<a href="#SUBID" class="cite xref">SUBID</a>]</span> specification to identify the subject of events. Since it is possible
-                    to issue a SCIM SET Event with multiple events, the <code>sub_id</code> claim MUST NOT be contained
-                    within an Event payload. A SET with multiple event URI's SHALL indicate that the events originate
-                    from the same transaction or resource state change. Finally, to distinguish SET
-                    Events from JWT tokens, the JWT "sub" claim MUST NOT be used.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+                    Security Event Tokens</a> [<a href="#SUBID" class="cite xref">SUBID</a>]</span> specification to identify the subject of events. The <code>sub_id</code>
+                    claim MUST be contained within the main JWT claims body and SHALL NOT be located within an Event
+                    payload within the <code>events</code> claim. A SET with multiple event URI's indicates that the events
+                    arise from the same transaction or resource state change for a single resource or subject. Finally,
+                    as recommended in <span>[<a href="#RFC8417" class="cite xref">RFC8417</a>]</span> the JWT "sub" claim SHALL NOT be used.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <span id="name-scim-subject-id-example"></span><div id="example_subid">
 <figure id="figure-1">
           <div class="alignLeft art-text artwork" id="section-2.1-2.1">
@@ -1660,7 +1661,7 @@ li > p:last-of-type:only-child {
           <dt id="section-2.1-4.1">uri</dt>
           <dd style="margin-left: 1.5em" id="section-2.1-4.2">
                         The SCIM relative path for the resource which usually consists of the resource type endpoint
-                        plus the resource <code>id</code>.  For example <code>/Users/2b2f880af6674ac284bae9381673d462</code>.
+                        plus the resource <code>id</code>. For example <code>/Users/2b2f880af6674ac284bae9381673d462</code>.
                         This attributes MUST be provided in a SCIM Event <code>sub_id</code> claim. Note the relative path
                         is the path component after the SCIM Service Provider Base URI as defined in Section 1.3 <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span>.
                         In cases where the Event Receiver is unable to match a URI, the Event Receiver MAY issue a call-back
@@ -1675,13 +1676,16 @@ li > p:last-of-type:only-child {
 </dd>
           <dd class="break"></dd>
 <dt id="section-2.1-4.5">id</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.6">The SCIM Id attribute MAY be used for backwards compatibility reasons in addition to the <code>uri</code> claim.<a href="#section-2.1-4.6" class="pilcrow">¶</a>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.6">
+                        The SCIM Id attribute MAY be used for backwards compatibility reasons in addition to the
+                        <code>uri</code> claim.<a href="#section-2.1-4.6" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
 <dt id="section-2.1-4.7">emails,username, ...</dt>
-          <dd style="margin-left: 1.5em" id="section-2.1-4.8">A SCIM attribute which is uniquely identifiable (e.g. username, emails). Used in situations
-                        where the normal SCIM identifiers ( <code>id</code> and <code>externalId</code>) are insufficient to
-                        identify a common resource between an Event Publisher and Event Receiver.<a href="#section-2.1-4.8" class="pilcrow">¶</a>
+          <dd style="margin-left: 1.5em" id="section-2.1-4.8">A SCIM attribute that is unique to both the Event Publisher and Receiver. Typically, attributes
+                        like email or usernames are used in situations where normal SCIM identifiers ( <code>id</code> and
+                        <code>externalId</code>) are insufficient to identify a common resource between an Event Publisher
+                        and Event Receiver.<a href="#section-2.1-4.8" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -1701,17 +1705,17 @@ li > p:last-of-type:only-child {
                         originating at a SCIM Service Provider and/or its underlying data repository or database. The
                         claim is used to detect duplicate transactions that may have been received (e.g. in the case of
                         a re-transmitted or recovered event). If not provided, the SET <code>jti</code> claim MAY be used.
-                        Where <code>txn</code> identifies uniqueness within a SCIM Service Provider, multiple SETs may be
-                        issued each with distinct JTI's stemming from a common originating transaction with identical
+                        Where <code>txn</code> identifies a unique transaction within a SCIM Service Provider, multiple SETs
+                        MAY be issued each with distinct JTI's stemming from a common originating transaction with identical
                         <code>txn</code> values.<a href="#section-2.2-2.2" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
 <dt id="section-2.2-2.3">data</dt>
           <dd style="margin-left: 1.5em" id="section-2.2-2.4">
-                        The content of this attribute corresponds to the JSON object format described in SCIM Bulk
-                        Operations, Section 3.7 <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span>. The JSON object contains the equivalent SCIM
-                        command processed by the SCIM Service provider. For example, after processing a SCIM Create
-                        operation, the data contained includes the final representation of the
+                        This event payload attribute contains information described in SCIM Bulk
+                        Operations <code>data</code> attribute, Section 3.7 <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span>. The JSON object
+                        contains the equivalent SCIM command processed by the SCIM Service provider. For example, after
+                        processing a SCIM Create operation, the data contained includes the final representation of the
                         created entity by the SCIM Service Provider including the assigned <code>id</code> value.<a href="#section-2.2-2.4" class="pilcrow">¶</a>
 </dd>
           <dd class="break"></dd>
@@ -1723,10 +1727,11 @@ li > p:last-of-type:only-child {
         <dd class="break"></dd>
 </dl>
 <p id="section-2.2-3">
-                    Only one of <code>data</code> or
-                    <code>attributes</code> claims SHALL be provided depending on the event definition.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
-<p id="section-2.2-4">This specifications defines a new URI prefix <code>urn:ietf:params:SCIM:event</code> which is used
-                as the prefix for the following defined SCIM Events.<a href="#section-2.2-4" class="pilcrow">¶</a></p>
+                    Only one of <code>data</code> or <code>attributes</code> claims SHALL be provided depending on the event
+                    definition.<a href="#section-2.2-3" class="pilcrow">¶</a></p>
+<p id="section-2.2-4">
+                    This specifications defines a new URI prefix <code>urn:ietf:params:SCIM:event</code> which is used
+                    as the prefix for the following defined SCIM Events (see <a href="#IANAevents" class="auto internal xref">Section 7.2</a>).<a href="#section-2.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="scimFeedEvents">
@@ -1735,9 +1740,10 @@ li > p:last-of-type:only-child {
 <a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-scim-feed-events" class="section-name selfRef">SCIM Feed Events</a>
         </h3>
 <p id="section-2.3-1">
-                    This section defines events related to notices about which resources are being added or removed from
-                    an event feed. These events are used in Co-operative Provisioning scenarios where only a sub-set of
-                    entities are shared across an Event Feed. The URI prefix for these events is:
+                    This section defines events related to changes in the content of an event feed. For example,
+                    SCIM resources that are being added or removed from an event feed. For example, the events may be
+                    used in Co-operative Provisioning scenarios where only a sub-set of entities are shared across an
+                    Event Feed. The URI prefix for these events is:
                     <code>urn:ietf:params:SCIM:event:feed</code><a href="#section-2.3-1" class="pilcrow">¶</a></p>
 <div id="feedAdd">
 <section id="section-2.3.1">
@@ -1818,10 +1824,9 @@ li > p:last-of-type:only-child {
 <a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-scim-provisioning-events" class="section-name selfRef">SCIM Provisioning Events</a>
         </h3>
 <p id="section-2.4-1">
-                    This section defines provisioning events that have occurred within a
-                    SCIM Service Provider. These events are used in both Domain Based Replication (DBR) and Co-operative
-                    Provisioning (CP) mode. The URI prefix for these events is:
-                    <code>urn:ietf:params:SCIM:event:prov</code><a href="#section-2.4-1" class="pilcrow">¶</a></p>
+                    This section defines resource changes that have occurred within a SCIM Service Provider. These
+                    events are used in both Domain Based Replication (DBR) and Co-operative Provisioning (CP) mode. The
+                    URI prefix for these events is: <code>urn:ietf:params:SCIM:event:prov</code><a href="#section-2.4-1" class="pilcrow">¶</a></p>
 <div id="provCreate">
 <section id="section-2.4.1">
           <h4 id="name-urnietfparamsscimeventprovc">
@@ -1829,16 +1834,15 @@ li > p:last-of-type:only-child {
           </h4>
 <p id="section-2.4.1-1">
                         Indicates a new SCIM resource has been created by the SCIM Service Provider
-                        and has been added to the Event Feed. When the <code>data</code> payload attribute is included the
+                        and has been added to the Event Feed. When the <code>data</code> payload attribute is included, the
                         event uri SHALL end with <code>full</code> otherwise, the event URI ends with <code>notice</code>. In
-                        full mode, all claims of the new resource are included. In notice mode,
-                        <code>attributes</code> is returned disclosing what attributes were created at the publisher. In
-                        full mode, the set of values reflecting the final
-                        state of the resource at the service provider are provided
-                        using the <code>data</code> attribute. Note that because this is a replication request, the <code>id</code>
+                        full mode, the set of values reflecting the final state of the resource at the service provider
+                        are provided using the <code>data</code> attribute. In <code>notice</code> mode,
+                        <code>attributes</code> is returned disclosing the list of attributes included in the create request.
+                        Note that because the event MAY be used for replication, the final <code>id</code>
                         attribute that was assigned by the SCIM Service Provider is shared so that all replicas in the
                         domain MAY use the same resource identifier.<a href="#section-2.4.1-1" class="pilcrow">¶</a></p>
-<span id="name-example-scim-create-full-da"></span><div id="exampleCreateEvent">
+<span id="name-example-scim-create-full"></span><div id="exampleCreateEvent">
 <figure id="figure-4">
             <div class="alignLeft art-text artwork" id="section-2.4.1-2.1">
 <pre>{
@@ -1873,7 +1877,7 @@ li > p:last-of-type:only-child {
 }</pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-example-scim-create-full-da" class="selfRef">Example SCIM Create (Full data)</a>
+<a href="#name-example-scim-create-full" class="selfRef">Example SCIM Create (Full)</a>
             </figcaption></figure>
 </div>
 <span id="name-example-scim-create-event-n"></span><div id="exampleCreateEventDef">
@@ -1921,9 +1925,10 @@ li > p:last-of-type:only-child {
           <h4 id="name-urnietfparamsscimeventprovp">
 <a href="#section-2.4.2" class="section-number selfRef">2.4.2. </a><a href="#name-urnietfparamsscimeventprovp" class="section-name selfRef">urn:ietf:params:SCIM:event:prov:patch:{notice|full}</a>
           </h4>
-<p id="section-2.4.2-1">The specified
-                        resource has been updated using SCIM PATCH. In <code>full</code> mode, the <code>data</code> payload attribute is
-                        included otherwise, the event URI ends with <code>notice</code> and the list of attributes changed are provided.<a href="#section-2.4.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.4.2-1">
+                        The specified resource has been updated using SCIM PATCH. In <code>full</code> mode, the
+                        <code>data</code> payload attribute is included. When the event URI ends with <code>notice</code>, the
+                        list of attributes changed is provided.<a href="#section-2.4.2-1" class="pilcrow">¶</a></p>
 <span id="name-example-scim-patch-event-fu"></span><div id="examplePatchEventFull">
 <figure id="figure-6">
             <div class="alignLeft art-text artwork" id="section-2.4.2-2.1">
@@ -1960,7 +1965,7 @@ li > p:last-of-type:only-child {
 }</pre>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-example-scim-patch-event-fu" class="selfRef">Example SCIM Patch Event (Full data mode)</a>
+<a href="#name-example-scim-patch-event-fu" class="selfRef">Example SCIM Patch Event (Full)</a>
             </figcaption></figure>
 </div>
 <span id="name-example-scim-patch-event-no"></span><div id="examplePatchEventBrief">
@@ -1987,7 +1992,7 @@ li > p:last-of-type:only-child {
 }</pre>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
-<a href="#name-example-scim-patch-event-no" class="selfRef">Example SCIM Patch Event (Notice Mode)</a>
+<a href="#name-example-scim-patch-event-no" class="selfRef">Example SCIM Patch Event (Notice)</a>
             </figcaption></figure>
 </div>
 </section>
@@ -2000,7 +2005,7 @@ li > p:last-of-type:only-child {
 <p id="section-2.4.3-1">
                         The specified resource has been updated (e.g. one or more attributes has
                         changed). In <code>full</code> mode, the SCIM PUT request body is included in the <code>data</code>
-                        attribute; or, in <code>notice</code> mode the modified attributes are listed using <code>attributes</code>.<a href="#section-2.4.3-1" class="pilcrow">¶</a></p>
+                        attribute. In <code>notice</code> mode the modified attributes are listed using <code>attributes</code>.<a href="#section-2.4.3-1" class="pilcrow">¶</a></p>
 <span id="name-example-scim-put-event-full"></span><div id="examplePutEventFull">
 <figure id="figure-8">
             <div class="alignLeft art-text artwork" id="section-2.4.3-2.1">
@@ -2039,7 +2044,7 @@ li > p:last-of-type:only-child {
 }</pre>
 </div>
 <figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
-<a href="#name-example-scim-put-event-full" class="selfRef">Example SCIM Put Event (Full Mode)</a>
+<a href="#name-example-scim-put-event-full" class="selfRef">Example SCIM Put Event (Full)</a>
             </figcaption></figure>
 </div>
 <span id="name-example-scim-put-event-noti"></span><div id="examplePutEventBrief">
@@ -2065,7 +2070,7 @@ li > p:last-of-type:only-child {
 }</pre>
 </div>
 <figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
-<a href="#name-example-scim-put-event-noti" class="selfRef">Example SCIM Put Event (Notice Mode)</a>
+<a href="#name-example-scim-put-event-noti" class="selfRef">Example SCIM Put Event (Notice)</a>
             </figcaption></figure>
 </div>
 </section>
@@ -2076,10 +2081,10 @@ li > p:last-of-type:only-child {
 <a href="#section-2.4.4" class="section-number selfRef">2.4.4. </a><a href="#name-urnietfparamsscimeventprovd" class="section-name selfRef">urn:ietf:params:SCIM:event:prov:delete</a>
           </h4>
 <p id="section-2.4.4-1">
-                        The specified resource has been deleted from the SCIM publisher.
+                        The specified resource has been deleted from the SCIM Service Provider.
                         The resource is also removed from the feed. When a
                         DELETE is sent, a corresponding <code>feedRemove</code> is not issued. A delete
-                        event has minimal disclosure profile only. Note that because the delete event has
+                        event has no payload attributes. Note that because the delete event has
                         no attributes, the qualifiers <code>full</code> and <code>notice</code> SHALL NOT be used.<a href="#section-2.4.4-1" class="pilcrow">¶</a></p>
 <span id="name-example-scim-delete-event"></span><div id="exampleDeleteEvent">
 <figure id="figure-10">
@@ -2113,11 +2118,10 @@ li > p:last-of-type:only-child {
 <a href="#section-2.4.5" class="section-number selfRef">2.4.5. </a><a href="#name-urnietfparamsscimeventprova" class="section-name selfRef">urn:ietf:params:SCIM:event:prov:activate</a>
           </h4>
 <p id="section-2.4.5-1">
-                        The specified resource (e.g. User) has been activated. This event
-                        indicates a high-level change in state as agreed
-                        between the Event Publisher and Event Receiver. For example, an activated
-                        resource is one that can now have an active session (may log in)
-                        from a security perspective.<a href="#section-2.4.5-1" class="pilcrow">¶</a></p>
+                        The specified resource (e.g. User) has been "activated". This does not necessarily reflect
+                        any particular state change at the SCIM Service Provider but may simply indicate the
+                        account defined by the SCIM resource is ready for use as agreed upon by the Event Publisher and
+                        Event Receiver. For example, an activated resource represents an account that may be logged in.<a href="#section-2.4.5-1" class="pilcrow">¶</a></p>
 <span id="name-example-scim-activate-event"></span><div id="exampleActivateEvent">
 <figure id="figure-11">
             <div class="alignLeft art-text artwork" id="section-2.4.5-2.1">
@@ -2150,7 +2154,7 @@ li > p:last-of-type:only-child {
           </h4>
 <p id="section-2.4.6-1">
                         The specified resource (e.g. User) has been deactivated and
-                        disabled. The exact meaning must be agreed to by the Event Publisher
+                        disabled. The exact meaning SHOULD be agreed to by the Event Publisher
                         and its corresponding Event Receiver. Typically, this means the sub
                         may no longer have an active security session. As with the activate
                         event, this event has minimal disclosure requirements.<a href="#section-2.4.6-1" class="pilcrow">¶</a></p>
@@ -2257,7 +2261,7 @@ li > p:last-of-type:only-child {
 <a href="#section-2.6.1.1" class="section-number selfRef">2.6.1.1. </a><a href="#name-making-an-asynchronous-scim" class="section-name selfRef">Making an Asynchronous SCIM Request</a>
             </h5>
 <p id="section-2.6.1.1-1">
-                            A SCIM provisioning client using SCIM requests defined in <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span> MAY request
+                            A SCIM client making SCIM HTTP requests defined in <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span> MAY request
                             "asynchronous" processing using the "Prefer" HTTP Header as defined in Section 4.1
                             <span>[<a href="#RFC7240" class="cite xref">RFC7240</a>]</span>. The client may do this for a number of reasons such as: avoiding
                             holding HTTP connections open during long requests, because the result of the request is not
@@ -2265,59 +2269,56 @@ li > p:last-of-type:only-child {
                             further action.<a href="#section-2.6.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-2.6.1.1-2">
                             To initiate an async SCIM request, a normal SCIM protocol POST, PUT,
-                            PATCH, or DELETE request is performed with the HTTP Header <code>Prefer</code> with a value of <code>respond-async</code>
-                            as defined in <span>[<a href="#RFC7231" class="cite xref">RFC7231</a>]</span>.<a href="#section-2.6.1.1-2" class="pilcrow">¶</a></p>
+                            PATCH, or DELETE request is performed with the HTTP Header <code>Prefer</code> with a value of
+                            <code>respond-async</code> as defined in <span>[<a href="#RFC7231" class="cite xref">RFC7231</a>]</span>. The HTTP <code>Accept</code>
+                            header SHALL be ignored.<a href="#section-2.6.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-2.6.1.1-3">
-                            In response, and as indicated in the SCIM Service Provider Configuration (see <a href="#serviceProviderConfig" class="auto internal xref">Section 4</a>,
-                            The SCIM Service Provider responds with either a normal SCIM response, or responds asynchronously by
-                            returning HTTP Status 202 Accepted. The HTTP response header "Set-txn" is returned for which the value corresponds
-                            to a future Security Event Token to be received whose "txn" claim will match.
-                            The <code>Location</code> header returned SHALL be one of the following:<a href="#section-2.6.1.1-3" class="pilcrow">¶</a></p>
+                            In response, and as indicated in the SCIM Service Provider Configuration (see
+                            <a href="#serviceProviderConfig" class="auto internal xref">Section 4</a>, The SCIM Service Provider responds with either a
+                            normal SCIM response, or respond asynchronously by returning HTTP Status 202 Accepted.
+                            The asynchronous response SHOULD contain no response body. To enable correlation of the
+                            future event, the HTTP response header "Set-txn" is returned.
+                            The value SHALL correspond to a future Security Event Token to be received whose "txn" claim
+                            SHALL match. The <code>Location</code> header returned SHALL be one of the following:<a href="#section-2.6.1.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.6.1.1-4.1">A location URI where the completion token MAY be retrieved using HTTP GET, or<a href="#section-2.6.1.1-4.1" class="pilcrow">¶</a>
 </li>
               <li class="normal" id="section-2.6.1.1-4.2">The normal SCIM location header response specified by <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span>.<a href="#section-2.6.1.1-4.2" class="pilcrow">¶</a>
 </li>
             </ul>
-<p id="section-2.6.1.1-5" class="keepWithNext">In the following non-normative example, a "Prefer" header is set to "respond-async":<a href="#section-2.6.1.1-5" class="pilcrow">¶</a></p>
-<span id="name-example-asynchronous-reques"></span><div id="asyncRequestFigure">
+<p id="section-2.6.1.1-5" class="keepWithNext">
+                            In the following non-normative example, a "Prefer" header is set to "respond-async":<a href="#section-2.6.1.1-5" class="pilcrow">¶</a></p>
+<span id="name-example-asynchronous-scim-p"></span><div id="asyncRequestFigure">
 <figure id="figure-14">
               <div class="alignLeft art-text artwork" id="section-2.6.1.1-6.1">
 <pre>
 PUT /Users/2819c223-7f76-453a-919d-413861904646
 Host: scim.example.com
 Prefer: respond-async
-Accept: application/scim+json
 Content-Type: application/scim+json
 Authorization: Bearer h480djs93hd8
-
 {
   "schemas":["urn:ietf:params:scim:schemas:core:2.0:User"],
   "id":"2819c223-7f76-453a-919d-413861904646",
   "userName":"bjensen",
   "externalId":"bjensen",
   "name":{
-    "formatted":"Ms. Barbara J Jensen III",
-    "familyName":"Jensen",
-    "givenName":"Barbara",
-    "middleName":"Jane"
+    "formatted":"Ms. Barbara J Jensen III"
   },
   "roles":[],
   "emails":[
     {
         "value":"bjensen@example.com"
-    },
-    {
-        "value":"babs@jensen.org"
     }
   ]
 }</pre>
 </div>
 <figcaption><a href="#figure-14" class="selfRef">Figure 14</a>:
-<a href="#name-example-asynchronous-reques" class="selfRef">Example Asynchronous Request</a>
+<a href="#name-example-asynchronous-scim-p" class="selfRef">Example Asynchronous SCIM Protocol Request</a>
               </figcaption></figure>
 </div>
-<p id="section-2.6.1.1-7" class="keepWithNext">The SCIM Service Provider responds with HTTP 202 Accepted and includes the Set-txn header:<a href="#section-2.6.1.1-7" class="pilcrow">¶</a></p>
+<p id="section-2.6.1.1-7" class="keepWithNext">
+                            The SCIM Service Provider responds with HTTP 202 Accepted and includes the Set-txn header:<a href="#section-2.6.1.1-7" class="pilcrow">¶</a></p>
 <figure id="figure-15">
               <div class="alignLeft art-text artwork" id="section-2.6.1.1-8.1">
 <pre>HTTP/1.1 202 Accepted
@@ -2334,10 +2335,10 @@ Location:
 <a href="#section-2.6.1.2" class="section-number selfRef">2.6.1.2. </a><a href="#name-urnietfparamsscimeventmisca" class="section-name selfRef">urn:ietf:params:SCIM:event:misc:asyncResp</a>
             </h5>
 <p id="section-2.6.1.2-1">
-                        The Async Response event signals the completion of a SCIM request. The payload contains the attributes
-                        defined in SCIM Bulk Section 3.7 <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span> and is the same a single SCIM Bulk Response
-                        Operation as per Section 3.7.3. In the event, the "txn" claim must be set to the value originally returned
-                        to the original SCIM client requestor (see <a href="#asyncRequest" class="auto internal xref">Section 2.6.1.1</a>).<a href="#section-2.6.1.2-1" class="pilcrow">¶</a></p>
+                        The Async Response event signals the completion of a SCIM request. The event payload contains
+                        the attributes defined in SCIM Bulk Section 3.7 <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span> and is the same a
+                        single SCIM Bulk Response Operation as per Section 3.7.3. In the event, the "txn" claim must be
+                        set to the value originally returned to the requesting SCIM client (see <a href="#asyncRequest" class="auto internal xref">Section 2.6.1.1</a>).<a href="#section-2.6.1.2-1" class="pilcrow">¶</a></p>
 <span id="name-example-scim-async-response"></span><div id="exampleAsyncEvent">
 <figure id="figure-16">
               <div class="alignLeft art-text artwork" id="section-2.6.1.2-2.1">
@@ -2375,12 +2376,13 @@ Location:
 </div>
 <div id="distribution">
 <section id="section-3">
-      <h2 id="name-event-delivery">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-event-delivery" class="section-name selfRef">Event Delivery</a>
+      <h2 id="name-event-delivery-feeds">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-event-delivery-feeds" class="section-name selfRef">Event Delivery Feeds</a>
       </h2>
 <p id="section-3-1">
-                For the purposes of SCIM, this draft uses the following methods exchange of events using the Security Event Token exchange
-                methods:<a href="#section-3-1" class="pilcrow">¶</a></p>
+                In addition to retrieving a single security event as described in <a href="#asyncRequest" class="auto internal xref">Section 2.6.1.1</a>, Event
+                Feeds (or Streams) provide the ability exchange a series of events between pre-arranged endpoints using
+                the following Security Event Token exchange methods:<a href="#section-3-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlNewline" id="section-3-2">
         <dt id="section-3-2.1"><span>[<a href="#RFC8935" class="cite xref">RFC8935</a>]</span></dt>
         <dd style="margin-left: 1.5em" id="section-3-2.2">
@@ -2400,7 +2402,7 @@ Location:
 <p id="section-3-3">In the figure below, a possible distribution architecture is shown. This specification is only normatively
             concerned with the actual Security Event Transfer mechanism. SCIM Service providers MAY choose to implement
             SET transfer directly, or they may use a method of allowing a single Event Publisher to assemble streams of
-            events for transfer to a receiver.  Likewise, on the receiving side, the only normative requirement is to be
+            events for transfer to a receiver. Likewise, on the receiving side, the only normative requirement is to be
             able to receive events and implement storage of Events to local recovery needs.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <div id="architecture">
 <figure id="figure-17">
@@ -2456,14 +2458,14 @@ Location:
                 transferred. Once a receiving domain has successfully stored events to its own recovery needs, the receiving
                 domain acknowledges the transfer of SET Events to the publisher using the method defined in <span>[<a href="#RFC8935" class="cite xref">RFC8935</a>]</span> and <span>[<a href="#RFC8936" class="cite xref">RFC8936</a>]</span>.
                 SET does not specify local server event recovery mechanisms, this is up to the service implementation within
-                each domain. This is done to enable cross-domain independence between domains.  As an example, a hosted
+                each domain. This is done to enable cross-domain independence between domains. As an example, a hosted
                 SCIM service provider with a series of SCIM servers replicates through a proprietary system. An enterprise
                 customer who is the common client across both providers wants to establish a single administrative domain and
                 wants to share SCIM change events between providers. Each domain has its own SCIM implementation and its own
-                local replication strategy.  The publishing domain issues events that the receiving domain picks up. Once the
+                local replication strategy. The publishing domain issues events that the receiving domain picks up. Once the
                 receiving domain has processed the event, the receiving domains own internal replication and recovery takes over.
                 Because there is no need for the publishing domain to retain the event, it has the option to purge the event
-                once the receiving domain has acknowledged it.  This may be particularly critical if a publishing domain has dozens
+                once the receiving domain has acknowledged it. This may be particularly critical if a publishing domain has dozens
                 or even thousands of event receiving domains each with their own sub-set of data. Retaining all events for all
                 receivers would become impractical.<a href="#section-3-6" class="pilcrow">¶</a></p>
 <div id="jwtFormats">
@@ -2518,7 +2520,7 @@ Location:
         </h3>
 <p id="section-3.2-1">
                     Security Event Tokens MAY be delivered using push-based HTTP delivery <span>[<a href="#RFC8935" class="cite xref">RFC8935</a>]</span>, or
-                    pull-based HTTP Polling <span>[<a href="#RFC8936" class="cite xref">RFC8936</a>]</span>.  Both of these protocols define a method of
+                    pull-based HTTP Polling <span>[<a href="#RFC8936" class="cite xref">RFC8936</a>]</span>. Both of these protocols define a method of
                     transfer and acknowledgement to prevent loss-of-information and to provide re-transmission and
                     recover. The method of transfer is best decided by considering the following advantages and disadvantages
                     in a production scenario:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
