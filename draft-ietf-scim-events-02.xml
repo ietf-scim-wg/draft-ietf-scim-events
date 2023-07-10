@@ -21,7 +21,6 @@
         category="std"
         docName="draft-ietf-scim-events-02"
         ipr="trust200902"
-        obsoletes="draft-hunt-idevent-scim-01"
         updates=""
         submissionType="IETF"
         xml:lang="en"
@@ -66,7 +65,7 @@
         <abstract>
             <t>
                 This specification defines a set of SCIM Security Events using the Security Event Token Specification
-                <xref target="RFC8417"/> to enable the asynchronous exchange of messages between SCIM Service Providers
+                RFC8417 to enable the asynchronous exchange of messages between SCIM Service Providers
                 and receivers. SCIM Security Events are typically used for: asynchronous request completion, resource
                 replication, provisioning co-ordination, and shared security signals.
             </t>
@@ -782,7 +781,7 @@
                         <t>
                             To initiate an async SCIM request, a normal SCIM protocol POST, PUT,
                             PATCH, or DELETE request is performed with the HTTP Header <tt>Prefer</tt> with a value of
-                            <tt>respond-async</tt> as defined in <xref target="RFC7231"/>. The HTTP <tt>Accept</tt>
+                            <tt>respond-async</tt> as defined in <xref target="RFC9110"/>. The HTTP <tt>Accept</tt>
                             header SHALL be ignored.
                         </t>
                         <t>
@@ -905,20 +904,20 @@ Location:
             able to receive events and implement storage of Events to local recovery needs.</t>
             <figure anchor="architecture">
                 <artwork align="center" type="ascii-art"><![CDATA[
-┌───────────────┐  ┌───────────────┐     ┌───────────────┐
-│               │  │               │     │               │
-│ SCIM Server 1 │  │ SCIM Server 2 │ ... │ SCIM Server n │
-│               │  │               │     │               │
-└───────┬───────┘  └───────┬───────┘     └───────┬───────┘
-        │                  │                     │
-┌───────▼──────────────────▼─────────────────────▼───────┐
-│              Local Event Delivery System               │
-└───────────────────────────┬────────────────────▲───────┘
-                            │                    │
-                   ┌────────▼────────┐    ┌──────┴───────┐
-                   │                 │    │   Recovery   │
-                   │ Event Publisher ◄────►    Buffer    │
-                   │                 │    └──────────────┘
+┌───────────────┐  ┌───────────────┐    ┌───────────────┐
+│               │  │               │    │               │
+│ SCIM Server 1 │  │ SCIM Server 2 │ ...│ SCIM Server n │
+│               │  │               │    │               │
+└───────┬───────┘  └───────┬───────┘    └───────┬───────┘
+        │                  │                    │
+┌───────▼──────────────────▼────────────────────▼───────┐
+│              Local Event Delivery System              │
+└───────────────────────────┬───────────────────▲───────┘
+                            │                   │
+                   ┌────────▼────────┐   ┌──────┴───────┐
+                   │                 │   │   Recovery   │
+                   │ Event Publisher ◄───►    Buffer    │
+                   │                 │   └──────────────┘
                    └────────┬────────┘
                ┌──          │
                │   ┌────────▼────────┐
@@ -927,10 +926,10 @@ Location:
     Minimum    │   └────────┬────────┘
     Interop    │            │
     Requirement│            │
-               │   ┌────────▼────────┐    ┌──────────────┐
-               │   │  SET Trans Rcvr │    │     Event    │
-               │   │ (RFC 8935/8936) ├────►    Storage   │
-               │   └────────┬────────┘    └──────────────┘
+               │   ┌────────▼────────┐   ┌──────────────┐
+               │   │  SET Trans Rcvr │   │     Event    │
+               │   │ (RFC 8935/8936) ├───►    Storage   │
+               │   └────────┬────────┘   └──────────────┘
                └──          │
                    ┌────────▼────────┐
                    │ Receiver Domain │
@@ -941,7 +940,7 @@ Location:
             </figure>
             <t>
                 As Security Event Tokens are based on JWT tokens, it is possible to exchange events by a number of transfer
-                mechanisms such as: XMPP <xref target="RFC6120"/>, HTTP <xref target="RFC7540"/>, and Message Buses (e.g.
+                mechanisms such as: XMPP <xref target="RFC6120"/>, HTTP <xref target="RFC9113"/>, and Message Buses (e.g.
                 <xref target="RFC3259"/>, Apache Kafka <xref target="Kafka"/>). For example, on the publishing side, a
                 cluster or network of SCIM servers may publish events to a common SET publisher service for distribution to 1 or more
                 receivers. The Event Publisher MAY be incorporated directly into each SCIM Server, or a Local Event Delivery System
@@ -1130,7 +1129,7 @@ Location:
                 The use of Json Web Encryption (JWE) <xref target="RFC7516"/> can impose performance limitations when
                 used in high event frequency scenarios. JWE is primarily useful only when the transfer of SETs involves an
                 unsecured transfer method (e.g. URL) that would not otherwise be protected by the transfer protocol (e.g.
-                SET Transfer over TLS <xref target="RFC5246"/>).</t>
+                SET Transfer over TLS <xref target="RFC8446"/>).</t>
             <t>
                 For SCIM Provisioning events, the long-term series of changes may be critical to both sides. As such
                 Event Publishers SHOULD consider storing events for receivers for longer periods of time in the case of
@@ -1350,15 +1349,14 @@ Location:
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3986.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7240.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7231.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7515.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7516.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7519.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7520.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7643.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7644.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8417.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9110.xml"/>
                 <reference anchor="SUBID">
                     <front>
                         <title>Subject Identifiers for Security Event Tokens (Draft 18)</title>
@@ -1371,6 +1369,29 @@ Location:
                         <date year="2023" day="24" month="June"/>
                     </front>
                     <format target="https://www.ietf.org/archive/id/draft-ietf-secevent-subject-identifiers-18.txt"
+                            type="HTML"/>
+                </reference>
+
+            </references>
+
+            <references>
+                <name>Informative References</name>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3259.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3864.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8446.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6120.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7520.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9113.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8935.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8936.xml"/>
+                <reference anchor="Kafka">
+                    <front>
+
+                        <title>Apache Kafka </title>
+                        <author><organization>Apache Software Foundation</organization></author>
+                        <date year="2017"/>
+                    </front>
+                    <format target="https://kafka.apache.org"
                             type="HTML"/>
                 </reference>
                 <referencegroup anchor="SSWG">
@@ -1428,27 +1449,6 @@ Location:
                 </referencegroup>
 
             </references>
-
-            <references>
-                <name>Informative References</name>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3259.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3864.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.5246.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6120.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7540.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8935.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8936.xml"/>
-                <reference anchor="Kafka">
-                    <front>
-
-                        <title>Apache Kafka </title>
-                        <author><organization>Apache Software Foundation</organization></author>
-                        <date year="2017"/>
-                    </front>
-                    <format target="https://kafka.apache.org"
-                            type="HTML"/>
-                </reference>
-            </references>
         </references>
         <section anchor="modes" numbered="true" toc="default">
             <name>Use Cases</name>
@@ -1464,7 +1464,7 @@ Location:
                     SCIM service providers in a common administrative domain. In this mode, complete information about
                     changes for resources are shared between replicas for immediate processing.
                 </t>
-                <figure anchor="dbrSequence">
+                <figure align="left" anchor="dbrSequence">
                     <name>Domain Based Replication Sequence</name>
                     <artset>
                         <artwork type="ascii-art"><![CDATA[
@@ -1583,7 +1583,7 @@ Location:
                     the sharing of information between domains, events about the User MAY be added to the feed
                     between the Event Publisher and Receiver.
                 </t>
-                <figure>
+                <figure align="left">
                     <name>Co-Ordinated Provisioning Sequence</name>
                     <artset>
                         <artwork type="ascii-art" align="center"><![CDATA[

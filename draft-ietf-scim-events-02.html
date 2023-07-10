@@ -11,7 +11,7 @@
 <meta content="
        
                 This specification defines a set of SCIM Security Events using the Security Event Token Specification
-                  to enable the asynchronous exchange of messages between SCIM Service Providers
+                RFC8417 to enable the asynchronous exchange of messages between SCIM Service Providers
                 and receivers. SCIM Security Events are typically used for: asynchronous request completion, resource
                 replication, provisioning co-ordination, and shared security signals.
        
@@ -1231,9 +1231,6 @@ li > p:last-of-type:only-child {
 <dd class="workgroup">SCIM</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
 <dd class="internet-draft">draft-ietf-scim-events</dd>
-<dt class="label-obsoletes">Obsoletes:</dt>
-<dd class="obsoletes">
-<a href="https://www.rfc-editor.org/rfc/rfcdraft-hunt-idevent-scim-01" class="eref">draft-hunt-idevent-scim-01</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
 <time datetime="2023-07-10" class="published">10 July 2023</time>
@@ -1265,7 +1262,7 @@ li > p:last-of-type:only-child {
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">
                 This specification defines a set of SCIM Security Events using the Security Event Token Specification
-                <span>[<a href="#RFC8417" class="cite xref">RFC8417</a>]</span> to enable the asynchronous exchange of messages between SCIM Service Providers
+                RFC8417 to enable the asynchronous exchange of messages between SCIM Service Providers
                 and receivers. SCIM Security Events are typically used for: asynchronous request completion, resource
                 replication, provisioning co-ordination, and shared security signals.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
@@ -2288,7 +2285,7 @@ li > p:last-of-type:only-child {
 <p id="section-2.6.1.1-2">
                             To initiate an async SCIM request, a normal SCIM protocol POST, PUT,
                             PATCH, or DELETE request is performed with the HTTP Header <code>Prefer</code> with a value of
-                            <code>respond-async</code> as defined in <span>[<a href="#RFC7231" class="cite xref">RFC7231</a>]</span>. The HTTP <code>Accept</code>
+                            <code>respond-async</code> as defined in <span>[<a href="#RFC9110" class="cite xref">RFC9110</a>]</span>. The HTTP <code>Accept</code>
                             header SHALL be ignored.<a href="#section-2.6.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-2.6.1.1-3">
                             In response, and as indicated in the SCIM Service Provider Configuration (see
@@ -2464,7 +2461,7 @@ Location:
 </div>
 <p id="section-3-5">
                 As Security Event Tokens are based on JWT tokens, it is possible to exchange events by a number of transfer
-                mechanisms such as: XMPP <span>[<a href="#RFC6120" class="cite xref">RFC6120</a>]</span>, HTTP <span>[<a href="#RFC7540" class="cite xref">RFC7540</a>]</span>, and Message Buses (e.g.
+                mechanisms such as: XMPP <span>[<a href="#RFC6120" class="cite xref">RFC6120</a>]</span>, HTTP <span>[<a href="#RFC9113" class="cite xref">RFC9113</a>]</span>, and Message Buses (e.g.
                 <span>[<a href="#RFC3259" class="cite xref">RFC3259</a>]</span>, Apache Kafka <span>[<a href="#Kafka" class="cite xref">Kafka</a>]</span>). For example, on the publishing side, a
                 cluster or network of SCIM servers may publish events to a common SET publisher service for distribution to 1 or more
                 receivers. The Event Publisher MAY be incorporated directly into each SCIM Server, or a Local Event Delivery System
@@ -2667,7 +2664,7 @@ Location:
                 The use of Json Web Encryption (JWE) <span>[<a href="#RFC7516" class="cite xref">RFC7516</a>]</span> can impose performance limitations when
                 used in high event frequency scenarios. JWE is primarily useful only when the transfer of SETs involves an
                 unsecured transfer method (e.g. URL) that would not otherwise be protected by the transfer protocol (e.g.
-                SET Transfer over TLS <span>[<a href="#RFC5246" class="cite xref">RFC5246</a>]</span>).<a href="#section-5-2" class="pilcrow">¶</a></p>
+                SET Transfer over TLS <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>).<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">
                 For SCIM Provisioning events, the long-term series of changes may be critical to both sides. As such
                 Event Publishers SHOULD consider storing events for receivers for longer periods of time in the case of
@@ -2930,10 +2927,6 @@ Location:
         <dd>
 <span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3986">https://www.rfc-editor.org/info/rfc3986</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC7231">[RFC7231]</dt>
-        <dd>
-<span class="refAuthor">Fielding, R., Ed.</span> and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content"</span>, <span class="seriesInfo">RFC 7231</span>, <span class="seriesInfo">DOI 10.17487/RFC7231</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7231">https://www.rfc-editor.org/info/rfc7231</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC7240">[RFC7240]</dt>
         <dd>
 <span class="refAuthor">Snell, J.</span>, <span class="refTitle">"Prefer Header for HTTP"</span>, <span class="seriesInfo">RFC 7240</span>, <span class="seriesInfo">DOI 10.17487/RFC7240</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7240">https://www.rfc-editor.org/info/rfc7240</a>&gt;</span>. </dd>
@@ -2949,10 +2942,6 @@ Location:
 <dt id="RFC7519">[RFC7519]</dt>
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7519">https://www.rfc-editor.org/info/rfc7519</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC7520">[RFC7520]</dt>
-        <dd>
-<span class="refAuthor">Miller, M.</span>, <span class="refTitle">"Examples of Protecting Content Using JSON Object Signing and Encryption (JOSE)"</span>, <span class="seriesInfo">RFC 7520</span>, <span class="seriesInfo">DOI 10.17487/RFC7520</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7520">https://www.rfc-editor.org/info/rfc7520</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7643">[RFC7643]</dt>
         <dd>
@@ -2970,13 +2959,9 @@ Location:
         <dd>
 <span class="refAuthor">Hunt, P., Ed.</span>, <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Denniss, W.</span>, and <span class="refAuthor">M. Ansari</span>, <span class="refTitle">"Security Event Token (SET)"</span>, <span class="seriesInfo">RFC 8417</span>, <span class="seriesInfo">DOI 10.17487/RFC8417</span>, <time datetime="2018-07" class="refDate">July 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8417">https://www.rfc-editor.org/info/rfc8417</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="SSWG">[SSWG]</dt>
+<dt id="RFC9110">[RFC9110]</dt>
         <dd>
-<div class="refInstance" id="SSEF">
-            <span class="refAuthor">Tulshibagwale, A.</span>, <span class="refAuthor">Cappalli, T.</span>, <span class="refAuthor">Scurtescu, M.</span>, <span class="refAuthor">Backman, A.</span>, and <span class="refAuthor">J. Bradley</span>, <span class="refTitle">"OpenID Shared Signals and Events Framework Specification 1.0 - draft 01"</span>, <time datetime="2021-06-08" class="refDate">8 June 2021</time>. </div>
-<div class="refInstance" id="CAEP">
-            <span class="refAuthor">Cappalli, T.</span> and <span class="refAuthor">A. Tulshibagwale</span>, <span class="refTitle">"OpenID Continuous Access Evaluation Profile 1.0 - draft 02"</span>, <time datetime="2021-06-08" class="refDate">8 June 2021</time>. </div>
-</dd>
+<span class="refAuthor">Fielding, R., Ed.</span>, <span class="refAuthor">Nottingham, M., Ed.</span>, and <span class="refAuthor">J. Reschke, Ed.</span>, <span class="refTitle">"HTTP Semantics"</span>, <span class="seriesInfo">STD 97</span>, <span class="seriesInfo">RFC 9110</span>, <span class="seriesInfo">DOI 10.17487/RFC9110</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9110">https://www.rfc-editor.org/info/rfc9110</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SUBID">[SUBID]</dt>
       <dd>
@@ -3001,25 +2986,37 @@ Location:
         <dd>
 <span class="refAuthor">Klyne, G.</span>, <span class="refAuthor">Nottingham, M.</span>, and <span class="refAuthor">J. Mogul</span>, <span class="refTitle">"Registration Procedures for Message Header Fields"</span>, <span class="seriesInfo">BCP 90</span>, <span class="seriesInfo">RFC 3864</span>, <span class="seriesInfo">DOI 10.17487/RFC3864</span>, <time datetime="2004-09" class="refDate">September 2004</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3864">https://www.rfc-editor.org/info/rfc3864</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC5246">[RFC5246]</dt>
-        <dd>
-<span class="refAuthor">Dierks, T.</span> and <span class="refAuthor">E. Rescorla</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.2"</span>, <span class="seriesInfo">RFC 5246</span>, <span class="seriesInfo">DOI 10.17487/RFC5246</span>, <time datetime="2008-08" class="refDate">August 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5246">https://www.rfc-editor.org/info/rfc5246</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC6120">[RFC6120]</dt>
         <dd>
 <span class="refAuthor">Saint-Andre, P.</span>, <span class="refTitle">"Extensible Messaging and Presence Protocol (XMPP): Core"</span>, <span class="seriesInfo">RFC 6120</span>, <span class="seriesInfo">DOI 10.17487/RFC6120</span>, <time datetime="2011-03" class="refDate">March 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6120">https://www.rfc-editor.org/info/rfc6120</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC7540">[RFC7540]</dt>
+<dt id="RFC7520">[RFC7520]</dt>
         <dd>
-<span class="refAuthor">Belshe, M.</span>, <span class="refAuthor">Peon, R.</span>, and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"Hypertext Transfer Protocol Version 2 (HTTP/2)"</span>, <span class="seriesInfo">RFC 7540</span>, <span class="seriesInfo">DOI 10.17487/RFC7540</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7540">https://www.rfc-editor.org/info/rfc7540</a>&gt;</span>. </dd>
+<span class="refAuthor">Miller, M.</span>, <span class="refTitle">"Examples of Protecting Content Using JSON Object Signing and Encryption (JOSE)"</span>, <span class="seriesInfo">RFC 7520</span>, <span class="seriesInfo">DOI 10.17487/RFC7520</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7520">https://www.rfc-editor.org/info/rfc7520</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8446">[RFC8446]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8446">https://www.rfc-editor.org/info/rfc8446</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8935">[RFC8935]</dt>
         <dd>
 <span class="refAuthor">Backman, A., Ed.</span>, <span class="refAuthor">Jones, M., Ed.</span>, <span class="refAuthor">Scurtescu, M.</span>, <span class="refAuthor">Ansari, M.</span>, and <span class="refAuthor">A. Nadalin</span>, <span class="refTitle">"Push-Based Security Event Token (SET) Delivery Using HTTP"</span>, <span class="seriesInfo">RFC 8935</span>, <span class="seriesInfo">DOI 10.17487/RFC8935</span>, <time datetime="2020-11" class="refDate">November 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8935">https://www.rfc-editor.org/info/rfc8935</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8936">[RFC8936]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Backman, A., Ed.</span>, <span class="refAuthor">Jones, M., Ed.</span>, <span class="refAuthor">Scurtescu, M.</span>, <span class="refAuthor">Ansari, M.</span>, and <span class="refAuthor">A. Nadalin</span>, <span class="refTitle">"Poll-Based Security Event Token (SET) Delivery Using HTTP"</span>, <span class="seriesInfo">RFC 8936</span>, <span class="seriesInfo">DOI 10.17487/RFC8936</span>, <time datetime="2020-11" class="refDate">November 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8936">https://www.rfc-editor.org/info/rfc8936</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9113">[RFC9113]</dt>
+        <dd>
+<span class="refAuthor">Thomson, M., Ed.</span> and <span class="refAuthor">C. Benfield, Ed.</span>, <span class="refTitle">"HTTP/2"</span>, <span class="seriesInfo">RFC 9113</span>, <span class="seriesInfo">DOI 10.17487/RFC9113</span>, <time datetime="2022-06" class="refDate">June 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9113">https://www.rfc-editor.org/info/rfc9113</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SSWG">[SSWG]</dt>
+      <dd>
+<div class="refInstance" id="SSEF">
+            <span class="refAuthor">Tulshibagwale, A.</span>, <span class="refAuthor">Cappalli, T.</span>, <span class="refAuthor">Scurtescu, M.</span>, <span class="refAuthor">Backman, A.</span>, and <span class="refAuthor">J. Bradley</span>, <span class="refTitle">"OpenID Shared Signals and Events Framework Specification 1.0 - draft 01"</span>, <time datetime="2021-06-08" class="refDate">8 June 2021</time>. </div>
+<div class="refInstance" id="CAEP">
+            <span class="refAuthor">Cappalli, T.</span> and <span class="refAuthor">A. Tulshibagwale</span>, <span class="refTitle">"OpenID Continuous Access Evaluation Profile 1.0 - draft 02"</span>, <time datetime="2021-06-08" class="refDate">8 June 2021</time>. </div>
+</dd>
 <dd class="break"></dd>
 </dl>
 </section>

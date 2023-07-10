@@ -4,10 +4,10 @@
 
 SCIM                                                        P. Hunt, Ed.
 Internet-Draft                                             IndependentId
-Obsoletes: draft-hunt-idevent-scim-01 (if                  N. Cam-Winget
-           approved)                                       Cisco Systems
-Intended status: Standards Track                                M. Kiser
-Expires: 11 January 2024                                       Sailpoint
+Intended status: Standards Track                           N. Cam-Winget
+Expires: 11 January 2024                                   Cisco Systems
+                                                                M. Kiser
+                                                               Sailpoint
                                                             10 July 2023
 
 
@@ -17,11 +17,11 @@ Expires: 11 January 2024                                       Sailpoint
 Abstract
 
    This specification defines a set of SCIM Security Events using the
-   Security Event Token Specification [RFC8417] to enable the
-   asynchronous exchange of messages between SCIM Service Providers and
-   receivers.  SCIM Security Events are typically used for: asynchronous
-   request completion, resource replication, provisioning co-ordination,
-   and shared security signals.
+   Security Event Token Specification RFC8417 to enable the asynchronous
+   exchange of messages between SCIM Service Providers and receivers.
+   SCIM Security Events are typically used for: asynchronous request
+   completion, resource replication, provisioning co-ordination, and
+   shared security signals.
 
 Status of This Memo
 
@@ -1031,7 +1031,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
    To initiate an async SCIM request, a normal SCIM protocol POST, PUT,
    PATCH, or DELETE request is performed with the HTTP Header Prefer
-   with a value of respond-async as defined in [RFC7231].  The HTTP
+   with a value of respond-async as defined in [RFC9110].  The HTTP
    Accept header SHALL be ignored.
 
    In response, and as indicated in the SCIM Service Provider
@@ -1220,7 +1220,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
 
    As Security Event Tokens are based on JWT tokens, it is possible to
    exchange events by a number of transfer mechanisms such as: XMPP
-   [RFC6120], HTTP [RFC7540], and Message Buses (e.g.  [RFC3259], Apache
+   [RFC6120], HTTP [RFC9113], and Message Buses (e.g.  [RFC3259], Apache
    Kafka [Kafka]).  For example, on the publishing side, a cluster or
    network of SCIM servers may publish events to a common SET publisher
    service for distribution to 1 or more receivers.  The Event Publisher
@@ -1428,7 +1428,7 @@ Internet-Draft           draft-ietf-scim-events                July 2023
    limitations when used in high event frequency scenarios.  JWE is
    primarily useful only when the transfer of SETs involves an unsecured
    transfer method (e.g.  URL) that would not otherwise be protected by
-   the transfer protocol (e.g.  SET Transfer over TLS [RFC5246]).
+   the transfer protocol (e.g.  SET Transfer over TLS [RFC8446]).
 
    For SCIM Provisioning events, the long-term series of changes may be
    critical to both sides.  As such Event Publishers SHOULD consider
@@ -1647,11 +1647,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
               RFC 3986, DOI 10.17487/RFC3986, January 2005,
               <https://www.rfc-editor.org/info/rfc3986>.
 
-   [RFC7231]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
-              Protocol (HTTP/1.1): Semantics and Content", RFC 7231,
-              DOI 10.17487/RFC7231, June 2014,
-              <https://www.rfc-editor.org/info/rfc7231>.
-
    [RFC7240]  Snell, J., "Prefer Header for HTTP", RFC 7240,
               DOI 10.17487/RFC7240, June 2014,
               <https://www.rfc-editor.org/info/rfc7240>.
@@ -1668,20 +1663,6 @@ Internet-Draft           draft-ietf-scim-events                July 2023
               (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015,
               <https://www.rfc-editor.org/info/rfc7519>.
 
-   [RFC7520]  Miller, M., "Examples of Protecting Content Using JSON
-              Object Signing and Encryption (JOSE)", RFC 7520,
-              DOI 10.17487/RFC7520, May 2015,
-              <https://www.rfc-editor.org/info/rfc7520>.
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 30]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
-
    [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and C.
               Mortimore, "System for Cross-domain Identity Management:
               Core Schema", RFC 7643, DOI 10.17487/RFC7643, September
@@ -1692,6 +1673,15 @@ Internet-Draft           draft-ietf-scim-events                July 2023
               Management: Protocol", RFC 7644, DOI 10.17487/RFC7644,
               September 2015, <https://www.rfc-editor.org/info/rfc7644>.
 
+
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 30]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -1701,12 +1691,10 @@ Internet-Draft           draft-ietf-scim-events                July 2023
               DOI 10.17487/RFC8417, July 2018,
               <https://www.rfc-editor.org/info/rfc8417>.
 
-   [SSWG]     Tulshibagwale, A., Cappalli, T., Scurtescu, M., Backman,
-              A., and J. Bradley, "OpenID Shared Signals and Events
-              Framework Specification 1.0 - draft 01", 8 June 2021.
-
-              Cappalli, T. and A. Tulshibagwale, "OpenID Continuous
-              Access Evaluation Profile 1.0 - draft 02", 8 June 2021.
+   [RFC9110]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
+              Ed., "HTTP Semantics", STD 97, RFC 9110,
+              DOI 10.17487/RFC9110, June 2022,
+              <https://www.rfc-editor.org/info/rfc9110>.
 
    [SUBID]    Ed, A. B., Scurtescu, M., and P. Jain, "Subject
               Identifiers for Security Event Tokens (Draft 18)", 24 June
@@ -1725,11 +1713,23 @@ Internet-Draft           draft-ietf-scim-events                July 2023
               DOI 10.17487/RFC3864, September 2004,
               <https://www.rfc-editor.org/info/rfc3864>.
 
-   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
-              (TLS) Protocol Version 1.2", RFC 5246,
-              DOI 10.17487/RFC5246, August 2008,
-              <https://www.rfc-editor.org/info/rfc5246>.
+   [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
+              Protocol (XMPP): Core", RFC 6120, DOI 10.17487/RFC6120,
+              March 2011, <https://www.rfc-editor.org/info/rfc6120>.
 
+   [RFC7520]  Miller, M., "Examples of Protecting Content Using JSON
+              Object Signing and Encryption (JOSE)", RFC 7520,
+              DOI 10.17487/RFC7520, May 2015,
+              <https://www.rfc-editor.org/info/rfc7520>.
+
+   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
+              <https://www.rfc-editor.org/info/rfc8446>.
+
+   [RFC8935]  Backman, A., Ed., Jones, M., Ed., Scurtescu, M., Ansari,
+              M., and A. Nadalin, "Push-Based Security Event Token (SET)
+              Delivery Using HTTP", RFC 8935, DOI 10.17487/RFC8935,
+              November 2020, <https://www.rfc-editor.org/info/rfc8935>.
 
 
 
@@ -1738,24 +1738,21 @@ Hunt, et al.             Expires 11 January 2024               [Page 31]
 Internet-Draft           draft-ietf-scim-events                July 2023
 
 
-   [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
-              Protocol (XMPP): Core", RFC 6120, DOI 10.17487/RFC6120,
-              March 2011, <https://www.rfc-editor.org/info/rfc6120>.
-
-   [RFC7540]  Belshe, M., Peon, R., and M. Thomson, Ed., "Hypertext
-              Transfer Protocol Version 2 (HTTP/2)", RFC 7540,
-              DOI 10.17487/RFC7540, May 2015,
-              <https://www.rfc-editor.org/info/rfc7540>.
-
-   [RFC8935]  Backman, A., Ed., Jones, M., Ed., Scurtescu, M., Ansari,
-              M., and A. Nadalin, "Push-Based Security Event Token (SET)
-              Delivery Using HTTP", RFC 8935, DOI 10.17487/RFC8935,
-              November 2020, <https://www.rfc-editor.org/info/rfc8935>.
-
    [RFC8936]  Backman, A., Ed., Jones, M., Ed., Scurtescu, M., Ansari,
               M., and A. Nadalin, "Poll-Based Security Event Token (SET)
               Delivery Using HTTP", RFC 8936, DOI 10.17487/RFC8936,
               November 2020, <https://www.rfc-editor.org/info/rfc8936>.
+
+   [RFC9113]  Thomson, M., Ed. and C. Benfield, Ed., "HTTP/2", RFC 9113,
+              DOI 10.17487/RFC9113, June 2022,
+              <https://www.rfc-editor.org/info/rfc9113>.
+
+   [SSWG]     Tulshibagwale, A., Cappalli, T., Scurtescu, M., Backman,
+              A., and J. Bradley, "OpenID Shared Signals and Events
+              Framework Specification 1.0 - draft 01", 8 June 2021.
+
+              Cappalli, T. and A. Tulshibagwale, "OpenID Continuous
+              Access Evaluation Profile 1.0 - draft 02", 8 June 2021.
 
 Appendix A.  Use Cases
 
@@ -1769,30 +1766,6 @@ A.1.  Domain Based Replication
    common administrative domain.  In this mode, complete information
    about changes for resources are shared between replicas for immediate
    processing.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hunt, et al.             Expires 11 January 2024               [Page 32]
-
-Internet-Draft           draft-ietf-scim-events                July 2023
-
 
                        ┌────────────────┐
    ┌────────┐          │SCIM            │   ┌────────────────────────┐
@@ -1813,6 +1786,13 @@ Internet-Draft           draft-ietf-scim-events                July 2023
                                     "Update local node"│ │    │
                                                        │ │<───┘
                                                        └┬┘
+
+
+
+Hunt, et al.             Expires 11 January 2024               [Page 32]
+
+Internet-Draft           draft-ietf-scim-events                July 2023
+
 
                 Figure 18: Domain Based Replication Sequence
 
@@ -1837,6 +1817,26 @@ A.2.  Co-ordinated Provisioning
    when a user consents to the sharing of information between domains,
    events about the User MAY be added to the feed between the Event
    Publisher and Receiver.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
