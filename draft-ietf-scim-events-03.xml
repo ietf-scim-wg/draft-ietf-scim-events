@@ -873,6 +873,43 @@ Location:
   ]
 }]]></artwork>
                     </figure>
+
+                    <t>
+                        An error may occur in the SCIM server's asynchornous processing of the SCIM request. In that case,
+                        the event's operation MUST include a "response" attribute to indicate a non-200-series HTTP status
+                        as defined in Section 3.7 <xref target="RFC7644"/>. The response attribute MUST contain the
+                        sub-attributes defined in Section 3.12 <xref target="RFC7644"/>. Note that the "status" attribute
+                        of the event operation should match the "status" attribute of the response.
+                    </t>
+                    <figure anchor="exampleAsyncErrorEvent">
+                        <name>Example SCIM Async Error Response Event</name>
+                        <artwork type="" align="left" alt=""><![CDATA[{
+  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+  "sub_id": {
+    "format": "scim",
+    "uri": "/Users/2819c223-7f76-453a-919d-413861904646"
+  },
+  "txn": "734f0614e3274f288f93ac74119dcf78",
+  "events":{
+    "urn:ietf:params:SCIM:event:misc:asyncResp": {
+        "method": "PUT",
+        "version": "W\/\"huJj29dMNgu3WXPD\"",
+        "status": "400",
+        "response": {
+            "schemas": ["urn:ietf:params:scim:api:messages:2.0:Error"],
+            "scimType":"invalidSyntax",
+            "detail": "Request is unparsable",
+            "status":"400"
+        }
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                    </figure>
                     </section>
                 </section>
             </section>
