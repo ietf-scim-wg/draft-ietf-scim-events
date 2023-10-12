@@ -279,7 +279,7 @@
                     <dd>
                         The SCIM relative path for the resource which usually consists of the resource type endpoint
                         plus the resource <tt>id</tt>. For example <tt>/Users/2b2f880af6674ac284bae9381673d462</tt>.
-                        This attributes MUST be provided in a SCIM Event <tt>sub_id</tt> claim. Note the relative path
+                        This attribute MUST be provided in a SCIM Event <tt>sub_id</tt> claim. Note the relative path
                         is the path component after the SCIM Service Provider Base URI as defined in Section 1.3 <xref target="RFC7644"/>.
                         In cases where the Event Receiver is unable to match a URI, the Event Receiver MAY issue a call-back
                         to a previously agreed SCIM Service Provider Base URI plus the relative <tt>uri</tt> value and
@@ -297,7 +297,7 @@
                     </dd>
                     <dt>emails,username, ...</dt>
                     <dd>A SCIM attribute that is unique to both the Event Publisher and Receiver. Typically, attributes
-                        like email or usernames are used in situations where normal SCIM identifiers ( <tt>id</tt> and
+                        like email or usernames are used in situations where normal SCIM identifiers (<tt>id</tt> and
                         <tt>externalId</tt>) are insufficient to identify a common resource between an Event Publisher
                         and Event Receiver.</dd>
                 </dl>
@@ -339,7 +339,7 @@
                 </t>
 
                 <t>
-                    This specifications defines a new URI prefix <tt>urn:ietf:params:SCIM:event</tt> which is used
+                    This specification defines a new URI prefix <tt>urn:ietf:params:SCIM:event</tt> which is used
                     as the prefix for the following defined SCIM Events (see <xref target="IANAevents"/>).
                 </t>
             </section>
@@ -702,7 +702,7 @@
                 <name>SCIM Signals Events</name>
                 <t>
                     This section defines security signal events that have occurred within a
-                    SCIM Service Provider.The URI prefix for these events is:
+                    SCIM Service Provider. The URI prefix for these events is:
                     <tt>urn:ietf:params:SCIM:event:signal</tt>
                 </t>
                 <section anchor="authMethod" numbered="true" toc="default">
@@ -761,8 +761,8 @@
             <section anchor="scimMisc" numbered="true" toc="default">
                 <name>Miscellaneous Events</name>
                 <t>
-                    This section defines events related miscellaneous events such as Asynchronous Request completion that have occurred within a
-                    SCIM Service Provider. The URI prefix for these events is:
+                    This section defines events related miscellaneous events such as Asynchronous Request completion
+                    that has occurred within a SCIM Service Provider. The URI prefix for these events is:
                     <tt>urn:ietf:params:SCIM:event:misc</tt>
                 </t>
 
@@ -875,7 +875,7 @@ Location:
                     </figure>
 
                     <t>
-                        An error may occur in the SCIM server's asynchornous processing of the SCIM request. In that case,
+                        An error may occur in the SCIM server's asynchronous processing of the SCIM request. In that case,
                         the event's operation MUST include a "response" attribute to indicate a non-200-series HTTP status
                         as defined in Section 3.7 <xref target="RFC7644"/>. The response attribute MUST contain the
                         sub-attributes defined in Section 3.12 <xref target="RFC7644"/>. Note that the "status" attribute
@@ -1248,21 +1248,21 @@ Location:
 
             <dl newline="false" spacing="normal">
                 <dt>Schema URI:</dt>
-                <dd>See<xref target="scimEvents" format="default"/>.
+                <dd>See <xref target="scimEvents" format="default"/>.
                 </dd>
                 <dt>Schema Name:</dt>
-                <dd>See corresponding names under<xref target="scimEvents" format="default"/>.
+                <dd>See corresponding names under <xref target="scimEvents" format="default"/>.
                 </dd>
                 <dt>Intended ResourceType:</dt>
                 <dd>N/A. Events are not intended to be persisted in SCIM and will be used with Security Event Tokens
                     <xref target="RFC8417"/>.</dd>
                 <dt>Purpose:</dt>
-                <dd>See each description in<xref target="scimEvents" format="default"/>.
+                <dd>See each description in <xref target="scimEvents" format="default"/>.
                 </dd>
                 <dt>Single-valued Attributes:</dt>
                 <dd>None.</dd>
                 <dt>Multi-valued Attributes:</dt>
-                <dd>All schemas in this specification share the same attributes. See<xref target="attributes"
+                <dd>All schemas in this specification share the same attributes. See <xref target="attributes"
                                                                                           format="default"/>.
                 </dd>
             </dl>
@@ -1816,7 +1816,7 @@ Location:
                 <t>
                     When sharing information between parties, CP Events minimize the information shared in each message
                     requiring the Security Event Receiver to call back to the event publisher to retrieve more information
-                    if required. In this way, the Event Publisher is able to regular access to information through normal
+                    if required. In this way, the Event Publisher is able to have regular access to information through normal
                     SCIM protocol access restrictions.
                 </t>
 
@@ -1858,7 +1858,7 @@ Location:
             <t>Draft 00 - PH - First WG Draft</t>
             <t>Draft 01 - PH - Moved non-normative sections to Appendix, Security and Privacy Considerations</t>
             <t>Draft 02 - PH - Clarifications on Async Events, IANA Considerations</t>
-            <t>Draft 03 - PH - Fixed Header Field registration to RFC9110. Added "Preference-Applied" header in async reponse.</t>
+            <t>Draft 03 - PH - Fixed Header Field registration to RFC9110. Added "Preference-Applied" header in async response.</t>
         </section>
     </back>
 </rfc>
