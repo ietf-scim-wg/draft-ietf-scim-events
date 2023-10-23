@@ -52,7 +52,13 @@
                 <email>mike.kiser@sailpoint.com</email>
             </address>
         </author>
-        <date year="2023" month="July" day="29"/>
+        <author fullname="Jen Schreiber" initials="J." surname="Schreiber">
+            <organization abbrev="Workday">Workday Incorporated</organization>
+            <address>
+                <email>jennifer.winer@workday.com</email>
+            </address>
+        </author>
+        <date year="2023" month="October" day="23"/>
         <workgroup>SCIM</workgroup>
 
         <keyword>Identity</keyword>
@@ -841,6 +847,28 @@ Location:
            </artwork>
                         </figure>
                     </section>
+                    <section anchor="asyncBulkRequest" numbered="true" toc="default">
+                        <name>Asynchronous Bulk Endpoint Requests</name>
+                        <t>
+                            Section 3.7 <xref target="RFC7644"/> provides the ability to submit multiple SCIM operations
+                            in a single request. For each operation in an asynchronous Bulk request, a single Async Event
+                            completion event SHALL be generated. For example, if a single SCIM Bulk request had 10
+                            operations, then 10 Async Event completions events would be generated.
+                        </t>
+                        <t>
+                            In order to correlate multiple Async Events generated to the common inbound SCIM Bulk request, the
+                            "txn" claim MUST be set to the value originally returned to the requesting SCIM client (see
+                            <xref target="asyncRequest"/>) appended with a dash "-" followed by the operation number.
+                            For example, if the "txn" claim value was "2d80e537a3f64622b0347b641ebc8f44", then the first
+                            Async Response Event Token SHALL have a "txn" claim value of
+                            "2d80e537a3f64622b0347b641ebc8f44-1", the second event SHALL have a value of
+                            "2d80e537a3f64622b0347b641ebc8f44-2", and so on. Because a SCIM service provider may elect
+                            to optimize the sequence of operations (per Section 3.7), the Security Event Tokens
+                            generated MAY also be generated out of sequence from the original request. In this
+                            case, the "txn" claims generated SHALL use operation numbers that correspond to the order in
+                            the original request.
+                        </t>
+                    </section>
                     <section>
                     <name>urn:ietf:params:SCIM:event:misc:asyncResp</name>
                     <t>
@@ -910,6 +938,101 @@ Location:
   ]
 }]]></artwork>
                     </figure>
+                    <t>The following 4 figures show Async Completion events for the example in Section 3.7.3 of
+                    <xref target="RFC7644"/>.</t>
+                        <figure anchor="exampleAsyncBulk1">
+                            <name>Example SCIM Async Response Event Operation 1/4</name>
+                            <artwork type="" align="left" alt=""><![CDATA[{
+  "jti": "dbae9d7506b34329aa7f2f0d3827848b",
+  "sub_id": {
+    "format": "scim",
+    "uri": "/Users/92b725cd-9465-4e7d-8c16-01f8e146b87a"
+  },
+  "txn": "2d80e537a3f64622b0347b641ebc8f44-1",
+  "events":{
+    "urn:ietf:params:SCIM:event:misc:asyncResp": {
+         "method": "POST",
+         "bulkId": "qwerty",
+         "version": "W\/\"oY4m4wn58tkVjJxK\"",
+         "status": "201"
+    }
+  },
+  "iat": 1458505044,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                        </figure>
+                        <figure anchor="exampleAsyncBulk2">
+                            <name>Example SCIM Async Response Event Operation 2/4</name>
+                            <artwork type="" align="left" alt=""><![CDATA[{
+  "jti": "ca977d05ba5c43929e3a69023d5392a9",
+  "sub_id": {
+    "format": "scim",
+    "uri": "/Users/b7c14771-226c-4d05-8860-134711653041"
+  },
+  "txn": "2d80e537a3f64622b0347b641ebc8f44-2",
+  "events":{
+    "urn:ietf:params:SCIM:event:misc:asyncResp": {
+          "method": "PUT",
+          "version": "W\/\"huJj29dMNgu3WXPD\"",
+          "status": "200"
+    }
+  },
+  "iat": 1458505045,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                        </figure>
+                        <figure anchor="exampleAsyncBulk3">
+                            <name>Example SCIM Async Response Event Operation 3/4</name>
+                            <artwork type="" align="left" alt=""><![CDATA[{
+  "jti": "4bb87d70a4ab463bbdcd1f99111cbbf1",
+  "sub_id": {
+    "format": "scim",
+    "uri": "/Users/5d8d29d3-342c-4b5f-8683-a3cb6763ffcc"
+  },
+  "txn": "2d80e537a3f64622b0347b641ebc8f44-3",
+  "events":{
+    "urn:ietf:params:SCIM:event:misc:asyncResp": {
+          "method": "PATCH",
+          "version": "W\/\"huJj29dMNgu3WXPD\"",
+          "status": "200"
+    }
+  },
+  "iat": 1458505046,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                        </figure>
+                        <figure anchor="exampleAsyncBulk4">
+                            <name>Example SCIM Async Response Event Operation 4/4</name>
+                            <artwork type="" align="left" alt=""><![CDATA[{
+  "jti": "6a7843a7f5244d0eb62ca38b641d9139",
+  "sub_id": {
+    "format": "scim",
+    "uri": "/Users/e9025315-6bea-44e1-899c-1e07454e468b"
+  },
+  "txn": "2d80e537a3f64622b0347b641ebc8f44-4",
+  "events":{
+    "urn:ietf:params:SCIM:event:misc:asyncResp": {
+          "method": "DELETE",
+          "status": "204"
+    }
+  },
+  "iat": 1458505047,
+  "iss":"https://scim.example.com",
+  "aud":[
+   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+  ]
+}]]></artwork>
+                        </figure>
+
                     </section>
                 </section>
             </section>
@@ -1858,7 +1981,7 @@ Location:
             <t>Draft 00 - PH - First WG Draft</t>
             <t>Draft 01 - PH - Moved non-normative sections to Appendix, Security and Privacy Considerations</t>
             <t>Draft 02 - PH - Clarifications on Async Events, IANA Considerations</t>
-            <t>Draft 03 - PH - Fixed Header Field registration to RFC9110. Added "Preference-Applied" header in async response.</t>
+            <t>Draft 03 - PH - Fixed Header Field registration to RFC9110. Added "Preference-Applied" header in async response. Added support for Async Bulk requests</t>
         </section>
     </back>
 </rfc>
