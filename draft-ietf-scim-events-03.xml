@@ -850,23 +850,26 @@ Location:
                     <section anchor="asyncBulkRequest" numbered="true" toc="default">
                         <name>Asynchronous Bulk Endpoint Requests</name>
                         <t>
-                            Section 3.7 <xref target="RFC7644"/> provides the ability to submit multiple SCIM operations
-                            in a single request. For each operation in an asynchronous Bulk request, a single Async Event
-                            completion event SHALL be generated. For example, if a single SCIM Bulk request had 10
-                            operations, then 10 Async Event completions events would be generated.
+                            SCIM Protocol Section 3.7 <xref target="RFC7644"/> provides the ability to submit multiple
+                            SCIM operations in a single request. When an asynchronous response is requested, a single
+                            Async Request Completion Event SHALL be generated for each requested operation. For example,
+                            if a single SCIM Bulk request had 10 operations, then 10 Async Event completions events
+                            would be generated.
                         </t>
                         <t>
-                            In order to correlate multiple Async Events generated to the common inbound SCIM Bulk request, the
-                            "txn" claim MUST be set to the value originally returned to the requesting SCIM client (see
-                            <xref target="asyncRequest"/>) appended with a dash "-" followed by the operation number.
+                            The "txn" claim MUST be set to the value originally returned to the requesting SCIM client (see
+                            <xref target="asyncRequest"/>) appended with a dash "-" followed by the request operation number.
                             For example, if the "txn" claim value was "2d80e537a3f64622b0347b641ebc8f44", then the first
-                            Async Response Event Token SHALL have a "txn" claim value of
-                            "2d80e537a3f64622b0347b641ebc8f44-1", the second event SHALL have a value of
-                            "2d80e537a3f64622b0347b641ebc8f44-2", and so on. Because a SCIM service provider may elect
-                            to optimize the sequence of operations (per Section 3.7), the Security Event Tokens
-                            generated MAY also be generated out of sequence from the original request. In this
-                            case, the "txn" claims generated SHALL use operation numbers that correspond to the order in
-                            the original request.
+                            Async Response Event Token representing the first operation SHALL have a "txn" claim value of
+                            "2d80e537a3f64622b0347b641ebc8f44-1", the second operation SHALL have a value of
+                            "2d80e537a3f64622b0347b641ebc8f44-2", and so on.
+                        </t>
+                        <t>
+                            If a SCIM service provider elects
+                            to optimize the sequence of operations (per Section 3.7 <xref target="RFC7644"/>), the
+                            Async Request Completion events generated MAY also be generated out of sequence from the
+                            order of operations in the original request. In this case, the "txn" claims generated SHALL
+                            use operation numbers that correspond to the original request order.
                         </t>
                     </section>
                     <section>
@@ -912,30 +915,30 @@ Location:
                     <figure anchor="exampleAsyncErrorEvent">
                         <name>Example SCIM Async Error Response Event</name>
                         <artwork type="" align="left" alt=""><![CDATA[{
-  "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
-  "sub_id": {
-    "format": "scim",
-    "uri": "/Users/2819c223-7f76-453a-919d-413861904646"
-  },
-  "txn": "734f0614e3274f288f93ac74119dcf78",
-  "events":{
-    "urn:ietf:params:SCIM:event:misc:asyncResp": {
-        "method": "PUT",
-        "version": "W\/\"huJj29dMNgu3WXPD\"",
-        "status": "400",
-        "response": {
-            "schemas": ["urn:ietf:params:scim:api:messages:2.0:Error"],
-            "scimType":"invalidSyntax",
-            "detail": "Request is unparsable",
-            "status":"400"
-        }
-    }
-  },
-  "iat": 1458505044,
-  "iss":"https://scim.example.com",
-  "aud":[
-   "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
-  ]
+ "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+ "sub_id": {
+   "format": "scim",
+   "uri": "/Users/2819c223-7f76-453a-919d-413861904646"
+ },
+ "txn": "734f0614e3274f288f93ac74119dcf78",
+ "events":{
+   "urn:ietf:params:SCIM:event:misc:asyncResp": {
+       "method": "PUT",
+       "version": "W\/\"huJj29dMNgu3WXPD\"",
+       "status": "400",
+       "response": {
+           "schemas": ["urn:ietf:params:scim:api:messages:2.0:Error"],
+           "scimType":"invalidSyntax",
+           "detail": "Request is unparsable",
+           "status":"400"
+       }
+   }
+ },
+ "iat": 1458505044,
+ "iss":"https://scim.example.com",
+ "aud":[
+  "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+ ]
 }]]></artwork>
                     </figure>
                     <t>The following 4 figures show Async Completion events for the example in Section 3.7.3 of
@@ -1350,50 +1353,73 @@ Location:
             <section anchor="IANAheader" numbered="true" toc="default">
                 <name>SCIM Async Txn Header Registration</name>
                 <t>
-                    This section registers the HTTP <tt>Set-txn</tt> header field in the "Hypertext Transfer Protocol (HTTP)
-                    Field Name Registry" registry defined in Section 18.4 <xref target="RFC9110"/>.
+                    This specification registers the HTTP <tt>Set-txn</tt> field name in the "HTTP Field Name Registry" defined in Section 16.3.1 <xref target="RFC9110"/>.
                 </t>
                 <dl newline="true" spacing="normal">
                     <dt>Field name:</dt><dd>Set-txn</dd>
-                    <dt>Status:</dt><dd>Standard</dd>
+                    <dt>Status:</dt><dd>Permanent</dd>
                     <dt>Specification Document:</dt><dd>this specification, <xref target="attributes"/> and <xref target="asyncRequest"/>. </dd>
                     <dt>Comments:</dt><dd>See also Section 2.2 <xref target="RFC8417"/> Security Event Tokens.</dd>
                 </dl>
             </section>
             <section anchor="IANAevents" numbered="true" toc="default">
-                <name>SCIM Events Registry</name>
-            <t>This section registers a new registry type called "event" in the SCIM Namespace registry found in
-                <xref target="scimEvents" format="default"/>
-                in the SCIM registry as per
-                <xref target="RFC7643" format="default">Section 10.2.1</xref>.
-            </t>
-            <t>This new event namespace shall take the structure: <tt>urn:ietf:params:scim:event:{class}:{name}:{other}</tt></t>
+                <name>Registration of the SCIM Event URIs Sub-Registry</name>
+                <t>
+                    IANA will add the following new registry "SCIM Events Registry" within the "SCIM URN Sub-namespace"
+                    registry defined in Section 10.1 <xref target="RFC7643"/> called the "SCIM Event URI Registry"
+                </t>
+                <dl newline="true">
+                    <dt>Namespace ID:</dt>
+                    <dd>
+                        The sub-namespace ID of "event" is assigned within the "scim" namespace.
+                    </dd>
+                    <dt>Syntactic Structure:</dt>
+                    <dd>
+                        <t>The Namespace Specific String (NSS) of all URNs that use the "event" Namespace ID SHALL have the
+                            following structure:</t>
+                        <sourcecode>"urn:ietf:params:scim:event:{class}:{name}:{other}</sourcecode>
+                        <t>The keywords have the following meaning:</t>
+                        <dl newline="true">
+                            <dt>class</dt>
+                            <dd>The class of events which is one of: "feed", "prov", "sig", or "misc".</dd>
+                            <dt>name</dt>
+                            <dd>A US-ASCII string that conforms to URN syntax requirements (see <xref target="RFC8141"/>)
+                                and defines a descriptive event name (e.g. "create").</dd>
+                            <dt>other</dt>
+                            <dd>An optional US-ASCII string that conforms to URN syntax requirements (see <xref target="RFC8141"/>)
+                                and serves as an additional sub-category or qualifier. For example "full" and "notice".</dd>
+                        </dl>
+                    </dd>
+                    <dt>Identifier Uniqueness Considerations:</dt>
+                    <dd>The designated contact shall be responsible for reviewing and enforcing uniqueness.</dd>
+                    <dt>Identifier Persistence Considerations:</dt>
+                    <dd>Once a name has been allocated it MUST NOT be
+                        re-allocated for a different purpose. The rules provided for
+                        assignments of values within a sub-namespace MUST be constructed
+                        so that the meaning of values cannot change. This registration
+                        mechanism is not appropriate for naming values whose meaning may
+                        change over time.</dd>
+                    <dt>Registration format:</dt>
+                    <dd>
+                        <t>An event registration MUST include the following fields:</t>
+                        <ul>
+                            <li>Event Uri</li>
+                            <li>Descriptive Name</li>
+                            <li>Reference to event definition</li>
+                        </ul>
+                        <t>Initial values to be added to the SCIM Events Registry <xref target="initialEvents"/>.</t>
+                    </dd>
+                </dl>
 
-            <dl newline="false" spacing="normal">
-                <dt>Schema URI:</dt>
-                <dd>See <xref target="scimEvents" format="default"/>.
-                </dd>
-                <dt>Schema Name:</dt>
-                <dd>See corresponding names under <xref target="scimEvents" format="default"/>.
-                </dd>
-                <dt>Intended ResourceType:</dt>
-                <dd>N/A. Events are not intended to be persisted in SCIM and will be used with Security Event Tokens
-                    <xref target="RFC8417"/>.</dd>
-                <dt>Purpose:</dt>
-                <dd>See each description in <xref target="scimEvents" format="default"/>.
-                </dd>
-                <dt>Single-valued Attributes:</dt>
-                <dd>None.</dd>
-                <dt>Multi-valued Attributes:</dt>
-                <dd>All schemas in this specification share the same attributes. See <xref target="attributes"
-                                                                                          format="default"/>.
-                </dd>
-            </dl>
-            <t keepWithNext="true">Summary of schema URI registrations:</t>
-            <table>
+            </section>
+            <section anchor="initialEvents" numbered="true" toc="default">
+                <name>Initial Events Registry</name>
+
+                <t keepWithNext="true">Summary of Event URI registrations:</t>
+                <table>
                 <thead>
                     <tr>
-                        <th align="left">Schema URI</th>
+                        <th align="left">Event URI</th>
                         <th align="left">Name</th>
                         <th align="left">Ref.</th>
                     </tr>
@@ -1495,6 +1521,14 @@ Location:
                             <xref target="sigPassReset" format="default"/>
                         </td>
                     </tr>
+                    <tr>
+                        <td align="left">urn:ietf:params:SCIM:event:misc:asyncResp</td>
+                        <td align="left">Async Request Completion</td>
+                        <td align="left">
+                            <xref target="asyncEvent" format="default"/>
+                        </td>
+                    </tr>
+
                 </tbody>
             </table>
             </section>
@@ -1507,6 +1541,7 @@ Location:
                 <name>Normative References</name>
 
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3986.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7240.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7515.xml"/>
@@ -1514,6 +1549,7 @@ Location:
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7519.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7643.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7644.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8141.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8417.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9110.xml"/>
@@ -1981,7 +2017,7 @@ Location:
             <t>Draft 00 - PH - First WG Draft</t>
             <t>Draft 01 - PH - Moved non-normative sections to Appendix, Security and Privacy Considerations</t>
             <t>Draft 02 - PH - Clarifications on Async Events, IANA Considerations</t>
-            <t>Draft 03 - PH - Fixed Header Field registration to RFC9110. Added "Preference-Applied" header in async response. Added support for Async Bulk requests</t>
+            <t>Draft 03 - PH - Fixed Header Field registration to RFC9110."Preference-Applied" header in async response. Support for Async Bulk requests. Added IANA SCIM Event Registry</t>
         </section>
     </back>
 </rfc>
