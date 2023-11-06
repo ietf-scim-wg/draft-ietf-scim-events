@@ -9,6 +9,8 @@ Current datatracker official draft:
 
 Meetings:
 * IETF 113 (Vienna) [SCIM Events Presentation](https://datatracker.ietf.org/meeting/113/materials/slides-113-scim-scim-events-02)
+* IETF 116 (Yokahama) [SCIM Events Presentation](presentations/ietf-116-scim-events.pptx)
+* IETF 117 (San Francisco) [SCIM Events Update](presentations/IETF117-SCIM-Events-Update.pptx)
 
 Discussion:
 * [SCIM WG Email List](https://www.ietf.org/mailman/listinfo/scim)
