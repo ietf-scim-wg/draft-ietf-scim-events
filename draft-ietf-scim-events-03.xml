@@ -96,8 +96,8 @@
                 Provider using HTTP methods such as POST, PATCH, and DELETE <xref target="RFC7644" format="default"/>
                 that cause a state change to a SCIM Resource. When multiple independent SCIM Clients update SCIM
                 resources, individual clients become out of date as state changes occur. Some clients may need to be
-                informed of these changes for co-ordination or reconciliation purposes. This could be done using SCIM
-                periodic SCIM GET requests over time, but this rapidly problematic as the number of changes and the
+                informed of these changes for co-ordination or reconciliation purposes. This could be done using
+                periodic SCIM GET requests over time, but this rapidly becomes problematic as the number of changes and the
                 number of resources increases.
             </t>
             <t>
