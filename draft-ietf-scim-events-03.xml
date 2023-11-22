@@ -83,7 +83,7 @@
             <name>Introduction and Overview</name>
             <t>
                 This specification defines Security Events for SCIM Service Providers and receivers as specified by the
-                Security Event Tokens (SET) <xref target="RFC8417" format="default"/> specification. Scim Security
+                Security Event Tokens (SET) <xref target="RFC8417" format="default"/> specification. SCIM Security
                 Events in this specification include: asynchronous request completion, resource replication,
                 provisioning co-ordination, and security signals.
             </t>
