@@ -335,7 +335,7 @@
 
                     <dt>attributes</dt>
                     <dd>
-                        This payload attribute contains an array of attributes that were added, revised, or removed. For example: <br/>
+                        This payload contains an array of attributes that were added, revised, or removed. For example: <br/>
                          <tt>"attributes": ["username","emails"]</tt>
                     </dd>
                 </dl>
