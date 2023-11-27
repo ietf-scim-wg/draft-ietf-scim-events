@@ -1146,9 +1146,7 @@ Location:
                     <dt>Unsecured</dt>
                     <dd>
                         Per Section 6 <xref target="RFC7519"/>, tokens MAY be generated with <tt>{"alg":"none"}</tt>.
-                        This mode speeds up processing and is best used in DBR scenarios. Unencrypted tokens MUST be
-                        transferred over authenticated TLS layer encryption and SHOULD only be used in a restricted
-                        network environment.
+                        Unsecured tokens SHALL NOT be used.                       
                     </dd>
                     <dt>Signed</dt>
                     <dd>
