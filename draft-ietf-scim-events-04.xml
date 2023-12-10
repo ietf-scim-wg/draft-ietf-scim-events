@@ -253,7 +253,7 @@
             <section anchor="sub-id" numbered="true" toc="default">
                 <name>Identifying the Subject of an Event</name>
                 <t>
-                    SCIM Events SHALL use the "sub_id" claim defined by <xref target="SUBID">Subject Identifiers for
+                    SCIM Events SHALL use the "sub_id" claim defined by <xref target="RFC9493">Subject Identifiers for
                     Security Event Tokens</xref> specification to identify the subject of events. The <tt>sub_id</tt>
                     claim MUST be contained within the main JWT claims body and SHALL NOT be located within an Event
                     payload within the <tt>events</tt> claim. A SET with multiple event URI's indicates that the events
@@ -1554,20 +1554,7 @@ Location:
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8417.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9110.xml"/>
-                <reference anchor="SUBID">
-                    <front>
-                        <title>Subject Identifiers for Security Event Tokens (Draft 18)</title>
-                        <author fullname="A. Backman, Ed">
-                            <organization>Amazon</organization></author>
-                        <author fullname="M. Scurtescu">
-                            <organization>Coinbase</organization>
-                        </author>
-                        <author fullname="P. Jain"><organization>Fastly</organization></author>
-                        <date year="2023" day="24" month="June"/>
-                    </front>
-                    <format target="https://www.ietf.org/archive/id/draft-ietf-secevent-subject-identifiers-18.txt"
-                            type="HTML"/>
-                </reference>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9493.xml"/>
 
             </references>
 
@@ -2020,7 +2007,7 @@ Location:
             <t>Draft 01 - PH - Moved non-normative sections to Appendix, Security and Privacy Considerations</t>
             <t>Draft 02 - PH - Clarifications on Async Events, IANA Considerations</t>
             <t>Draft 03 - PH - Fixed Header Field registration to RFC9110."Preference-Applied" header in async response. Support for Async Bulk requests. Added IANA SCIM Event Registry</t>
-            <t>Draft 04 - PH - Minor typos, change bulk txn separator to ":", Fixed IANA registry paragraph</t>
+            <t>Draft 04 - PH - Minor typos, change bulk txn separator to ":", Updated SubId Reference to RFC9493, other comments, fixed IANA registry paragraph</t>
         </section>
     </back>
 </rfc>
