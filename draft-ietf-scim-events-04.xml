@@ -641,7 +641,7 @@
                     <t>
                         The specified resource has been deleted from the SCIM Service Provider.
                         The resource is also removed from the feed. When a
-                        DELETE is sent, a corresponding <tt>feedRemove</tt> is not issued. A delete
+                        DELETE is sent, a corresponding <tt>feedRemove</tt> SHALL NOT be issued. A delete
                         event has no payload attributes. Note that because the delete event has
                         no attributes, the qualifiers <tt>full</tt> and <tt>notice</tt> SHALL NOT be used.
                     </t>
