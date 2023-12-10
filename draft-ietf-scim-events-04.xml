@@ -1161,10 +1161,9 @@ Location:
                     </dd>
                     <dt>Encrypted</dt>
                     <dd>
-                        JWE (<xref target="RFC7516"/>) are encrypted SETs and are useful when the transport mechanism is
-                        not fully secured (e.g. messages carried by a third party). The use of JWEs ensures only the
-                        designated receiver can read the event and provides mutual authentication within the SET message
-                        itself.
+                        JWE (<xref target="RFC7516"/>) are encrypted SETs and are useful when the transport mechanismis not 
+                        end-to-end encrypted. The use of JWEs ensures only the designated receiver can read the event and 
+                        provides mutual authentication within the SET message itself.
                     </dd>
                 </dl>
             </section>
@@ -1292,9 +1291,9 @@ Location:
                 This specification depends on the Security Considerations for <xref target="RFC8417"/>. </t>
             <t>
                 The use of Json Web Encryption (JWE) <xref target="RFC7516"/> can impose performance limitations when
-                used in high event frequency scenarios. JWE is primarily useful only when the transfer of SETs involves an
-                unsecured transfer method (e.g. URL) that would not otherwise be protected by the transfer protocol (e.g.
-                SET Transfer over TLS <xref target="RFC8446"/>).</t>
+                used in high event frequency scenarios. JWE is useful when the transfer of SETs is not end-to-end encrypted.
+                TLS termination, for example, may occur before the destination of the SET.  JWE ensures that the content of
+                the SET is encrypted after TLS termination to prevent disclosure.</t>
             <t>
                 For SCIM Provisioning events, the long-term series of changes may be critical to both sides. As such
                 Event Publishers SHOULD consider storing events for receivers for longer periods of time in the case of
@@ -1308,7 +1307,9 @@ Location:
             <t>
                 JWS <xref target="RFC7515"/> signed SET Events SHOULD be used to verify authenticity of the origin of
                 a SET Event. Validating event signatures is both useful on the initial transfer of SET Events, and
-                may also be useful for auditing purposes.
+                may also be useful for auditing purposes.  Signed SET Events are protected from tampering in the event that 
+                an intermediate system, such as a TLS-terminating proxy, decrypts the SET payload before sending it onward 
+                to its intended recipient.
             </t>
             <t>
                 In operation, some SCIM resources such as SCIM Groups may have a high rate of change. Implementors and
