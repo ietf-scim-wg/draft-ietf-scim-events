@@ -1136,26 +1136,26 @@ Location:
                     on JWT tokens <xref target="RFC7519"/>,
                     they can be transmitted insecurely, signed, or encrypted. For more information see the JWT Cookbook
                     specification <xref target="RFC7520"/> for examples. The decision on whether to use JWS and JWE depends
-                    on operational considerations. For each SCIM Feed relationship, it is up to deployers to decide on
-                    signing, encryption and algorithm requirements. Deployers SHOULD be aware that too much emphasis on
-                    turning on every possible encryption feature may cause operational performance to suffer. Deployers
-                    MUST weigh the security trade-offs of up-to-date SCIM services, vs. the potential information loss
-                    of an event.
+                    on operational considerations. For each SCIM Feed relationship, there may be differing security
+                    considerations. Some guidance is provided below:
                 </t>
                 <dl newline="true">
                     <dt>Unsecured</dt>
                     <dd>
                         Per Section 6 <xref target="RFC7519"/>, tokens MAY be generated with <tt>{"alg":"none"}</tt>.
-                        This mode speeds up processing and is best used in DBR scenarios. Unencrypted tokens MUST be
-                        transferred over authenticated TLS layer encryption and SHOULD only be used in a restricted
-                        network environment.
+                        This mode potentially speeds up processing by avoiding what would be redundant cryptographic
+                        processing. An example would be replication scenarios within a cluster (e.g. Kubernetes).
+                        Unencrypted tokens MUST be transferred over mutually-authenticated TLS layer encryption and
+                        SHOULD only be used in restricted network environments.
                     </dd>
                     <dt>Signed</dt>
                     <dd>
                         JWS (<xref target="RFC7515"/>) signed SETs are useful when it is important to be able to verify
-                        the issuer of a SET as valid.
-                        In addition, some systems MAY wish to validate the authenticity of the event in a review
-                        process which may occur at a later date. While the content can be validated as originating from
+                        the issuer of a SET as valid and particularly when SETs are being used for subsequent reliance
+                        in security systems, intelligence, and/or provisioning systems. In situations where a SET
+                        is processed or reviewed at a later date or outside of this original transfer (where
+                        mutual authentication occurred), the receiver MUST be able to validate the authenticity of SETs
+                        through JWS signature validation. While the content can be validated as originating from
                         the correct issuer and is unmodified, the message contents remain unsecure. Signed SETs MUST
                         be transferred over encrypted transport.
                     </dd>
