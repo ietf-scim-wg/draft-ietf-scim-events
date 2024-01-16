@@ -58,7 +58,7 @@
                 <email>jennifer.winer@workday.com</email>
             </address>
         </author>
-        <date year="2023" month="November" day="21"/>
+        <date year="2024" month="January" day="16"/>
         <workgroup>SCIM</workgroup>
 
         <keyword>Identity</keyword>
@@ -106,7 +106,7 @@
                 enables greater scale and timeliness, where only changed information is exchanged between parties.
             </t>
             <t>
-                A SET token conveys a signal about a state changes that has occurred in a publishing SCIM Service Provider.
+                A SET token conveys a signal about a state change that has occurred in a publishing SCIM Service Provider.
                 That token may be of interest to one or more receivers and can be delivered asynchronously to the originating
                 SCIM client making the change. Unlike SCIM Protocol requests which convey protocol commands, Security
                 Events describe statements of fact about changes that have already occurred at the SCIM Provider. This
@@ -214,11 +214,6 @@
                         using <xref target="RFC8935"/>, the Event Publisher is an HTTP Client that initiates HTTP POST
                         requests to a defined Event Receiver endpoint. When using <xref target="RFC8936"/>, the Event
                         Publisher provides an HTTP endpoint which a receiver MAY use to "poll" for Security Events.
-                    </dd>
-
-                    <dt>RS</dt>
-                    <dd>
-                        Abbreviation for "Risk Signals" as defined in <xref target="s_risk" />.
                     </dd>
 
                     <dt>SCIM Client</dt>
@@ -704,66 +699,6 @@
                     </t>
                 </section>
             </section>
-            <section anchor="scimSignals" numbered="true" toc="default">
-                <name>SCIM Signals Events</name>
-                <t>
-                    This section defines security signal events that have occurred within a
-                    SCIM Service Provider. The URI prefix for these events is:
-                    <tt>urn:ietf:params:SCIM:event:signal</tt>
-                </t>
-                <section anchor="authMethod" numbered="true" toc="default">
-                    <name>urn:ietf:params:SCIM:event:sig:authMethod</name>
-                    <t>
-                        A new authentication method has been added to the User profile. As attackers often use new
-                        authentication methods to lock-out Users from their account, this signal can be used by the
-                        receiver that the chance of account them may be temporarily elevated. The receiver MAY also
-                        wish to take action such as resetting current authorizations or sessions.
-                    </t>
-                    <figure anchor="exampleAuthMethod">
-                        <name>Example SCIM Authentication Factor Change Event</name>
-                        <artwork name="" type="" align="left" alt=""><![CDATA[{
-  "jti": "3d0c3cf797584bd193bd0fb1bd4e7d30",
-  "sub_id": {
-    "format": "scim",
-    "uri": "/Users/44f6142df96bd6ab61e7521d9"
-  },
-  "events":{
-    "urn:ietf:params:SCIM:event:sig:authMethod": {}
-  },
-  "iat": 1458496025,
-  "iss": "https://scim.example.com"
-}]]></artwork>
-                    </figure>
-                </section>
-                <section anchor="sigPassReset" numbered="true" toc="default">
-                    <name>urn:ietf:params:SCIM:event:sig:pwdReset</name>
-                    <t>
-                        The specified resource (e.g. User) has changed its password or the password
-                        has been reset. When the password has changed, the
-                        <tt>attributes</tt>
-                        attribute is supplied with the value "password".
-                    </t>
-                    <figure anchor="examplePassword">
-                        <name>Example SCIM Password Change Event</name>
-                        <artwork name="" type="" align="left" alt=""><![CDATA[{
-  "jti": "3d0c3cf797584bd193bd0fb1bd4e7d30",
-  "sub_id": {
-    "format": "scim",
-    "uri": "/Users/44f6142df96bd6ab61e7521d9"
-  },
-  "events": {
-    "urn:ietf:params:SCIM:event:sig:pwdReset": {}
-  },
-  "iat": 1458496025,
-  "iss": "https://scim.example.com",
-  "aud":[
-    "https://jhub.example.com/Feeds/98d52461fa5bbc879593b7754",
-    "https://jhub.example.com/Feeds/5d7604516b1d08641d7676ee7"
-  ]
-}]]></artwork>
-                    </figure>
-                </section>
-            </section>
             <section anchor="scimMisc" numbered="true" toc="default">
                 <name>Miscellaneous Events</name>
                 <t>
@@ -1145,7 +1080,7 @@ Location:
                         Per Section 6 <xref target="RFC7519"/>, tokens MAY be generated with <tt>{"alg":"none"}</tt>.
                         This mode potentially speeds up processing by avoiding what would be redundant cryptographic
                         processing. An example would be replication scenarios within a cluster (e.g. Kubernetes).
-                        Unencrypted tokens MUST be transferred over mutually-authenticated TLS layer encryption and
+                        Unencrypted tokens MUST be transferred over mutually-authenticated TLS <xref target="RFC9325"/> layer encryption and
                         SHOULD only be used in restricted network environments.
                     </dd>
                     <dt>Signed</dt>
@@ -1344,8 +1279,7 @@ Location:
                 be verified each time data is transferred.</li>
             </ul>
             <t>In general the sharing of SCIM Event information falls within a pre-existing SCIM Client and Service
-            Provider relationship. In the case of SCIM Risk Signals Events, the existing relationship may need to be
-            reviewed. By their nature, however, SCIM Signals carry no personal information and aid parties in ensuring
+            Provider relationship and carry no additional personal information and aid parties in ensuring
             the protection of privacy information and account security.</t>
             <t>Privacy considerations of <xref target="RFC8417"/> MUST also be observed.</t>
         </section>
@@ -1550,10 +1484,10 @@ Location:
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3259.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6120.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7520.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8446.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8935.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8936.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9113.xml"/>
+                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9325.xml"/>
                 <reference anchor="Kafka">
                     <front>
 
@@ -1564,59 +1498,6 @@ Location:
                     <format target="https://kafka.apache.org"
                             type="HTML"/>
                 </reference>
-                <referencegroup anchor="SSWG">
-                    <reference anchor="SSEF">
-                        <front>
-                            <title>OpenID Shared Signals and Events Framework Specification 1.0 - draft 01</title>
-                            <author fullname="A. Tulshibagwale">
-                                <organization>Google</organization>
-                            </author>
-                            <author fullname="T. Cappalli">
-                                <organization>Microsoft</organization>
-                            </author>
-                            <author fullname="M. Scurtescu">
-                                <organization>Coinbase</organization>
-                            </author>
-                            <author fullname="A. Backman">
-                                <organization>Amazon</organization>
-                            </author>
-                            <author fullname="J. Bradley">
-                                <organization>Yubico</organization>
-                            </author>
-                            <date year="2021" month="June" day="8"/>
-                            <abstract>
-                                <t>
-                                    This Shared Signals and Events (SSE) Framework enables sharing of signals and events between cooperating peers. It enables multiple applications such as Risk Incident Sharing and Coordination (RISC) and the Continuous Access Evaluation Profile,
-                                </t>
-                            </abstract>
-
-                        </front>
-                        <format target="https://openid.net/specs/openid-sse-framework-1_0-ID1.html"
-                                type="HTML"/>
-                    </reference>
-                    <reference anchor="CAEP">
-                        <front>
-
-                            <title>OpenID Continuous Access Evaluation Profile 1.0 - draft 02</title>
-                            <author fullname="T. Cappalli">
-                                <organization>Microsoft</organization>
-                            </author>
-                            <author fullname="AA. Tulshibagwale">
-                                <organization>Google</organization>
-                            </author>
-                            <date year="2021" month="June" day="8"/>
-                            <abstract>
-                                <t>
-                                    This document defines the Continuous Access Evaluation Profile (CAEP) of the Shared Signals and Events Framework. It specifies a set of event types conforming to the SSE Framework. These event types are intended to be used between cooperating Transmitters and Receivers such that Transmitters may send continuous updates using which Receivers can attenuate access to shared human or robotic users, devices, sessions and applications.
-                                </t>
-                            </abstract>
-
-                        </front>
-                        <format target="https://openid.net/specs/openid-caep-specification-1_0-ID1.html"
-                                type="HTML"/>
-                    </reference>
-
-                </referencegroup>
 
             </references>
         </references>
@@ -1955,25 +1836,6 @@ Location:
                 </t>
 
             </section>
-            <section anchor="s_risk" toc="default" numbered="true">
-                <name>Risk Signals</name>
-                <t>
-                    The sharing of risk signals (RS) is used for the purpose of co-ordinating account change events between
-                    a SCIM Service Provider and another related security service. For example, when a password or other
-                    authentication factor has changed, a receiving security system can choose to terminate current User
-                    sessions to force a re-authentication against the modified User resource.
-                </t>
-                <t>
-                    These signals MAY also include those described in the
-                    <xref target="SSWG">OpenID Shared Signals Working Group Specifications</xref>.
-                </t>
-                <t>
-                    These events are intended for receivers where there is a prior relationship on behalf of the users
-                    described in the SCIM Service Provider. The intent of sharing information about security events is
-                    for the purpose of securing a user account and ensuring privacy.
-                </t>
-
-            </section>
 
         </section>
 
@@ -1994,7 +1856,7 @@ Location:
             <t>Draft 01 - PH - Moved non-normative sections to Appendix, Security and Privacy Considerations</t>
             <t>Draft 02 - PH - Clarifications on Async Events, IANA Considerations</t>
             <t>Draft 03 - PH - Fixed Header Field registration to RFC9110."Preference-Applied" header in async response. Support for Async Bulk requests. Added IANA SCIM Event Registry</t>
-            <t>Draft 04 - PH - Minor typos, change bulk txn separator to ":", Updated SubId Reference to RFC9493, other comments, fixed IANA registry paragraph</t>
+            <t>Draft 04 - PH - Minor typos, change bulk txn separator to ":", Updated SubId Reference to RFC9493, other comments, fixed IANA registry paragraph, SCIM Signals Removed</t>
         </section>
     </back>
 </rfc>
