@@ -148,7 +148,7 @@ Internet-Draft           draft-ietf-scim-events            November 2023
    timeliness, where only changed information is exchanged between
    parties.
 
-   A SET token conveys a signal about a state changes that has occurred
+   A SET token conveys a signal about state changes that has occurred
    in a publishing SCIM Service Provider.  That token may be of interest
    to one or more receivers and can be delivered asynchronously to the
    originating SCIM client making the change.  Unlike SCIM Protocol
