@@ -319,10 +319,10 @@
                         For the purposes of SCIM, this SET defined claim identifies a unique transaction
                         originating at a SCIM Service Provider and/or its underlying data repository or database. The
                         claim is used to detect duplicate transactions that may have been received (e.g. in the case of
-                        a re-transmitted or recovered event). If not provided, the SET <tt>jti</tt> claim MAY be used.
-                        Where <tt>txn</tt> identifies a unique transaction within a SCIM Service Provider, multiple SETs
-                        MAY be issued each with distinct JTI's stemming from a common originating transaction with identical
-                        <tt>txn</tt> values.
+                        a re-transmitted or recovered event). The <tt>txn</tt> claim is REQUIRED.  The SET <tt>jti</tt> claim MAY be used
+                        in addition to the <tt>txn</tt> claim. Where <tt>txn</tt> identifies a unique transaction within a 
+                        SCIM Service Provider, multiple SETs MAY be issued each with distinct JTI's stemming from a 
+                        common originating transaction with identical <tt>txn</tt> values.
                     </dd>
                     <dt>data</dt>
                     <dd>
