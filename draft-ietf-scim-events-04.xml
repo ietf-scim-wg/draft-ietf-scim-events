@@ -1510,20 +1510,6 @@ Location:
                         </td>
                     </tr>
                     <tr>
-                        <td align="left">urn:ietf:params:SCIM:event:sig:authMethod</td>
-                        <td align="left">New authentication method added</td>
-                        <td align="left">
-                            <xref target="authMethod" format="default"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left">urn:ietf:params:SCIM:event:sig:pwdReset</td>
-                        <td align="left">Password Reset Event</td>
-                        <td align="left">
-                            <xref target="sigPassReset" format="default"/>
-                        </td>
-                    </tr>
-                    <tr>
                         <td align="left">urn:ietf:params:SCIM:event:misc:asyncResp</td>
                         <td align="left">Async Request Completion</td>
                         <td align="left">
