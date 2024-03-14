@@ -73,7 +73,7 @@
                 This specification defines a set of SCIM Security Events using the Security Event Token Specification
                 RFC8417 to enable the asynchronous exchange of messages between SCIM Service Providers
                 and receivers. SCIM Security Events are typically used for: asynchronous request completion, resource
-                replication, provisioning co-ordination, and shared security signals.
+                replication, and provisioning co-ordination.
             </t>
         </abstract>
 
@@ -84,8 +84,8 @@
             <t>
                 This specification defines Security Events for SCIM Service Providers and receivers as specified by the
                 Security Event Tokens (SET) <xref target="RFC8417" format="default"/> specification. SCIM Security
-                Events in this specification include: asynchronous request completion, resource replication,
-                provisioning co-ordination, and security signals.
+                Events in this specification include: asynchronous request completion, resource replication, and
+                provisioning co-ordination.
             </t>
             <t>
                 This specification also profiles the use of the HTTP Header "<tt>Prefer: Async-response</tt>" <xref target="RFC7240"/>
@@ -106,7 +106,7 @@
                 enables greater scale and timeliness, where only changed information is exchanged between parties.
             </t>
             <t>
-                A SET token conveys a signal about a state change that has occurred in a publishing SCIM Service Provider.
+                A SET token conveys a information about a state change that has occurred in a publishing SCIM Service Provider.
                 That token may be of interest to one or more receivers and can be delivered asynchronously to the originating
                 SCIM client making the change. Unlike SCIM Protocol requests which convey protocol commands, Security
                 Events describe statements of fact about changes that have already occurred at the SCIM Provider. This
@@ -976,209 +976,7 @@ Location:
             </section>
 
         </section>
-        <section anchor="distribution" numbered="true" toc="default">
-            <name>Event Delivery Feeds</name>
-            <t>
-                In addition to retrieving a single security event as described in <xref target="asyncRequest"/>, Event
-                Feeds (or Streams) provide the ability exchange a series of events between pre-arranged endpoints using
-                the following Security Event Token exchange methods:
-            </t>
-            <dl newline="true">
-                <dt><xref target="RFC8935"/></dt>
-                <dd>
-                    Push-Based Security Event Token (SET) Delivery delivers tokens to an Event Receiver with an accessible
-                    HTTP Endpoint.
-                </dd>
-                <dt><xref target="RFC8936"/></dt>
-                <dd>
-                    Poll-Based Security Event Token (SET) Delivery enables an event receiver to initiate calls to SET Event
-                    publisher endpoint to receive 1 or more events. This is particularly advantageous when an Event Receiver
-                    is behind a firewall or other network restriction that would prevent Push Delivery. An Event Receiver
-                    may also use HTTP "Long-polling" to achieve real time event delivery.
-                </dd>
-            </dl>
-            <t>In the figure below, a possible distribution architecture is shown. This specification is only normatively
-            concerned with the actual Security Event Transfer mechanism. SCIM Service providers MAY choose to implement
-            SET transfer directly, or they may use a method of allowing a single Event Publisher to assemble streams of
-            events for transfer to a receiver. Likewise, on the receiving side, the only normative requirement is to be
-            able to receive events and implement storage of Events to local recovery needs.</t>
-            <figure anchor="architecture">
-                <artwork align="center" type="ascii-art"><![CDATA[
-┌───────────────┐  ┌───────────────┐    ┌───────────────┐
-│               │  │               │    │               │
-│ SCIM Server 1 │  │ SCIM Server 2 │ ...│ SCIM Server n │
-│               │  │               │    │               │
-└───────┬───────┘  └───────┬───────┘    └───────┬───────┘
-        │                  │                    │
-┌───────▼──────────────────▼────────────────────▼───────┐
-│              Local Event Delivery System              │
-└───────────────────────────┬───────────────────▲───────┘
-                            │                   │
-                   ┌────────▼────────┐   ┌──────┴───────┐
-                   │                 │   │   Recovery   │
-                   │ Event Publisher ◄───►    Buffer    │
-                   │                 │   └──────────────┘
-                   └────────┬────────┘
-               ┌──          │
-               │   ┌────────▼────────┐
-               │   │ SET Trans Txmtr │
-               │   │ (RFC 8935/8936) │
-    Minimum    │   └────────┬────────┘
-    Interop    │            │
-    Requirement│            │
-               │   ┌────────▼────────┐   ┌──────────────┐
-               │   │  SET Trans Rcvr │   │     Event    │
-               │   │ (RFC 8935/8936) ├───►    Storage   │
-               │   └────────┬────────┘   └──────────────┘
-               └──          │
-                   ┌────────▼────────┐
-                   │ Receiver Domain │
-                   │ Event Processor │
-                   └────────┬────────┘
-                            │
-                            ▼]]></artwork>
-            </figure>
-            <t>
-                As Security Event Tokens are based on JWT tokens, it is possible to exchange events by a number of transfer
-                mechanisms such as: XMPP <xref target="RFC6120"/>, HTTP <xref target="RFC9113"/>, and Message Buses (e.g.
-                <xref target="RFC3259"/>, Apache Kafka <xref target="Kafka"/>). For example, on the publishing side, a
-                cluster or network of SCIM servers may publish events to a common SET publisher service for distribution to 1 or more
-                receivers. The Event Publisher MAY be incorporated directly into each SCIM Server, or a Local Event Delivery System
-                might be used to collect events for an Event Publisher service for forwarding. How this is done is up
-                to the implementer. This specification is only concerned with the interoperability of SET transfer between
-                domains using <xref target="RFC8935"/> and <xref target="RFC8936"/>.
-            </t>
-            <t>
-                The SET Transfer specifications provide a short-term method of recovery to ensure SET Events are successfully
-                transferred. Once a receiving domain has successfully stored events to its own recovery needs, the receiving
-                domain acknowledges the transfer of SET Events to the publisher using the method defined in <xref target="RFC8935"/> and <xref target="RFC8936"/>.
-                SET does not specify local server event recovery mechanisms, this is up to the service implementation within
-                each domain. This is done to enable cross-domain independence between domains. As an example, a hosted
-                SCIM service provider with a series of SCIM servers replicates through a proprietary system. An enterprise
-                customer who is the common client across both providers wants to establish a single administrative domain and
-                wants to share SCIM change events between providers. Each domain has its own SCIM implementation and its own
-                local replication strategy. The publishing domain issues events that the receiving domain picks up. Once the
-                receiving domain has processed the event, the receiving domains own internal replication and recovery takes over.
-                Because there is no need for the publishing domain to retain the event, it has the option to purge the event
-                once the receiving domain has acknowledged it. This may be particularly critical if a publishing domain has dozens
-                or even thousands of event receiving domains each with their own sub-set of data. Retaining all events for all
-                receivers would become impractical.
-            </t>
-            <section anchor="jwtFormats">
-                <name>Security Event Token Signing and Encryption</name>
-                <t>
-                    This specification uses Security Event Tokens as the message format for SCIM Events. As SETs are based
-                    on JWT tokens <xref target="RFC7519"/>,
-                    they can be transmitted insecurely, signed, or encrypted. For more information see the JWT Cookbook
-                    specification <xref target="RFC7520"/> for examples. The decision on whether to use JWS and JWE depends
-                    on operational considerations. For each SCIM Feed relationship, there may be differing security
-                    considerations. Some guidance is provided below:
-                </t>
-                <dl newline="true">
-                    <dt>Unsecured</dt>
-                    <dd>
-                        Per Section 6 <xref target="RFC7519"/>, tokens MAY be generated with <tt>{"alg":"none"}</tt>.
-                        This mode potentially speeds up processing by avoiding what would be redundant cryptographic
-                        processing. An example would be replication scenarios within a cluster (e.g. Kubernetes).
-                        Unencrypted tokens MUST be transferred over mutually-authenticated TLS <xref target="RFC9325"/> layer encryption and
-                        SHOULD only be used in restricted network environments.
-                    </dd>
-                    <dt>Signed</dt>
-                    <dd>
-                        JWS (<xref target="RFC7515"/>) signed SETs are useful when it is important to be able to verify
-                        the issuer of a SET as valid and particularly when SETs are being used for subsequent reliance
-                        in security systems, intelligence, and/or provisioning systems. In situations where a SET
-                        is processed or reviewed at a later date or outside of this original transfer (where
-                        mutual authentication occurred), the receiver MUST be able to validate the authenticity of SETs
-                        through JWS signature validation. While the content can be validated as originating from
-                        the correct issuer and is unmodified, the message contents remain unsecure. Signed SETs MUST
-                        be transferred over encrypted transport.
-                    </dd>
-                    <dt>Encrypted</dt>
-                    <dd>
-                        JWE (<xref target="RFC7516"/>) are encrypted SETs and are useful when the transport mechanismis not 
-                        end-to-end encrypted. The use of JWEs ensures only the designated receiver can read the event and 
-                        provides mutual authentication within the SET message itself.
-                    </dd>
-                </dl>
-            </section>
 
-            <section anchor="setDelivery" numbered="true" toc="default">
-                <name>Point-to-Point Delivery Over HTTP</name>
-                <t>
-                    Security Event Tokens MAY be delivered using push-based HTTP delivery <xref target="RFC8935"/>, or
-                    pull-based HTTP Polling <xref target="RFC8936"/>. Both of these protocols define a method of
-                    transfer and acknowledgement to prevent loss-of-information and to provide re-transmission and
-                    recover. The method of transfer is best decided by considering the following advantages and disadvantages
-                    in a production scenario:</t>
-                <t>
-                    Push-based delivery has the following advantages:
-                </t>
-                <ul>
-                    <li>
-                        Message transfer is instant (when compared to using a common Event Publisher acting as a relay),
-                        and in high event frequency scenarios, HTTP connections can be kept open.
-                    </li>
-                    <li>
-                        Scales well when an SCIM Event Publisher has thousands of event receivers and TCP resources may
-                        be limited.
-                    </li>
-                    <li>
-                        Does not require events to be routed to a single publisher node. SCIM Events may be issued by
-                        SCIM Service Provider nodes where the transaction occurred.
-                    </li>
-                    <li>
-                        SCIM Events only need to be retained until they have been delivered to designated receivers.
-                    </li>
-                </ul>
-                <t>
-                    Push-delivery has the following disadvantages:
-                </t>
-                <ul>
-                    <li>
-                        A SCIM Event Publisher system needs authorization credentials enabling it to access the HTTP
-                        SCIM Event delivery endpoint.
-                    </li>
-                    <li>
-                        When synchronizing business data that is behind protected firewalls, a virtual network or
-                        other firewall policy may be required to allow external network based SCIM providers to
-                        deliver SCIM Events to internally hosted systems.
-                    </li>
-                </ul>
-
-                <t>
-                    Delivery by HTTP Polling has the following advantages:
-                </t>
-                <ul>
-                    <li>
-                        It is possible for a SCIM Event Receiver to use the same SCIM credentials it uses when
-                        access the normal SCIM Service Provider service defined by <xref target="RFC7644"/>.
-                    </li>
-                    <li>
-                        Systems behind protected network boundaries can reach externally hosted systems without
-                        requiring special firewall or network configuration.
-                    </li>
-                    <li>
-                        Instantaneous transfer MAY be supported using HTTP Long-polling as described Section 2.1 of
-                        <xref target="RFC8936"/>.
-                    </li>
-                </ul>
-                <t>
-                    Polling-based delivery has the following disadvantages:
-                </t>
-                <ul>
-                    <li>
-                        Long-polling requires the use of persistent connections for which TCP resources may be
-                        limited. HTTP Long-polling is best used in scenarios when there are relatively few Event
-                        Receivers.
-                    </li>
-                    <li>
-                        The SCIM Event Publisher MUST retain events for the Event Receiver until delivered.
-                    </li>
-                </ul>
-
-            </section>
-        </section>
         <section anchor="serviceProviderConfig" numbered="true" toc="default">
             <name>Events Discovery Schema for Service Provider Configuration</name>
             <t>Section 5 of <xref target="RFC7643"/> defines SCIM Service Provider configuration schema. This section
@@ -1856,7 +1654,7 @@ Location:
             <t>Draft 01 - PH - Moved non-normative sections to Appendix, Security and Privacy Considerations</t>
             <t>Draft 02 - PH - Clarifications on Async Events, IANA Considerations</t>
             <t>Draft 03 - PH - Fixed Header Field registration to RFC9110."Preference-Applied" header in async response. Support for Async Bulk requests. Added IANA SCIM Event Registry</t>
-            <t>Draft 04 - PH - Minor typos, change bulk txn separator to ":", Updated SubId Reference to RFC9493, other comments, fixed IANA registry paragraph, SCIM Signals Removed</t>
+            <t>Draft 04 - PH - Removed Event Delivery Feeds and Appendix A(not normative), Removed "sig" events, change bulk txn separator to ":", Updated SubId Reference to RFC9493, other comments, fixed IANA registry paragraph, SCIM Signals Removed</t>
         </section>
     </back>
 </rfc>
