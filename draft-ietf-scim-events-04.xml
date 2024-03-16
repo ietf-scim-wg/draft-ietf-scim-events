@@ -58,7 +58,7 @@
                 <email>jennifer.winer@workday.com</email>
             </address>
         </author>
-        <date year="2024" month="January" day="16"/>
+        <date year="2024" month="March" day="16"/>
         <workgroup>SCIM</workgroup>
 
         <keyword>Identity</keyword>
@@ -862,7 +862,9 @@ Location:
        "version": "W\/\"huJj29dMNgu3WXPD\"",
        "status": "400",
        "response": {
-           "schemas": ["urn:ietf:params:scim:api:messages:2.0:Error"],
+           "schemas": [
+               "urn:ietf:params:scim:api:messages:2.0:Error"
+           ],
            "scimType":"invalidSyntax",
            "detail": "Request is unparsable",
            "status":"400"
@@ -1279,23 +1281,8 @@ Location:
 
             <references>
                 <name>Informative References</name>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3259.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.6120.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7520.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8935.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8936.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9113.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.9325.xml"/>
-                <reference anchor="Kafka">
-                    <front>
-
-                        <title>Apache Kafka </title>
-                        <author><organization>Apache Software Foundation</organization></author>
-                        <date year="2017"/>
-                    </front>
-                    <format target="https://kafka.apache.org"
-                            type="HTML"/>
-                </reference>
 
             </references>
         </references>

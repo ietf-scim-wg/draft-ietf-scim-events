@@ -5,12 +5,12 @@
 SCIM                                                        P. Hunt, Ed.
 Internet-Draft                                             IndependentId
 Intended status: Standards Track                           N. Cam-Winget
-Expires: 19 July 2024                                      Cisco Systems
+Expires: 17 September 2024                                 Cisco Systems
                                                                 M. Kiser
                                                                Sailpoint
                                                             J. Schreiber
                                                                  Workday
-                                                         16 January 2024
+                                                           16 March 2024
 
 
                  SCIM Profile for Security Event Tokens
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 July 2024.
+   This Internet-Draft will expire on 17 September 2024.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Hunt, et al.              Expires 19 July 2024                  [Page 1]
+Hunt, et al.            Expires 17 September 2024               [Page 1]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    and restrictions with respect to this document.  Code Components
@@ -100,8 +100,8 @@ Table of Contents
      A.1.  Domain Based Replication  . . . . . . . . . . . . . . . .  31
      A.2.  Co-ordinated Provisioning . . . . . . . . . . . . . . . .  32
    Appendix B.  Acknowledgments  . . . . . . . . . . . . . . . . . .  34
-   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  35
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  35
+   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  34
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  34
 
 
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Hunt, et al.              Expires 19 July 2024                  [Page 2]
+Hunt, et al.            Expires 17 September 2024               [Page 2]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
 1.  Introduction and Overview
@@ -165,9 +165,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                  [Page 3]
+Hunt, et al.            Expires 17 September 2024               [Page 3]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
 1.2.  Notational Conventions
@@ -221,9 +221,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                  [Page 4]
+Hunt, et al.            Expires 17 September 2024               [Page 4]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    CP
@@ -277,9 +277,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                  [Page 5]
+Hunt, et al.            Expires 17 September 2024               [Page 5]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    SCIM Service Provider
@@ -333,9 +333,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                  [Page 6]
+Hunt, et al.            Expires 17 September 2024               [Page 6]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    uri
@@ -389,9 +389,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                  [Page 7]
+Hunt, et al.            Expires 17 September 2024               [Page 7]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    data
@@ -445,9 +445,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                  [Page 8]
+Hunt, et al.            Expires 17 September 2024               [Page 8]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    {
@@ -501,9 +501,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                  [Page 9]
+Hunt, et al.            Expires 17 September 2024               [Page 9]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
 2.4.  SCIM Provisioning Events
@@ -557,9 +557,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 10]
+Hunt, et al.            Expires 17 September 2024              [Page 10]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    {
@@ -613,9 +613,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 11]
+Hunt, et al.            Expires 17 September 2024              [Page 11]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    {
@@ -669,9 +669,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 12]
+Hunt, et al.            Expires 17 September 2024              [Page 12]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    {
@@ -725,9 +725,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 13]
+Hunt, et al.            Expires 17 September 2024              [Page 13]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    {
@@ -781,9 +781,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 14]
+Hunt, et al.            Expires 17 September 2024              [Page 14]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    {
@@ -837,9 +837,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 15]
+Hunt, et al.            Expires 17 September 2024              [Page 15]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    {
@@ -893,9 +893,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 16]
+Hunt, et al.            Expires 17 September 2024              [Page 16]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
 2.4.5.  urn:ietf:params:SCIM:event:prov:activate
@@ -949,9 +949,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 17]
+Hunt, et al.            Expires 17 September 2024              [Page 17]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
 2.5.1.1.  Making an Asynchronous SCIM Request
@@ -1005,9 +1005,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 18]
+Hunt, et al.            Expires 17 September 2024              [Page 18]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    PUT /Users/2819c223-7f76-453a-919d-413861904646
@@ -1061,9 +1061,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 19]
+Hunt, et al.            Expires 17 September 2024              [Page 19]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    SHALL have a "txn" claim value of
@@ -1117,9 +1117,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 20]
+Hunt, et al.            Expires 17 September 2024              [Page 20]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    An error may occur in the SCIM server's asynchronous processing of
@@ -1130,34 +1130,36 @@ Internet-Draft           draft-ietf-scim-events             January 2024
    that the "status" attribute of the event operation should match the
    "status" attribute of the response.
 
-  {
-   "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
-   "sub_id": {
-     "format": "scim",
-     "uri": "/Users/2819c223-7f76-453a-919d-413861904646"
-   },
-   "txn": "734f0614e3274f288f93ac74119dcf78",
-   "events":{
-     "urn:ietf:params:SCIM:event:misc:asyncResp": {
-         "method": "PUT",
-         "version": "W\/\"huJj29dMNgu3WXPD\"",
-         "status": "400",
-         "response": {
-             "schemas": ["urn:ietf:params:scim:api:messages:2.0:Error"],
-             "scimType":"invalidSyntax",
-             "detail": "Request is unparsable",
-             "status":"400"
-         }
-     }
-   },
-   "iat": 1458505044,
-   "iss":"https://scim.example.com",
-   "aud":[
-    "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
-   ]
-  }
+   {
+    "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
+    "sub_id": {
+      "format": "scim",
+      "uri": "/Users/2819c223-7f76-453a-919d-413861904646"
+    },
+    "txn": "734f0614e3274f288f93ac74119dcf78",
+    "events":{
+      "urn:ietf:params:SCIM:event:misc:asyncResp": {
+          "method": "PUT",
+          "version": "W\/\"huJj29dMNgu3WXPD\"",
+          "status": "400",
+          "response": {
+              "schemas": [
+                  "urn:ietf:params:scim:api:messages:2.0:Error"
+              ],
+              "scimType":"invalidSyntax",
+              "detail": "Request is unparsable",
+              "status":"400"
+          }
+      }
+    },
+    "iat": 1458505044,
+    "iss":"https://scim.example.com",
+    "aud":[
+     "https://scim.example.com/Feeds/98d52461fa5bbc879593b7754"
+    ]
+   }
 
-            Figure 15: Example SCIM Async Error Response Event
+             Figure 15: Example SCIM Async Error Response Event
 
    The following 4 figures show Async Completion events for the example
    in Section 3.7.3 of [RFC7644].
@@ -1171,11 +1173,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-
-
-Hunt, et al.              Expires 19 July 2024                 [Page 21]
+Hunt, et al.            Expires 17 September 2024              [Page 21]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    {
@@ -1229,9 +1229,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 22]
+Hunt, et al.            Expires 17 September 2024              [Page 22]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    {
@@ -1285,9 +1285,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 23]
+Hunt, et al.            Expires 17 September 2024              [Page 23]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
 3.  Events Discovery Schema for Service Provider Configuration
@@ -1341,9 +1341,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 24]
+Hunt, et al.            Expires 17 September 2024              [Page 24]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    For SCIM Provisioning events, the long-term series of changes may be
@@ -1397,9 +1397,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 25]
+Hunt, et al.            Expires 17 September 2024              [Page 25]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
       information systems co-ordinated and up-to-date.  For example, the
@@ -1453,9 +1453,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 26]
+Hunt, et al.            Expires 17 September 2024              [Page 26]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    Namespace ID:
@@ -1509,9 +1509,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 27]
+Hunt, et al.            Expires 17 September 2024              [Page 27]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
 6.3.  Initial Events Registry
@@ -1565,9 +1565,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 28]
+Hunt, et al.            Expires 17 September 2024              [Page 28]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    +--------------------------------------------+--------------+-------+
@@ -1621,9 +1621,9 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 29]
+Hunt, et al.            Expires 17 September 2024              [Page 29]
 
-Internet-Draft           draft-ietf-scim-events             January 2024
+Internet-Draft           draft-ietf-scim-events               March 2024
 
 
    [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and C.
@@ -1661,32 +1661,6 @@ Internet-Draft           draft-ietf-scim-events             January 2024
 
 7.2.  Informative References
 
-   [Kafka]    Apache Software Foundation, "Apache Kafka", 2017.
-
-   [RFC3259]  Ott, J., Perkins, C., and D. Kutscher, "A Message Bus for
-              Local Coordination", RFC 3259, DOI 10.17487/RFC3259, April
-              2002, <https://www.rfc-editor.org/info/rfc3259>.
-
-   [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
-              Protocol (XMPP): Core", RFC 6120, DOI 10.17487/RFC6120,
-              March 2011, <https://www.rfc-editor.org/info/rfc6120>.
-
-
-
-
-
-
-
-Hunt, et al.              Expires 19 July 2024                 [Page 30]
-
-Internet-Draft           draft-ietf-scim-events             January 2024
-
-
-   [RFC7520]  Miller, M., "Examples of Protecting Content Using JSON
-              Object Signing and Encryption (JOSE)", RFC 7520,
-              DOI 10.17487/RFC7520, May 2015,
-              <https://www.rfc-editor.org/info/rfc7520>.
-
    [RFC8935]  Backman, A., Ed., Jones, M., Ed., Scurtescu, M., Ansari,
               M., and A. Nadalin, "Push-Based Security Event Token (SET)
               Delivery Using HTTP", RFC 8935, DOI 10.17487/RFC8935,
@@ -1697,15 +1671,16 @@ Internet-Draft           draft-ietf-scim-events             January 2024
               Delivery Using HTTP", RFC 8936, DOI 10.17487/RFC8936,
               November 2020, <https://www.rfc-editor.org/info/rfc8936>.
 
-   [RFC9113]  Thomson, M., Ed. and C. Benfield, Ed., "HTTP/2", RFC 9113,
-              DOI 10.17487/RFC9113, June 2022,
-              <https://www.rfc-editor.org/info/rfc9113>.
 
-   [RFC9325]  Sheffer, Y., Saint-Andre, P., and T. Fossati,
-              "Recommendations for Secure Use of Transport Layer
-              Security (TLS) and Datagram Transport Layer Security
-              (DTLS)", BCP 195, RFC 9325, DOI 10.17487/RFC9325, November
-              2022, <https://www.rfc-editor.org/info/rfc9325>.
+
+
+
+
+
+Hunt, et al.            Expires 17 September 2024              [Page 30]
+
+Internet-Draft           draft-ietf-scim-events               March 2024
+
 
 Appendix A.  Use Cases
 
@@ -1719,24 +1694,6 @@ A.1.  Domain Based Replication
    common administrative domain.  In this mode, complete information
    about changes for resources are shared between replicas for immediate
    processing.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hunt, et al.              Expires 19 July 2024                 [Page 31]
-
-Internet-Draft           draft-ietf-scim-events             January 2024
-
 
                        ┌────────────────┐
    ┌────────┐          │SCIM            │   ┌────────────────────────┐
@@ -1766,6 +1723,21 @@ Internet-Draft           draft-ietf-scim-events             January 2024
    servers are in the same administrative domain, the primary objective
    is to keep individual service provider nodes or cluster synchronized.
 
+
+
+
+
+
+
+
+
+
+
+Hunt, et al.            Expires 17 September 2024              [Page 31]
+
+Internet-Draft           draft-ietf-scim-events               March 2024
+
+
 A.2.  Co-ordinated Provisioning
 
    In "Co-ordinated Provisioning" (CP), SCIM resource change events
@@ -1781,18 +1753,6 @@ A.2.  Co-ordinated Provisioning
    when a user consents to the sharing of information between domains,
    events about the User MAY be added to the feed between the Event
    Publisher and Receiver.
-
-
-
-
-
-
-
-
-Hunt, et al.              Expires 19 July 2024                 [Page 32]
-
-Internet-Draft           draft-ietf-scim-events             January 2024
-
 
                   ┌────────────────┐  ┌──────────────┐  ┌─────────────┐
    ┌───────────┐  │SCIM            │  │Client A      │  │Co-op Action │
@@ -1827,6 +1787,13 @@ Internet-Draft           draft-ietf-scim-events             January 2024
          │      ║         │                 │ │ ───────────────>│    ║
          │      ╚═════════╪═════════════════╪═╪═════════════════╪════╝
 
+
+
+Hunt, et al.            Expires 17 September 2024              [Page 32]
+
+Internet-Draft           draft-ietf-scim-events               March 2024
+
+
                Figure 21: Co-Ordinated Provisioning Sequence
 
    In CP mode, the receiver of an event must call back to the
@@ -1839,16 +1806,6 @@ Internet-Draft           draft-ietf-scim-events             January 2024
       example, a receiving domain may only be interested or only be
       allowed access to a few attributes (e.g. role based access data)
       to enable access to an application.
-
-
-
-
-
-
-Hunt, et al.              Expires 19 July 2024                 [Page 33]
-
-Internet-Draft           draft-ietf-scim-events             January 2024
-
 
    *  Different Event Receivers MAY have differing needs access to
       information and thus be assigned varying access rights.  Minimal
@@ -1883,6 +1840,16 @@ Internet-Draft           draft-ietf-scim-events             January 2024
    user as part of a online authorization where individual consent was
    obtained.
 
+
+
+
+
+
+Hunt, et al.            Expires 17 September 2024              [Page 33]
+
+Internet-Draft           draft-ietf-scim-events               March 2024
+
+
    When sharing information between parties, CP Events minimize the
    information shared in each message requiring the Security Event
    Receiver to call back to the event publisher to retrieve more
@@ -1896,15 +1863,6 @@ Appendix B.  Acknowledgments
 
    *  Morteza Ansari who contributed significantly to draft-hunt-
       idevent-scim-00, upon which this draft is based.
-
-
-
-
-
-Hunt, et al.              Expires 19 July 2024                 [Page 34]
-
-Internet-Draft           draft-ietf-scim-events             January 2024
-
 
    *  Special thanks to Dean Saxe, Elliot Lear, Paulo Correia, and
       Pamela Dingle for reviewing the document.
@@ -1942,6 +1900,12 @@ Authors' Addresses
    Email: ncamwing@cisco.com
 
 
+
+Hunt, et al.            Expires 17 September 2024              [Page 34]
+
+Internet-Draft           draft-ietf-scim-events               March 2024
+
+
    Mike Kiser
    Sailpoint Technologies
    Email: mike.kiser@sailpoint.com
@@ -1957,4 +1921,40 @@ Authors' Addresses
 
 
 
-Hunt, et al.              Expires 19 July 2024                 [Page 35]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hunt, et al.            Expires 17 September 2024              [Page 35]
