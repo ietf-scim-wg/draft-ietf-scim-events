@@ -1072,10 +1072,9 @@ Location:
                 </li>
             </ul>
             <t>
-                When using Asynchronous SCIM Requests (see <xref target="asyncRequest"/>), and location returned in
+                When using Asynchronous SCIM Requests (see <xref target="asyncRequest"/>), and a location returned in
                 a SCIM Accepted response is a URI for retrieving the event result, the URI SHOULD be protected requiring
-                an HTTP Authorization header. Or in the alternative, the SET's retrieved SHOULD be encrypted in order to
-                authenticate the receiver. The retrieval endpoint SHOULD be protected
+                an HTTP Authorization header or some other form of client authentication.
             </t>
         </section>
         <section anchor="Privacy" toc="default" numbered="true">

@@ -1386,12 +1386,12 @@ Internet-Draft           draft-ietf-scim-events               April 2024
       exact date of each membership change is not critical but that the
       information content remains intact.
 
-   When using Asynchronous SCIM Requests (see Section 2.5.1.1), and
+   When using Asynchronous SCIM Requests (see Section 2.5.1.1), and a
    location returned in a SCIM Accepted response is a URI for retrieving
    the event result, the URI SHOULD be protected requiring an HTTP
-   Authorization header.  Or in the alternative, the SET's retrieved
-   SHOULD be encrypted in order to authenticate the receiver.  The
-   retrieval endpoint SHOULD be protected
+   Authorization header or some other form of client authentication.
+
+
 
 
 
