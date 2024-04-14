@@ -410,8 +410,10 @@ Internet-Draft           draft-ietf-scim-events               April 2024
 
    attributes
       This payload contains an array of attributes that were added,
-      revised, or removed.  For example:
-      "attributes": ["username","emails"]
+      revised, or removed.  Values of modified attributes SHOULD conform
+      to the ABNF syntax rule for path> (sec 3.5.2 [RFC7644]).  For
+      example:
+      "attributes": ["username","emails","name.familyName"]
 
    Only one of data or attributes claims SHALL be provided depending on
    the event definition.
@@ -435,8 +437,6 @@ Internet-Draft           draft-ietf-scim-events               April 2024
    not indicate a resource is new or has been recently created.  For
    example, an existing user has had a new role (e.g.  CRM_User) added
    to their profile which has caused their resource to join a feed.
-
-
 
 
 
@@ -1888,6 +1888,10 @@ Appendix C.  Change Log
    Updated SubId Reference to RFC9493, other comments, fixed IANA
    registry paragraph, SCIM Signals Removed
 
+   Draft 05 - PH - Removed Signals Events, Removed Delivery Section (not
+   normative), Version(etag) definition added, Security Considerations
+   revisions, Syntax for Attributes
+
 Authors' Addresses
 
    Phil Hunt (editor)
@@ -1895,15 +1899,16 @@ Authors' Addresses
    Email: phil.hunt@independentid.com
 
 
-   Nancy Cam-Winget
-   Cisco Systems
-   Email: ncamwing@cisco.com
-
 
 
 Hunt, et al.             Expires 16 October 2024               [Page 34]
 
 Internet-Draft           draft-ietf-scim-events               April 2024
+
+
+   Nancy Cam-Winget
+   Cisco Systems
+   Email: ncamwing@cisco.com
 
 
    Mike Kiser
@@ -1914,11 +1919,6 @@ Internet-Draft           draft-ietf-scim-events               April 2024
    Jen Schreiber
    Workday Incorporated
    Email: jennifer.winer@workday.com
-
-
-
-
-
 
 
 

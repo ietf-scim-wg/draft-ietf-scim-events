@@ -335,8 +335,10 @@
 
                     <dt>attributes</dt>
                     <dd>
-                        This payload contains an array of attributes that were added, revised, or removed. For example: <br/>
-                         <tt>"attributes": ["username","emails"]</tt>
+                        This payload contains an array of attributes that were added, revised, or removed. Values of
+                        modified attributes SHOULD conform to the ABNF syntax rule for <tt>path</tt>> (sec 3.5.2
+                        <xref target="RFC7644"/>). For example: <br/>
+                        <tt>"attributes": ["username","emails","name.familyName"]</tt>
                     </dd>
                 </dl>
                 <t>
@@ -1279,7 +1281,6 @@ Location:
                 <name>Normative References</name>
 
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
-
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3986.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7240.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7515.xml"/>
@@ -1658,6 +1659,7 @@ Location:
             <t>Draft 02 - PH - Clarifications on Async Events, IANA Considerations</t>
             <t>Draft 03 - PH - Fixed Header Field registration to RFC9110."Preference-Applied" header in async response. Support for Async Bulk requests. Added IANA SCIM Event Registry</t>
             <t>Draft 04 - PH - Removed Event Delivery Feeds and Appendix A(not normative), Removed "sig" events, change bulk txn separator to ":", Updated SubId Reference to RFC9493, other comments, fixed IANA registry paragraph, SCIM Signals Removed</t>
+            <t>Draft 05 - PH - Removed Signals Events, Removed Delivery Section (not normative), Version(etag) definition added, Security Considerations revisions, Syntax for Attributes</t>
         </section>
     </back>
 </rfc>
