@@ -58,7 +58,7 @@
                 <email>jennifer.winer@workday.com</email>
             </address>
         </author>
-        <date year="2024" month="April" day="10"/>
+        <date year="2024" month="April" day="14"/>
         <workgroup>SCIM</workgroup>
 
         <keyword>Identity</keyword>
@@ -1052,13 +1052,25 @@ Location:
                 to its intended recipient.
             </t>
             <t>
-                In operation, some SCIM resources such as SCIM Groups may have a high rate of change. Implementors and
-                operators SHOULD consider use of throttling techniques to balance immediacy and frequency. For example, a
-                large group whose members change dozens of times per second may not need discrete SET Patch Events per change.
-                Instead, issuing a single consolidated change per second or even minute may be beneficial to keeping Event Receivers
-                up-to-date. Likewise, a Co-ordinated Provisioning Event Receiver (Section 2.2), does not necessarily need to retrieve
-                the full Group on every change request. It MAY choose to do lookups on a less frequent scale for reconciliation.
-            </t>
+                In operation, some SCIM resources such as SCIM Groups may have a high rate of change such a groups with more
+                than 100k member values. This could lead to an excessive event rate that SHOULD be considered by Event
+                Publishers and Receivers. Consider the following to help mitigate throughput issues:
+                </t>
+            <ul>
+                <li>
+                    Avoid use of SCIM PUT (section 3.5.1 <xref target="RFC7644"/> operations on large groups as this may
+                    require excessive locking in data store systems as well as large Security Event payloads. Use SCIM PATCH
+                    (section 3.5.2) to focus on updating and notifying about changed information.
+                </li>
+                <li>
+                    Use Patch Notice (urn:ietf:params:SCIM:event:prov:patch:notice) to reduce event content combined with
+                    using periodic SCIM GET (see section 3.4 <xref target="RFC7644"/>) to retrieve current group state
+                </li>
+                <li>
+                    Aggregate multiple PATCH Events into a single event providing the exact date of each membership change
+                    is not critical but that the information content remains intact.
+                </li>
+            </ul>
             <t>
                 When using Asynchronous SCIM Requests (see <xref target="asyncRequest"/>), and location returned in
                 a SCIM Accepted response is a URI for retrieving the event result, the URI SHOULD be protected requiring
