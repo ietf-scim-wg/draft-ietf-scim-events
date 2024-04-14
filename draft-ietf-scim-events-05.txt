@@ -14,7 +14,7 @@ Expires: 16 October 2024                                   Cisco Systems
 
 
                  SCIM Profile for Security Event Tokens
-                       draft-ietf-scim-events-04
+                       draft-ietf-scim-events-05
 
 Abstract
 
@@ -156,7 +156,7 @@ Internet-Draft           draft-ietf-scim-events               April 2024
 
 1.1.  Requirements Language
 
-   The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
    "OPTIONAL" in this document are to be interpreted as described in BCP
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
