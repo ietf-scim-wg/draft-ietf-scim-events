@@ -106,10 +106,10 @@
                 enables greater scale and timeliness, where only changed information is exchanged between parties.
             </t>
             <t>
-                A SET token conveys information about a state change in a publishing SCIM Service Provider.
+                A SET token conveys information about a state change that has occured in a publishing SCIM Service Provider.
                 That token may be of interest to one or more receivers and can be delivered asynchronously to the originating
                 SCIM Client making the change. Unlike SCIM Protocol requests which convey protocol commands, Security
-                Events describe statements of fact about changes by the SCIM Provider. This approach allows the event receiver
+                Events describe statements of fact about changes by the SCIM Service Provider. This approach allows the Event Receiver
                 to determine the best local follow-up action to take within its own context. For example, the receiver can
                 reconcile intentional schema and population differences between the domain.
             </t>
@@ -151,7 +151,7 @@
                     </li>
                 </ul>
                 <t>
-                    In JSON Web Tokens and Security Event Tokens the term "claim" refers to JSON attribute
+                    In JSON Web Tokens and Security Event Tokens, the term "claim" refers to JSON attribute
                     values in a JSON Web Token <xref target="RFC7519"/> structure. The term "claim" in tokens is used
                     to indicate that an attribute value may not be verified and its accuracy can be questioned. In the
                     context of SCIM, claims are referred to as attributes. For the purposes of this specification claims
@@ -357,12 +357,12 @@
                     This section defines events related to changes in the content of an event feed. Such as,
                     SCIM Resources that are being added or removed from an event feed or events used in
                     Co-operative Provisioning scenarios where only a sub-set of entities are shared across an
-                    Event Feed. The URI prefix for these events is:
+                    Event Feed. The URI prefix for these events is
                     <tt>urn:ietf:params:SCIM:event:feed</tt>
                 </t>
                 <section anchor="feedAdd" numbered="true" toc="default">
                     <name>urn:ietf:params:SCIM:event:feed:add</name>
-                    <t>The specified resource was added to the Event Feed. A <tt>feed:add</tt> does not indicate a
+                    <t>The specified resource has been added to the Event Feed. A <tt>feed:add</tt> does not indicate a
                         resource is new or has been recently created. For example,
                         an existing user has had a new role (e.g. CRM_User) added to
                         their profile which has caused their resource to join a feed.
