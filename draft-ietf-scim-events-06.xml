@@ -1302,8 +1302,7 @@ Location:
                         <title>Shared Signals Framework</title>
                         <author><organization>OpenId Foundation</organization></author>
                     </front>
-                    <format target="https://kafka.apache.org"
-                            type="HTML"/>
+                    <format target="https://openid.net/wg/sharedsignals/specifications/" type="HTML"/>
                 </reference>
             </references>
         </references>
