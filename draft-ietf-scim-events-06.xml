@@ -1300,7 +1300,7 @@ Location:
                 <reference anchor="SSF">
                     <front>
                         <title>Shared Signals Framework</title>
-                        <author><organization>OpenId Foundation</organization></author>
+                        <author><organization>OpenID Foundation</organization></author>
                     </front>
                     <format target="https://openid.net/wg/sharedsignals/specifications/" type="HTML"/>
                 </reference>
@@ -1638,7 +1638,7 @@ Location:
                     SCIM protocol access restrictions. The Event Receiver and Publisher may agree to communicate these
                     updates through a variety of transmission methods such as push and pull based HTTP like in <xref target="RFC8935"/>,
                     <xref target="RFC8936"/>, or HTTP GET (see <xref target="asyncRequest"/>), streaming technologies
-                    (e.g., Kaftka or Kinesis), or via webhooks like in the <xref target="SSF" format="default">Shared Signals Framework</xref>.
+                    (e.g., Kafka or Kinesis), or via webhooks like in the <xref target="SSF" format="default">Shared Signals Framework</xref>.
                 </t>
 
             </section>
