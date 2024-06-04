@@ -1297,7 +1297,13 @@ Location:
                 <name>Informative References</name>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8935.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8936.xml"/>
-
+                <reference anchor="SSF">
+                    <front>
+                        <title>Shared Signals Framework</title>
+                        <author><organization>OpenID Foundation</organization></author>
+                    </front>
+                    <format target="https://openid.net/wg/sharedsignals/specifications/" type="HTML"/>
+                </reference>
             </references>
         </references>
         <section anchor="modes" numbered="true" toc="default">
@@ -1627,9 +1633,12 @@ Location:
                 </t>
                 <t>
                     When sharing information between parties, CP Events minimize the information shared in each message and
-                    require the Security Event Receiver to callback to the Event Publisher to retrieve more information.
-                    In this way, the Event Publisher is able to have regular access to information through normal
-                    SCIM protocol access restrictions.
+                    require the Security Event Receiver to receive more information from the Event Publisher as needed.
+                    In this way, the Event Receiver is able to have regular access to information through normal
+                    SCIM protocol access restrictions. The Event Receiver and Publisher may agree to communicate these
+                    updates through a variety of transmission methods such as push and pull based HTTP like in <xref target="RFC8935"/>,
+                    <xref target="RFC8936"/>, or HTTP GET (see <xref target="asyncRequest"/>), streaming technologies
+                    (e.g., Kafka or Kinesis), or via webhooks like in the <xref target="SSF" format="default">Shared Signals Framework</xref>.
                 </t>
 
             </section>
