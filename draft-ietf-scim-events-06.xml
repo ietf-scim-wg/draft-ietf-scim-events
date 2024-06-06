@@ -58,7 +58,7 @@
                 <email>jennifer.winer@workday.com</email>
             </address>
         </author>
-        <date year="2024" month="April" day="14"/>
+        <date year="2024" month="June" day="6"/>
         <workgroup>SCIM</workgroup>
 
         <keyword>Identity</keyword>
@@ -1664,6 +1664,7 @@ Location:
             <t>Draft 03 - PH - Fixed Header Field registration to RFC9110."Preference-Applied" header in async response. Support for Async Bulk requests. Added IANA SCIM Event Registry</t>
             <t>Draft 04 - PH - Removed Event Delivery Feeds and Appendix A(not normative), Removed "sig" events, change bulk txn separator to ":", Updated SubId Reference to RFC9493, other comments, fixed IANA registry paragraph, SCIM Signals Removed</t>
             <t>Draft 05 - PH - Removed Signals Events, Removed Delivery Section (not normative), Version(etag) definition added, Security Considerations revisions, Syntax for Attributes</t>
+            <t>Draft 06 - PH - Editorial edits and clarifications, add SSF reference</t>
         </section>
     </back>
 </rfc>
