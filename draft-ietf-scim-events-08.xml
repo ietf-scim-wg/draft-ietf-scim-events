@@ -19,7 +19,7 @@
 <rfc
         xmlns:xi="http://www.w3.org/2001/XInclude"
         category="std"
-        docName="draft-ietf-scim-events-07"
+        docName="draft-ietf-scim-events-08"
         ipr="trust200902"
         updates=""
         submissionType="IETF"
@@ -33,7 +33,7 @@
     <!-- xml2rfc v2v3 conversion 3.12.1 -->
     <front>
         <title abbrev="draft-ietf-scim-events">SCIM Profile for Security Event Tokens</title>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-scim-events-07"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-scim-events-08"/>
         <author fullname="Phil Hunt" initials="P." role="editor" surname="Hunt">
             <organization abbrev="IndependentId">Independent Identity Inc</organization>
             <address>
@@ -58,7 +58,7 @@
                 <email>jennifer.winer@workday.com</email>
             </address>
         </author>
-        <date year="2024" month="Dec" day="2"/>
+        <date year="2025" month="June" day="2"/>
         <workgroup>SCIM</workgroup>
 
         <keyword>Identity</keyword>
@@ -1028,33 +1028,41 @@ Location:
         <section anchor="Security" toc="default" numbered="true">
             <name>Security Considerations</name>
             <t>
-                This specification depends on the Security Considerations for <xref target="RFC8417"/>. </t>
+                As this specification is based upon the Security Event Tokens specification and the associated delivery specifications the following
+                Security Considerations SHALL be applied:
+            </t>
+            <ul>
+                <li>Section 5 of <xref target="RFC8417"/> (Security Event Token)</li>
+                <li>Section 5 of <xref target="RFC8935"/> (Push-based Delivery Using HTTP)</li>
+                <li>Section 4 of <xref target="RFC8936"/> (Poll-Based Delivery Using HTTP) </li>
+            </ul>
             <t>
-                The use of JSON Web Encryption (JWE) <xref target="RFC7516"/> can impose performance limitations when
-                used in high event frequency scenarios. JWE is useful when the transfer of SETs is not end-to-end encrypted.
-                TLS termination, for example, may occur before the destination of the SET.  JWE ensures that the content of
-                the SET is encrypted after TLS termination to prevent disclosure.</t>
-            <t>
-                For SCIM Provisioning events, the long-term series of changes may be critical to both sides. As such,
-                Event Publishers SHOULD consider storing events for receivers for longer periods of time in the case of
-                an extended SET Transfer service failure. Similarly, Event Receivers MUST ensure events are persisted
+                When co-ordinating provisioning between entities, the long-term series of changes may be critical to the
+                information integrity and recovery requirements of both sides. To address this, Event Publishers SHOULD
+                consider storing events for receivers for longer periods of time than might typically be used for recovering
+                from momentary delivery failures and retries per <xref target="RFC8935"/> or <xref target="RFC8936"/>.
+                Similarly, Event Receivers MUST ensure events are persisted
                 directly or indirectly to meet local recovery needs before acknowledging the SET Events were received.
             </t>
             <t>
-                When SET Events are stored for future delivery or retained local recovery, they MUST be limited only to the
+                An attacker might leverage transaction and/or signal information contained in SET Event Publisher or
+                Receiver system. To mitigate this, access to event recovery and forwarding SHOULD be limited to the
                 parties needed to support recovery or SET forwarding.
             </t>
             <t>
-                JWS <xref target="RFC7515"/> signed SET Events SHOULD be used to verify authenticity of the origin of
+                When SET Events are transferred in such a was as the Event Publisher is not communicating directly to the
+                Event Receiver, it may become possible for an attacker or other system to insert an event. To mitigate,
+                the use of JWS <xref target="RFC7515"/> signed SET Events SHOULD be used to verify the originator of
                 a SET Event. Validating event signatures is both useful on the initial transfer of SET Events, and
                 may also be useful for auditing purposes. Signed SET Events are protected from tampering in the event that
                 an intermediate system, such as a TLS-terminating proxy, decrypts the SET payload before sending it onward 
                 to its intended recipient.
             </t>
             <t>
-                In operation, some SCIM Resources such as SCIM Groups may have a high rate of change such a groups with more
-                than 100k member values. This could lead to an excessive event rate that SHOULD be considered by Event
-                Publishers and Receivers. Consider the following to help mitigate throughput issues:
+                In operation, some SCIM Resources such as SCIM Groups may have a high rate of change. For examples groups
+                with more than a few thousand member values could lead to excessive change rates that could lead to a
+                loss of SET Events between Event Publishers and Event Receivers. To mitigate this risk, consider the
+                following to help mitigate throughput issues:
                 </t>
             <ul>
                 <li>
@@ -1072,27 +1080,41 @@ Location:
                 </li>
             </ul>
             <t>
-                When using Asynchronous SCIM Requests (see <xref target="asyncRequest"/>), and a location returned in
-                a SCIM Accepted response is a URI for retrieving the event result, the URI SHOULD be protected requiring
-                an HTTP Authorization header or some other form of client authentication.
+                When using Asynchronous SCIM Requests (see <xref target="asyncRequest"/>), a SCIM Service provider returns
+                a SCIM Accepted response with a URI for retrieving the event result. An unauthorized entity or attacker
+                could obtain asynchronous request completion event information by querying the asynchronous operation
+                result endpoint used by a SCIM Service Provider. To mitigate, the returned URI endpoint SHOULD be
+                protected requiring an HTTP Authorization header or some other form of client authentication.
             </t>
         </section>
         <section anchor="Privacy" toc="default" numbered="true">
             <name>Privacy Considerations</name>
-            <t>This specification enables the sharing of information between domains. The specification assumes
-            that implementers and deployers are operating under one of the following scenarios:
+            <t>
+                As this specification is based upon the Security Event Tokens and the associated delivery specifications the following
+                Security Considerations SHALL be applied:
+            </t>
+            <ul>
+                <li>Section 6 of <xref target="RFC8417"/> (Security Event Token)</li>
+                <li>Section 6 of <xref target="RFC8935"/> (Push-based Delivery Using HTTP)</li>
+                <li>Section 5 of <xref target="RFC8936"/> (Poll-Based Delivery Using HTTP) </li>
+            </ul>
+            <t>
+                This specification enables the sharing of information between domains. The specification assumes
+                that implementers and deployers are operating under one of the following scenarios:
             </t>
             <ul>
                 <li>A common administrative domain where there is one administrative owner of the data. In these cases,
                 the objective is to protect privacy and security of the owner and user data by keeping information
                 systems co-ordinated and up-to-date. For example, the domains decide to use Domain Based Replication
-                mode in order to keep employee information synchronized.</li>
+                mode in order to keep employee information synchronized.
+                </li>
                 <li>In a co-operative or co-ordinated relationship, parties have decided to share a limited amount
                 of data and/or signals for the benefits of their users. Depending on end-user consent, information
                 is shared on an as-authorized and/or as-needed basis. For example, the domains agree to use Co-ordinated
                 Provision mode that exchanges things like account status or specific minimal attribute information
                 that must be fetched on request after receiving notice of a change. This enables authorization to
-                be verified each time data is transferred.</li>
+                be verified each time data is transferred.
+                </li>
             </ul>
             <t>In general, the sharing of SCIM Event information falls within a pre-existing SCIM Client and Service
             Provider relationship and carry no additional personal information.</t>
@@ -1118,6 +1140,10 @@ Location:
                     IANA will add a new registry called “SCIM Event URIs” to the “System for Cross-domain Identity
                     Management (SCIM) Schema URIs” registry group initiated by Section 10.1 of <xref target="RFC7643"/>
                     at https://www.iana.org/assignments/scim.
+                </t>
+                <t>
+                    Unless otherwise stated, the procedures and definitions for this sub-registry are inherited from the
+                    parent registry.
                 </t>
                 <dl newline="true">
                     <dt>Namespace ID:</dt>
@@ -1281,7 +1307,6 @@ Location:
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3986.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7240.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7515.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7516.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7519.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7643.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7644.xml"/>
@@ -1665,6 +1690,8 @@ Location:
             <t>Draft 04 - PH - Removed Event Delivery Feeds and Appendix A(not normative), Removed "sig" events, change bulk txn separator to ":", Updated SubId Reference to RFC9493, other comments, fixed IANA registry paragraph, SCIM Signals Removed</t>
             <t>Draft 05 - PH - Removed Signals Events, Removed Delivery Section (not normative), Version(etag) definition added, Security Considerations revisions, Syntax for Attributes</t>
             <t>Draft 06 - PH - Editorial edits and clarifications, add SSF reference</t>
+            <t>Draft 07 - PH - Document date update only</t>
+            <t>Draft 08 - PH - Update to Security Considerations to frame as risk/correction</t>
         </section>
     </back>
 </rfc>
