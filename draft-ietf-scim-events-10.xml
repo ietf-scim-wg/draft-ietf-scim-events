@@ -58,7 +58,7 @@
                 <email>jennifer.winer@workday.com</email>
             </address>
         </author>
-        <date year="2025" month="September" day="20"/>
+        <date year="2025" month="September" day="22"/>
         <workgroup>SCIM</workgroup>
 
         <keyword>Identity</keyword>
@@ -286,7 +286,7 @@
                 </figure>
                 <t>
                     Instead of "sub", the top-level claim "sub_id" SHALL be used. "sub_id" contains the subclaim attribute
-                    "format" and assigned a value of <tt>scim</tt> to indicate the attributes present in the "sub_id"
+                    "format" set to <tt>scim</tt> to indicate the attributes present in the "sub_id"
                     object are SCIM attributes. The following "sub_id" attributes are defined:
                 </t>
                 <dl newline="true" spacing="normal">
@@ -327,7 +327,7 @@
                 <dl newline="true" spacing="normal">
                     <dt>txn</dt>
                     <dd>
-                        For the purposes of SCIM, is a SET defined claim (see Section 2.2 <xref target="RFC8417"/> that
+                        For the purposes of SCIM, is a SET defined claim (see Section 2.2 <xref target="RFC8417"/>) that
                         uniquely identifies a transaction
                         originating at a SCIM Service Provider and/or its underlying data repository or database. The
                         claim is used to detect duplicate transactions that may have been received (e.g. in the case of
@@ -442,7 +442,7 @@
                         <tt>full</tt> mode, the set of values reflecting the final state of the resource at the Service Provider
                         are provided using the <tt>data</tt> attribute. In <tt>notice</tt> mode, the
                         <tt>attributes</tt> attribute is returned listing the set of attributes included in the create
-                        request (see <xref target="exampleCreateEventDef"/> .
+                        request (see <xref target="exampleCreateEventDef"/>).
                         Note that because the event MAY be used for replication, the <tt>id</tt>
                         attribute that was assigned by the SCIM Service Provider is shared so that all replicas in the
                         domain MAY use the same resource identifier.
@@ -1148,7 +1148,7 @@ Location:
                     <dt>Field name:</dt><dd>Set-txn</dd>
                     <dt>Status:</dt><dd>Permanent</dd>
                     <dt>Specification Document:</dt><dd>this specification, <xref target="attributes"/>, <xref target="asyncRequest"/> and Section 2.2 of <xref target="RFC8417"/>.
-                    In the context of this specification, the field value is a unique string or number (e.g. GUID) used for exact matching purposes. </dd>
+                    In the context of this specification, the field value is a unique string or number (e.g. GUID) used for exact matching purposes.</dd>
                     <dt>Comments:</dt><dd>See also Section 2.2 <xref target="RFC8417"/> Security Event Tokens.</dd>
                 </dl>
             </section>
