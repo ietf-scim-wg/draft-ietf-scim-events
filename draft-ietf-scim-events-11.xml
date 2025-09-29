@@ -1767,7 +1767,7 @@ Location:
             <t>Draft 08 - PH - Update to Security Considerations to frame as risk/correction</t>
             <t>Draft 09 - PH - Incorporating feedback from AD</t>
             <t>Draft 10 - PH - IANA and ARTART Feedback</t>
-            <t>Draft 11 - PH - GenArt, OpsDir Feedback including new section on set-txn header</t>
+            <t>Draft 11 - PH - GenArt, OpsDir Feedback including new section on set-txn header, removed unicode art characters.</t>
         </section>
     </back>
 </rfc>
