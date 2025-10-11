@@ -58,7 +58,7 @@
                 <email>jennifer.winer@workday.com</email>
             </address>
         </author>
-        <date year="2025" month="October" day="3"/>
+        <date year="2025" month="October" day="13"/>
         <workgroup>SCIM</workgroup>
 
         <keyword>Identity</keyword>
@@ -93,11 +93,11 @@
                 provisioning co-ordination.
             </t>
             <t>
-                This specification also profiles the use of the HTTP Header "<tt>Prefer: Async-response</tt>" <xref target="RFC7240"/>
+                This specification defines the use of the HTTP Header "<tt>Prefer: respond-async</tt>" <xref target="RFC7240"/>
                 to allow a SCIM Protocol Client <xref target="RFC7644"/> to request an asynchronous response (see <xref target="asyncRequest"/>).
             </t>
             <t>
-                In a typical HTTP client-server relationship, a SCIM Protocol Client issues commands to a SCIM Service
+                Using HTTP protocol, a SCIM Protocol Client issues commands to a SCIM Service
                 Provider using HTTP methods such as POST, PATCH, and DELETE <xref target="RFC7644" format="default"/>
                 that cause a state change to a SCIM Resource. When multiple independent SCIM Clients update SCIM
                 Resources, individual clients become out of date as state changes occur. Some clients may need to be
@@ -106,17 +106,15 @@
                 number of resources increases.
             </t>
             <t>
-                SCIM Events can be shared over an established Event Feed that can allow receivers to monitor trigger
+                SCIM Events can be shared over an established Event Feed that can allow receivers to monitor and trigger
                 independent asynchronous action. This approach enables greater scale and timeliness, where only
                 changed information is exchanged between parties.
             </t>
             <t>
-                A SET conveys information about a state change that has occurred in a publishing SCIM Service Provider.
-                That token may be of interest to one or more receivers and can be delivered asynchronously to the originator
-                of the change. Unlike SCIM Protocol requests which convey protocol commands, Security
-                Events describe statements of fact about changes by the SCIM Service Provider. This approach allows the Event Receiver
-                to determine the best local follow-up action to take within its own context. For example, the receiver can
-                reconcile schema and resource type differences between domains.
+                A SET conveys information about a state change that has occurred at a SCIM Service Provider.
+                That SET may be of interest to one or more receivers. But instead of interpreting SETs as commands, each
+                Event Receiver is able to determine the best local follow-up action to take within its own context.
+                For example, a receiver can reconcile schema and resource type differences between domains.
             </t>
 
             <section>
@@ -131,11 +129,6 @@
             </section>
             <section anchor="notat" toc="default" numbered="true">
                 <name>Notational Conventions</name>
-                <t>
-                    For purposes of readability examples are not URL encoded.
-                    Implementers MUST percent encode URLs as described in <xref target="RFC3986" format="default">
-                    Section 2.1 of</xref>.
-                </t>
                 <t>
                     Throughout this document all figures may contain spaces and extra
                     line-wrapping for readability and space limitations. Similarly, some
@@ -175,19 +168,19 @@
                         JSON attributes. For the purposes of this draft, the terms "attributes" and "claims" are equivalent.
                     </dd>
 
-                    <dt>CP</dt>
+                    <dt>Co-ordinated Provisioning (CP)</dt>
                     <dd>
-                        Abbreviation for "Co-ordinated Provisioning" as defined in <xref target="coordination"/>. In these
+                        Defined in <xref target="coordination"/>, in co-ordinated provisioning
                         relationships, an Event Publisher and Receiver typically exchange resource change events without
                         exchanging data (see <xref target="scimProvEvents"/>). For a receiver to know the value of the data,
                         the Event Receiver usually calls back
                         to the SCIM Event Publisher domain to receive a new copy of data (e.g., Uses a SCIM GET request).
                     </dd>
 
-                    <dt>DBR</dt>
+                    <dt>Domain Based Replication (DBR)</dt>
                     <dd>
-                        Abbreviation for "Domain Based Replication" as defined in <xref target="replication"/>. In this
-                        mode because there is an administrative relationship spanning multiple operational domains, data
+                        Defined in <xref target="replication"/>, in this domain-based replication
+                        mode there is an administrative relationship spanning multiple operational domains, data
                         shared in Events typically uses the <tt>full</tt> mode variation of change events including
                         the <tt>data</tt> payload attribute (see <xref target="scimProvEvents"/>). This eliminates the need for a callback
                         to retrieve additional data.
@@ -266,9 +259,11 @@
                     Security Event Tokens</xref> specification to identify the subject of events. The <tt>sub_id</tt>
                     claim MUST be contained within the main JWT claims body and SHALL NOT be located within an Event
                     payload within the <tt>events</tt> claim. A SET with multiple event URIs indicates that the events
-                    arise from the same transaction or resource state change for a single resource or subject. Finally,
-                    as recommended in Section 3 of <xref target="RFC8417"/> the JWT "sub" claim SHALL NOT be used to
-                    prevent confusion with JWT authorization tokens.
+                    arise from the same transaction or resource state change for a single resource or subject.
+                </t>
+                <t>
+                    The JWT "sub" claim SHALL NOT be used to identify subjects to prevent confusion with JWT
+                    authorization tokens (originally recommended in Section 3 of <xref target="RFC8417"/>).
                 </t>
                 <figure anchor="example_subid">
                     <name>SCIM Subject Id Example</name>
@@ -314,17 +309,16 @@
                         The SCIM Id attribute (defined in Section 3.1 of <xref target="RFC7643"/>) MAY be used for backwards
                         compatibility reasons in addition to the <tt>uri</tt> claim.
                     </dd>
-                    <dt>emails,username, ...</dt>
-                    <dd>
-                        A SCIM attribute that is unique to both the Event Publisher and Receiver. Alternative attributes
-                        that are unique such as <tt>email</tt> or <tt>usernames</tt> (defined in Section 4 of <xref target="RFC7643"/>)
-                        MAY be used in situations where SCIM identifiers (<tt>id</tt> and
-                        <tt>externalId</tt>) are not enough to identify a common resource between an Event Publisher
-                        and Event Receiver. In the situation where custom attributes have been defined, unique attributes
-                        discoverable through the SCIM Service Provider's schemas endpoint MAY be used (see Section 4 of
-                        <xref target="RFC7644"/>).
-                    </dd>
                 </dl>
+                <t>
+                    In cases where SCIM identifiers (<tt>id</tt> and <tt>externalId</tt>) are not enough to identify a
+                    common resource between an Event Publisher and Event Receiver,
+                    the "sub_id" object MAY contain attributes whose SCIM attribute types have "uniqueness" set to
+                    "server" or "global" as per Section 7 of <xref target="RFC7643"/>. For example, attributes such as
+                    <tt>emails</tt> or <tt>username</tt> (defined in Section 4 of <xref target="RFC7643"/>) are unique
+                    with in a SCIM Service Provider. Such attributes should allow an Event Publisher and Event Receiver
+                    to identify a commonly understood subject resource of an event.
+                </t>
             </section>
             <section anchor="attributes" numbered="true" toc="default">
                 <name>Common Event Attributes</name>
@@ -336,10 +330,11 @@
                 <dl newline="true" spacing="normal">
                     <dt>txn</dt>
                     <dd>
-                        <tt>txn</tt> is a SET defined claim with a STRING value (see Section 2.2 of <xref target="RFC8417"/>)
+                        <tt>txn</tt> is a SET-defined claim with a STRING value (see Section 2.2 of <xref target="RFC8417"/>)
                         that uniquely identifies a transaction originating at a SCIM Service Provider and/or its underlying data
                         repository or database where one or more SCIM Events may be subsequently issued. In contrast to
-                        <tt>jti</tt> claims which uniquely identifies a token, the <tt>txn</tt> remains the same when
+                        a <tt>jti</tt> claim (see Section 4.1.7 of <xref target="RFC7519"/>), which uniquely identifies
+                        a token, the <tt>txn</tt> remains the same when
                         one or more SETs are generated for various purposes such as re-transmission, publication to
                         multiple receivers etc. A distinct state change or transaction within a SCIM Service Provider
                         MAY result in multiple SETs issued each with distinct <tt>jit</tt> values an a common
@@ -413,8 +408,7 @@
                     <name>urn:ietf:params:scim:event:feed:remove</name>
                     <t>The specified
                         resource has been removed from the feed. Removal does not indicate
-                        that the resource was deleted or otherwise deactivated. This
-                        event has minimal disclosure.
+                        that the resource was deleted or otherwise deactivated.
                     </t>
                     <figure anchor="exampleRemoveEvent">
                         <name>Example SCIM Feed Remove Event</name>
@@ -745,7 +739,7 @@
                         <name>Making an Asynchronous SCIM Request</name>
                         <t>
                             A SCIM Client making SCIM HTTP requests defined in Section 3 of <xref target="RFC7644"/> MAY request
-                            "asynchronous" processing using the "Prefer" HTTP Header as defined in Section 4.1 of
+                            asynchronous processing using the "Prefer" HTTP Header as defined in Section 4.1 of
                             <xref target="RFC7240"/>. The client may do this for a number of reasons such as avoiding
                             holding HTTP connections open during long requests, because the result of the request is not
                             needed, or for co-ordination reasons where the result is delivered to another entity for
@@ -771,7 +765,7 @@
                             be one of the following:
                         </t>
                         <ul>
-                            <li>A location URI where the completion token MAY be retrieved using HTTP GET</li>
+                            <li>A location URI where the completion SCIM Event Token MAY be retrieved using HTTP GET</li>
                             <li>The normal SCIM location header response specified by <xref target="RFC7644"/></li>
                         </ul>
                         <t keepWithNext="true">
@@ -821,19 +815,25 @@ Location:
                     <section anchor="asyncBulkRequest" numbered="true" toc="default">
                         <name>Asynchronous Bulk Endpoint Requests</name>
                         <t>
-                            SCIM Protocol Section 3.7 of <xref target="RFC7644"/> provides the ability to submit multiple
-                            SCIM operations in a single request. When an asynchronous response is requested, a single
+                            Section 3.7 of <xref target="RFC7644"/> provides the ability to submit multiple
+                            SCIM operations in a single "bulk" request. When an asynchronous response is requested, a single
                             Asynchronous Request Completion Event SHALL be generated for each requested operation. For example,
-                            if a single SCIM Bulk request had 10 operations, then 10 Asynchronous Event completions events
+                            if a single "bulk" request had 10 operations, then 10 Asynchronous Event completions events
                             would be generated.
                         </t>
                         <t>
                             The "txn" claim MUST be set to the value originally returned to the requesting SCIM Client (see
-                            <xref target="asyncRequest"/>) appended with a colon (":") followed by the request operation number.
-                            For example, if the "txn" claim value was "2d80e537a3f64622b0347b641ebc8f44", then the first
-                            Asynchronous Response Event Token representing the first operation SHALL have a "txn" claim value of
-                            "2d80e537a3f64622b0347b641ebc8f44:1", the second operation SHALL have a value of
-                            "2d80e537a3f64622b0347b641ebc8f44:2", and so on.
+                            <xref target="asyncRequest"/>) appended with a colon (":") followed by the array index number,
+                            starting from 0, of the operation expressed in the <tt>Operations</tt> attribute in the
+                            original bulk request. The <tt>bulkId</tt> parameter SHALL NOT be used for this purpose as
+                            it is a temporary identifier and is not required for every operation.
+                        </t>
+                        <t>
+                            For example, if a SCIM Service Provider received a Bulk request with two or more operations,
+                            and had a "txn" claim value of <tt>2d80e537a3f64622b0347b641ebc8f44</tt>,
+                            then the first Asynchronous Response Event Token representing the first operation has
+                            a "txn" claim value of <tt>2d80e537a3f64622b0347b641ebc8f44:0</tt>, the second operation has a value of
+                            <tt>2d80e537a3f64622b0347b641ebc8f44:1</tt>, and so on.
                         </t>
                         <t>
                             If a SCIM Service Provider elects
@@ -847,7 +847,7 @@ Location:
                     <name>urn:ietf:params:scim:event:misc:asyncresp</name>
                     <t>
                         The Asynchronous Response event signals the completion of a SCIM request. The event payload contains
-                        the attributes defined in SCIM Bulk Section 3.7 of <xref target="RFC7644"/> and is the same a
+                        the attributes defined in SCIM Bulk Section 3.7 of <xref target="RFC7644"/> and is the same as a
                         single SCIM Bulk Response Operation as per Section 3.7.3. In the event, the "txn" claim must be
                         set to the value originally returned to the requesting SCIM Client (see <xref target="asyncRequest"/>).
                     </t>
@@ -1033,7 +1033,7 @@ Location:
                 Intermediaries SHOULD NOT insert, modify, or delete the field's value.
             </t>
             <t>
-                SCIM client's MAY ignore the header in cases where confirmation of completion is not required. For
+                SCIM clients MAY ignore the header in cases where confirmation of completion is not required. For
                 example a SCIM client may simply not want to wait for synchronous completion.
             </t>
         </section>
@@ -1055,12 +1055,12 @@ Location:
                         <dt>asyncRequest</dt>
                         <dd>
                             <t>
-                                A string value specifying one of the following:</t>
+                                A case-insensitive string value specifying one of the following:</t>
                                 <ul>
-                                    <li><tt>NONE</tt> indicates asynchronous SCIM requests defined in <xref target="asyncRequest"/> are not supported; </li>
-                                    <li><tt>LONG</tt> indicates the SCIM Service Provider MAY complete asynchronously at its discretion (e.g.
+                                    <li>"none" indicates asynchronous SCIM requests defined in <xref target="asyncRequest"/> are not supported; </li>
+                                    <li>"long" indicates the SCIM Service Provider MAY complete asynchronously at its discretion (e.g.
                                     based on a max wait time);</li>
-                                    <li><tt>REQUEST</tt> indicates the request SHALL complete asynchronously when requested by
+                                    <li>"request" indicates the request SHALL complete asynchronously when requested by
                                         the SCIM Client.</li>
                                 </ul>
                         </dd>
@@ -1083,7 +1083,7 @@ Location:
             <name>Security Considerations</name>
             <t>
                 As this specification is based upon the Security Event Tokens specification and the associated delivery specifications the following
-                Security Considerations SHALL be applied:
+                Security Considerations are also applicable to this specification:
             </t>
             <ul>
                 <li>Section 5 of <xref target="RFC8417"/> (Security Event Token)</li>
@@ -1099,7 +1099,7 @@ Location:
             <t>
                 When co-ordinating provisioning between entities, the long-term series of changes may be critical to the
                 information integrity and recovery requirements of both sides. To address this, Event Publishers SHOULD
-                consider storing events for receivers for longer periods of time than might typically be used for recovering
+                CONSIDER storing events for receivers for longer periods of time than might typically be used for recovering
                 from momentary delivery failures and retries per <xref target="RFC8935"/> or <xref target="RFC8936"/>.
                 Similarly, Event Receivers MUST ensure events are persisted
                 directly or indirectly to meet local recovery needs before acknowledging the SET Events were received.
@@ -1154,7 +1154,7 @@ Location:
             <name>Privacy Considerations</name>
             <t>
                 As this specification is based upon the Security Event Tokens and the associated delivery specifications the following
-                Privacy Considerations SHALL be applied:
+                Privacy Considerations are also applicable to this specification:
             </t>
             <ul>
                 <li>Section 6 of <xref target="RFC8417"/> (Security Event Token)</li>
@@ -1188,13 +1188,12 @@ Location:
             <section anchor="IANAheader" numbered="true" toc="default">
                 <name>SCIM Asynchronous Txn Header Registration</name>
                 <t>
-                    This specification registers the HTTP <tt>Set-txn</tt> field name in the "HTTP Field Name Registry" defined in Section 16.3.1 <xref target="RFC9110"/>.
+                    This specification registers the HTTP <tt>Set-txn</tt> field name in the "HTTP Field Name Registry" defined in Section 16.3.1 of <xref target="RFC9110"/>.
                 </t>
                 <dl newline="true" spacing="normal">
                     <dt>Field name:</dt><dd>Set-txn</dd>
                     <dt>Status:</dt><dd>Permanent</dd>
-                    <dt>Specification Document:</dt><dd>See Sections <xref target="settxnheader"/> and <xref target="asyncRequest"/> of this document.</dd>
-                    <dt>Comments:</dt><dd>See also Section 2.2 of <xref target="RFC8417"/> Security Event Tokens.</dd>
+                    <dt>Specification Document:</dt><dd>See Section <xref target="settxnheader"/> of this document.</dd>
                 </dl>
             </section>
             <section anchor="spcRegister" numbered="true" toc="default">
@@ -1202,7 +1201,7 @@ Location:
                 <t>
                     For the SCIM Schema Registry Section 10.4 of <xref target="RFC7643"/>, under Service Provider
                     Configuration Schema (<tt>urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig</tt>),
-                    add Section 3 of this document to the Reference column.
+                    add <xref target="serviceProviderConfig"/> of this document to the Reference column.
                 </t>
             </section>
             <section anchor="IANAevents" numbered="true" toc="default">
@@ -1255,7 +1254,7 @@ Location:
                             <li>Descriptive Name</li>
                             <li>Reference to event definition</li>
                         </ul>
-                        <t>Initial values to be added to the SCIM Events Registry <xref target="initialEvents"/>.</t>
+                        <t>Initial values to be added to the SCIM Events Registry are listed in <xref target="initialEvents"/>.</t>
                     </dd>
                 </dl>
 
@@ -1375,7 +1374,6 @@ Location:
                 <name>Normative References</name>
                 <xi:include href="https://bib.ietf.org/public/rfc/bibxml9/reference.BCP.0195.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
-                <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.3986.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7240.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7515.xml"/>
                 <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.7519.xml"/>
@@ -1684,7 +1682,7 @@ Location:
                     </artset>
                 </figure>
                 <t>
-                    In CP mode, the receiver of an event must callback to the originating SCIM Service Provider
+                    In CP mode, the receiver of an event must call back to the originating SCIM Service Provider
                     (e.g., using a SCIM GET request) to reconcile the newly changed resource in
                     order to obtain the changes.
                 </t>
@@ -1694,8 +1692,8 @@ Location:
                 <ul>
                     <li>
                         Differences in schema (e.g., attributes) between domains. For example, a receiving domain may
-                        only be interested in or allowed to access to a few attributes (e.g., role based access data) to enable access to an
-                        application.
+                        only be interested in or allowed to access to a few attributes (e.g., role-based access data) to
+                        enable access to an application.
                     </li>
                     <li>
                         Different Event Receivers may have differing needs when accessing information and thus be assigned
@@ -1751,7 +1749,7 @@ Location:
                 <li>Special thanks to Dean Saxe, Elliot Lear, Paulo Correia, and Pamela Dingle for reviewing the document.</li>
                 <li>The participants of the SCIM
                     working group and the id-event list for their support of this specification.</li>
-                <li>Thanks to Elliot Lear, Deb Cooley, Mark Nottingham, R Gideon, Paulo Jorge Correia, Shuping Peng, Elwyn Davies, Luigi Lannone, and Mohamed Boucadair for their write-ups and reviews</li>
+                <li>Thanks to Elliot Lear, Deb Cooley, Mark Nottingham, R Gideon, Paulo Jorge Correia, Shuping Peng, Elwyn Davies, Luigi Lannone, Mohamed Boucadair, Roman Danyliw, and Mike Bishop for their write-ups and reviews</li>
             </ul>
         </section>
         <section numbered="false" toc="default" removeInRFC="true">
@@ -1768,7 +1766,7 @@ Location:
             <t>Draft 09 - PH - Incorporating feedback from AD</t>
             <t>Draft 10 - PH - IANA and ARTART Feedback</t>
             <t>Draft 11 - PH - GenArt, OpsDir Feedback including new section on set-txn header, removed unicode art characters.</t>
-            <t>Draft 12 - PH - Update reference to Shared Signals to stable</t>
+            <t>Draft 12 - PH - Update reference to Shared Signals to stable, IESG feedback</t>
         </section>
     </back>
 </rfc>
