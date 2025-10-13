@@ -18,19 +18,15 @@ Expires: 16 April 2026                                          M. Kiser
 
 Abstract
 
-   This specification defines a set of SCIM (System for Cross-domain
-   Identity Management, RFC7643 and RFC7644) Security Events using the
-   Security Event Token Specification (RFC8417) to enable the
-   asynchronous exchange of messages between SCIM Service Providers and
-   receivers.  SCIM Security Events are typically used for: asynchronous
-   request completion, resource replication, and provisioning co-
-   ordination.
+   This specification defines a set of System for Cross-domain Identity
+   Management (SCIM) Security Events using the Security Event Token
+   Specification to enable the asynchronous exchange of messages between
+   SCIM Service Providers and receivers.
 
-   This draft updates Section 5, of RFC7643 defining additional
-   attributes for
-   urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig schema.
-   This draft updates RFC7644 with the optional new Asynchronous SCIM
-   Request capability.
+   This draft updates RFC7643 defining additional attributes for
+   urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig schema
+   and updates RFC7644 with optional new Asynchronous SCIM Request
+   capability.
 
 Status of This Memo
 
@@ -49,6 +45,10 @@ Status of This Memo
 
    This Internet-Draft will expire on 16 April 2026.
 
+Copyright Notice
+
+   Copyright (c) 2025 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
 
 
 
@@ -57,11 +57,6 @@ Hunt, et al.              Expires 16 April 2026                 [Page 1]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
-
-Copyright Notice
-
-   Copyright (c) 2025 IETF Trust and the persons identified as the
-   document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents (https://trustee.ietf.org/
@@ -75,14 +70,14 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction and Overview . . . . . . . . . . . . . . . . . .   3
-     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   4
+     1.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
      1.2.  Notational Conventions  . . . . . . . . . . . . . . . . .   4
      1.3.  Definitions . . . . . . . . . . . . . . . . . . . . . . .   4
    2.  SCIM Events . . . . . . . . . . . . . . . . . . . . . . . . .   6
      2.1.  Identifying the Subject of an Event . . . . . . . . . . .   6
-     2.2.  Common Event Attributes . . . . . . . . . . . . . . . . .   8
-     2.3.  SCIM Feed Events  . . . . . . . . . . . . . . . . . . . .   9
-       2.3.1.  urn:ietf:params:scim:event:feed:add . . . . . . . . .   9
+     2.2.  Common Event Attributes . . . . . . . . . . . . . . . . .   7
+     2.3.  SCIM Feed Events  . . . . . . . . . . . . . . . . . . . .   8
+       2.3.1.  urn:ietf:params:scim:event:feed:add . . . . . . . . .   8
        2.3.2.  urn:ietf:params:scim:event:feed:remove  . . . . . . .   9
      2.4.  SCIM Provisioning Events  . . . . . . . . . . . . . . . .  10
        2.4.1.
@@ -106,6 +101,11 @@ Table of Contents
      7.3.  Registration of the SCIM Event URIs Sub-Registry  . . . .  29
      7.4.  Initial Events Registry . . . . . . . . . . . . . . . . .  30
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  31
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  31
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  33
+   Appendix A.  Use Cases  . . . . . . . . . . . . . . . . . . . . .  33
+     A.1.  Domain Based Replication  . . . . . . . . . . . . . . . .  33
+     A.2.  Co-ordinated Provisioning . . . . . . . . . . . . . . . .  34
 
 
 
@@ -114,11 +114,6 @@ Hunt, et al.              Expires 16 April 2026                 [Page 2]
 Internet-Draft           draft-ietf-scim-events             October 2025
 
 
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  31
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  33
-   Appendix A.  Use Cases  . . . . . . . . . . . . . . . . . . . . .  33
-     A.1.  Domain Based Replication  . . . . . . . . . . . . . . . .  33
-     A.2.  Co-ordinated Provisioning . . . . . . . . . . . . . . . .  34
    Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  36
    Change Log  . . . . . . . . . . . . . . . . . . . . . . . . . . .  37
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  38
@@ -157,8 +152,13 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    within its own context.  For example, a receiver can reconcile schema
    and resource type differences between domains.
 
+1.1.  Requirements Language
 
-
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
 
 
 
@@ -169,14 +169,6 @@ Hunt, et al.              Expires 16 April 2026                 [Page 3]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
-
-1.1.  Requirements Language
-
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in BCP
-   14 [RFC2119] [RFC8174] when, and only when, they appear in all
-   capitals, as shown here.
 
 1.2.  Notational Conventions
 
@@ -218,14 +210,6 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    Co-ordinated Provisioning (CP)
       Defined in Appendix A.2, in co-ordinated provisioning
       relationships, an Event Publisher and Receiver typically exchange
-
-
-
-Hunt, et al.              Expires 16 April 2026                 [Page 4]
-
-Internet-Draft           draft-ietf-scim-events             October 2025
-
-
       resource change events without exchanging data (see Section 2.4).
       For a receiver to know the value of the data, the Event Receiver
       usually calls back to the SCIM Event Publisher domain to receive a
@@ -234,10 +218,18 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    Domain Based Replication (DBR)
       Defined in Appendix A.1, in this domain-based replication mode
       there is an administrative relationship spanning multiple
+
+
+
+Hunt, et al.              Expires 16 April 2026                 [Page 4]
+
+Internet-Draft           draft-ietf-scim-events             October 2025
+
+
       operational domains, data shared in Events typically uses the full
-      mode variation of change events including the data payload
-      attribute (see Section 2.4).  This eliminates the need for a
-      callback to retrieve additional data.
+      mode variation of change events (see Section 2.4) including the
+      data payload attribute.  This eliminates the need for a callback
+      to retrieve additional data.
 
    Event Feed / Event Stream
       An Event Feed (equivalently Event Stream) is a logical series of
@@ -273,15 +265,6 @@ Internet-Draft           draft-ietf-scim-events             October 2025
       Event Receiver, typically when making an asynchronous SCIM request
       (see Section 2.5.1.1).
 
-
-
-
-
-Hunt, et al.              Expires 16 April 2026                 [Page 5]
-
-Internet-Draft           draft-ietf-scim-events             October 2025
-
-
    SCIM Service Provider
       An HTTP server that implements SCIM Protocol [RFC7644] and SCIM
       Schema [RFC7643].  Upon processing a state change to a SCIM
@@ -290,6 +273,14 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
    SET
       Abbreviation for "Security Event Token" as defined in [RFC8417]
+
+
+
+
+Hunt, et al.              Expires 16 April 2026                 [Page 5]
+
+Internet-Draft           draft-ietf-scim-events             October 2025
+
 
 2.  SCIM Events
 
@@ -318,26 +309,6 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    confusion with JWT authorization tokens (originally recommended in
    Section 3 of [RFC8417]).
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hunt, et al.              Expires 16 April 2026                 [Page 6]
-
-Internet-Draft           draft-ietf-scim-events             October 2025
-
-
    {
         "iss": "issuer.example.com",
         "iat": 1508184845,
@@ -358,6 +329,14 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    "sub_id" contains the subclaim attribute "format" set to scim to
    indicate the attributes present in the "sub_id" object are SCIM
    attributes.  The following "sub_id" attributes are defined:
+
+
+
+
+Hunt, et al.              Expires 16 April 2026                 [Page 6]
+
+Internet-Draft           draft-ietf-scim-events             October 2025
+
 
    uri
       The SCIM relative path for the resource which usually consists of
@@ -386,14 +365,6 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    In cases where SCIM identifiers (id and externalId) are not enough to
    identify a common resource between an Event Publisher and Event
    Receiver, the "sub_id" object MAY contain attributes whose SCIM
-
-
-
-Hunt, et al.              Expires 16 April 2026                 [Page 7]
-
-Internet-Draft           draft-ietf-scim-events             October 2025
-
-
    attribute types have "uniqueness" set to "server" or "global" as per
    Section 7 of [RFC7643].  For example, attributes such as emails or
    username (defined in Section 4 of [RFC7643]) are unique with in a
@@ -415,6 +386,14 @@ Internet-Draft           draft-ietf-scim-events             October 2025
       SCIM Service Provider and/or its underlying data repository or
       database where one or more SCIM Events may be subsequently issued.
       In contrast to a jti claim (see Section 4.1.7 of [RFC7519]), which
+
+
+
+Hunt, et al.              Expires 16 April 2026                 [Page 7]
+
+Internet-Draft           draft-ietf-scim-events             October 2025
+
+
       uniquely identifies a token, the txn remains the same when one or
       more SETs are generated for various purposes such as re-
       transmission, publication to multiple receivers etc.  A distinct
@@ -442,14 +421,6 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    attributes
       This payload contains an array of attributes that were added,
       revised, or removed.  Names of modified attributes SHOULD conform
-
-
-
-Hunt, et al.              Expires 16 April 2026                 [Page 8]
-
-Internet-Draft           draft-ietf-scim-events             October 2025
-
-
       to the ABNF syntax rule for path> (Section 3.5.2 of [RFC7644]).
       For example:
       "attributes": ["username","emails","name.familyName"]
@@ -470,6 +441,14 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    For example, an existing user has had a new role (e.g., CRM_User)
    added to their profile which has caused their resource to join a
    feed.
+
+
+
+
+Hunt, et al.              Expires 16 April 2026                 [Page 8]
+
+Internet-Draft           draft-ietf-scim-events             October 2025
+
 
    {
      "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
@@ -496,16 +475,6 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    The specified resource has been removed from the feed.  Removal does
    not indicate that the resource was deleted or otherwise deactivated.
 
-
-
-
-
-
-Hunt, et al.              Expires 16 April 2026                 [Page 9]
-
-Internet-Draft           draft-ietf-scim-events             October 2025
-
-
    {
      "jti": "6164f3bbf6ff41a88dc94f18cb0620e8",
      "sub_id": {
@@ -524,6 +493,18 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    }
 
                   Figure 3: Example SCIM Feed Remove Event
+
+
+
+
+
+
+
+
+Hunt, et al.              Expires 16 April 2026                 [Page 9]
+
+Internet-Draft           draft-ietf-scim-events             October 2025
+
 
 2.4.  SCIM Provisioning Events
 
@@ -550,6 +531,25 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    event may be used for replication, the id attribute that was assigned
    by the SCIM Service Provider is shared so that all replicas in the
    domain MAY use the same resource identifier.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1590,8 +1590,8 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    group initiated by Section 10.1 of [RFC7643] at
    https://www.iana.org/assignments/scim.
 
-   Unless otherwise stated, the procedures and definitions for this sub-
-   registry are inherited from the parent registry.
+   The parent registry defines the procedures and definitions for this
+   sub-registry.
 
    Namespace ID:
       The sub-namespace ID of "event" is assigned within the "scim"
@@ -1821,6 +1821,13 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 8.2.  Informative References
 
+   [I-D.hunt-idevent-scim]
+              Hunt, P., Denniss, W., and M. Ansari, "SCIM Event
+              Extension", Work in Progress, Internet-Draft, draft-hunt-
+              idevent-scim-00, 20 March 2016,
+              <https://datatracker.ietf.org/doc/html/draft-hunt-idevent-
+              scim-00>.
+
    [SSF]      OpenID Foundation, "Shared Signals Framework".
 
 Appendix A.  Use Cases
@@ -1835,13 +1842,6 @@ A.1.  Domain Based Replication
    common administrative domain.  In this mode, complete information
    about modified resources are shared between replicas for immediate
    processing.
-
-
-
-
-
-
-
 
 
 
@@ -2004,11 +2004,11 @@ Acknowledgements
 
    The authors would like to thank the following contributors:
 
-   *  Morteza Ansari who contributed significantly to draft-hunt-
-      idevent-scim-00, upon which this draft is based.
+   *  Morteza Ansari and William Denniss, who contributed significantly
+      to [I-D.hunt-idevent-scim], upon which this draft is based.
 
-   *  Special thanks to Dean Saxe, Elliot Lear, Paulo Correia, and
-      Pamela Dingle for reviewing the document.
+   *  The participants of the SCIM working group and the id-event list
+      for their support of this specification.
 
 
 
@@ -2018,12 +2018,10 @@ Hunt, et al.              Expires 16 April 2026                [Page 36]
 Internet-Draft           draft-ietf-scim-events             October 2025
 
 
-   *  The participants of the SCIM working group and the id-event list
-      for their support of this specification.
-
-   *  Thanks to Elliot Lear, Deb Cooley, Mark Nottingham, R Gideon,
-      Paulo Jorge Correia, Shuping Peng, Elwyn Davies, Luigi Lannone,
-      Mohamed Boucadair, Roman Danyliw, and Mike Bishop for their write-
+   *  Thanks to Deb Cooley, Dean Saxe, Elliot Lear, Pamela Dingle, Mark
+      Nottingham, R Gideon, Paulo Jorge Correia, Shuping Peng, Elwyn
+      Davies, Luigi Lannone, Mohamed Boucadair, Roman Danyliw, Ketan
+      Talaulikar, Mahesh Jethanandani, and Mike Bishop for their write-
       ups and reviews
 
 Change Log
@@ -2066,6 +2064,8 @@ Change Log
 
    Draft 12 - PH - Update reference to Shared Signals to stable, IESG
    feedback
+
+
 
 
 

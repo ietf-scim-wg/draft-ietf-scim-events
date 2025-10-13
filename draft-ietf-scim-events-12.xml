@@ -70,15 +70,14 @@
         <keyword>SCIM</keyword>
         <abstract>
             <t>
-                This specification defines a set of SCIM (System for Cross-domain Identity Management, RFC7643 and RFC7644)
-                Security Events using the Security Event Token Specification (RFC8417) to enable the asynchronous exchange
-                of messages between SCIM Service Providers and receivers. SCIM Security Events are typically used for:
-                asynchronous request completion, resource replication, and provisioning co-ordination.
+                This specification defines a set of System for Cross-domain Identity Management (SCIM)
+                Security Events using the Security Event Token Specification to enable the asynchronous exchange
+                of messages between SCIM Service Providers and receivers.
             </t>
             <t>
-                This draft updates Section 5, of RFC7643 defining additional attributes for
-                <tt>urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig</tt> schema. This draft updates
-                RFC7644 with the optional new Asynchronous SCIM Request capability.
+                This draft updates RFC7643 defining additional attributes for
+                <tt>urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig</tt> schema and updates
+                RFC7644 with optional new Asynchronous SCIM Request capability.
             </t>
         </abstract>
 
@@ -181,8 +180,8 @@
                     <dd>
                         Defined in <xref target="replication"/>, in this domain-based replication
                         mode there is an administrative relationship spanning multiple operational domains, data
-                        shared in Events typically uses the <tt>full</tt> mode variation of change events including
-                        the <tt>data</tt> payload attribute (see <xref target="scimProvEvents"/>). This eliminates the need for a callback
+                        shared in Events typically uses the <tt>full</tt> mode variation of change events (see <xref target="scimProvEvents"/>) including
+                        the <tt>data</tt> payload attribute. This eliminates the need for a callback
                         to retrieve additional data.
                     </dd>
 
@@ -1208,8 +1207,7 @@ Location:
                     at https://www.iana.org/assignments/scim.
                 </t>
                 <t>
-                    Unless otherwise stated, the procedures and definitions for this sub-registry are inherited from the
-                    parent registry.
+                    The parent registry defines the procedures and definitions for this sub-registry.
                 </t>
                 <dl newline="true">
                     <dt>Namespace ID:</dt>
@@ -1387,6 +1385,7 @@ Location:
 
             <references>
                 <name>Informative References</name>
+                <xi:include href="https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.draft-hunt-idevent-scim-00.xml"/>
 
                 <reference anchor="SSF">
                     <front>
@@ -1740,12 +1739,11 @@ Location:
 
             <t>The authors would like to thank the following contributors:</t>
             <ul>
-                <li>Morteza Ansari who contributed significantly to draft-hunt-idevent-scim-00, upon which this
+                <li>Morteza Ansari and William Denniss, who contributed significantly to <xref target="I-D.hunt-idevent-scim"/>, upon which this
                     draft is based.</li>
-                <li>Special thanks to Dean Saxe, Elliot Lear, Paulo Correia, and Pamela Dingle for reviewing the document.</li>
                 <li>The participants of the SCIM
                     working group and the id-event list for their support of this specification.</li>
-                <li>Thanks to Elliot Lear, Deb Cooley, Mark Nottingham, R Gideon, Paulo Jorge Correia, Shuping Peng, Elwyn Davies, Luigi Lannone, Mohamed Boucadair, Roman Danyliw, and Mike Bishop for their write-ups and reviews</li>
+                <li>Thanks to Deb Cooley, Dean Saxe, Elliot Lear, Pamela Dingle, Mark Nottingham, R Gideon, Paulo Jorge Correia, Shuping Peng, Elwyn Davies, Luigi Lannone, Mohamed Boucadair, Roman Danyliw, Ketan Talaulikar, Mahesh Jethanandani, and Mike Bishop for their write-ups and reviews</li>
             </ul>
         </section>
         <section numbered="false" toc="default" removeInRFC="true">
