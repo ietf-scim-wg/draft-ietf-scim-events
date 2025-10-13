@@ -95,10 +95,10 @@ Table of Contents
        2.4.6.  urn:ietf:params:scim:event:prov:deactivate  . . . . .  17
      2.5.  Miscellaneous Events  . . . . . . . . . . . . . . . . . .  17
        2.5.1.  Asynchronous Events . . . . . . . . . . . . . . . . .  17
-   3.  Set-txn HTTP Response Header for Asynchronous Requests  . . .  25
+   3.  set-txn HTTP Response Header for Asynchronous Requests  . . .  25
    4.  Events Discovery Schema for Service Provider Configuration  .  25
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .  26
-   6.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  27
+   6.  Privacy Considerations  . . . . . . . . . . . . . . . . . . .  28
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  28
      7.1.  SCIM Asynchronous Txn Header Registration . . . . . . . .  28
      7.2.  Registering Event Capability with Scim Service Provider
@@ -307,17 +307,17 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 2.1.  Identifying the Subject of an Event
 
-   SCIM Events SHALL use the "sub_id" claim defined by Subject
-   Identifiers for Security Event Tokens [RFC9493] specification to
+   SCIM Events MUST use the sub_id claim, defined by [RFC9493], to
    identify the subject of events.  The sub_id claim MUST be contained
-   within the main JWT claims body and SHALL NOT be located within an
-   Event payload within the events claim.  A SET with multiple event
+   within the main JWT claims body and MUST NOT be located within an
+   event payload within the events claim.  A SET with multiple event
    URIs indicates that the events arise from the same transaction or
    resource state change for a single resource or subject.
 
-   The JWT "sub" claim SHALL NOT be used to identify subjects to prevent
+   The JWT "sub" claim MUST NOT be used to identify subjects to prevent
    confusion with JWT authorization tokens (originally recommended in
    Section 3 of [RFC8417]).
+
 
 
 
@@ -406,7 +406,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    The following attributes are available for all events defined.  Some
    attributes are defined as SET/JWT claims, while others are "Event
    Payload" claims as defined in Section 1.2 of [RFC8417].  Only one of
-   data or attributes claims SHALL be provided depending on the event
+   data or attributes claims MUST be provided depending on the event
    definition.
 
    txn
@@ -533,13 +533,15 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    prefix for these events is urn:ietf:params:scim:event:prov.
 
    For each of the following events when the data payload attribute is
-   included, the event URI SHALL end with full, otherwise the event URI
+   included, the event URI MUST end with full, otherwise the event URI
    ends with notice.  In full mode, the set of values reflecting the
    final representation of the resource (such as would be returned in a
    SCIM protocol response) at the Service Provider are provided using
    the data attribute (see Figure 4).  In notice mode, the attributes
    attribute is returned listing the set of attributes created or
-   modified in the request (see Figure 5).
+   modified in the request (see Figure 5).  Exactly one of the payload
+   attributes data or attributes, MUST be present.  Both MUST NOT be
+   present simultaneously.
 
 2.4.1.  urn:ietf:params:scim:event:prov:create:{notice|full}
 
@@ -548,8 +550,6 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    event may be used for replication, the id attribute that was assigned
    by the SCIM Service Provider is shared so that all replicas in the
    domain MAY use the same resource identifier.
-
-
 
 
 
@@ -965,32 +965,32 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    is delivered to another entity for further action.
 
    To initiate an asynchronous SCIM request, a normal SCIM protocol
-   POST, PUT, PATCH, or DELETE request is performed with the HTTP Header
-   Prefer with a value of respond-async as defined in Section 4.1 of
-   [RFC7240].  The HTTP Accept header SHALL be ignored.  Additionally,
-   per Section 4.3 of [RFC7240], the wait preference SHOULD be supported
-   which establishes an amount of time before a SCIM Service Provider
-   MAY choose respond with asynchronous completion as defined for
-   respond-async.
+   POST, PUT, PATCH, or DELETE request is performed with the HTTP Prefer
+   Header set to respond-async (Section 4.1 of [RFC7240]).  The HTTP
+   Accept header MUST be ignored for purposes of an asynchronous
+   response.  Additionally, per Section 4.3 of [RFC7240], the wait
+   preference SHOULD be supported to establish a maximum time before a
+   SCIM Service Provider MAY choose to respond asynchronously.
 
-   In response, and as indicated in the SCIM Service Provider
-   Configuration (see Section 4), the SCIM Service Provider responds
-   with either a normal SCIM response or asynchronously by returning
-   HTTP Status 202 Accepted.  The asynchronous response SHOULD contain
-   no response body.  To enable correlation of the future event, the
-   HTTP response header "set-txn" (see Section 3) is returned with a
-   value corresponding to a future Security Event Token to be received
-   whose "txn" claim SHALL match.  Per Section 3 of [RFC7240], the
-   response will also include the header Preference-Applied.  The
-   Location header returned SHALL be one of the following:
-
-   *  A location URI where the completion SCIM Event Token MAY be
-      retrieved using HTTP GET
-
-   *  The normal SCIM location header response specified by [RFC7644]
+   In response, the SCIM Service Provider either returns a normal SCIM
+   response or returns HTTP Status 202 (Accepted).  The asynchronous
+   response MUST contain no response body.  To enable correlation of the
+   future event, the HTTP response header "set-txn" (see Section 3) is
+   returned with a value that MUST match the txn claim in a subsequent
+   Security Event Token.  Per [RFC7240], Section 3, the response will
+   also include the Preference-Applied header.  The Location header
+   value MUST be one of the following: (a) a URI where the completion
+   SCIM Event Token MAY be retrieved using HTTP GET, or (b) the normal
+   SCIM location header response specified by [RFC7644].
 
    In the following non-normative example, a "Prefer" header is set to
    "respond-async":
+
+
+
+
+
+
 
 
 
@@ -1035,10 +1035,10 @@ Internet-Draft           draft-ietf-scim-events             October 2025
            Figure 12: Example Asynchronous SCIM Protocol Request
 
    The SCIM Service Provider responds with HTTP 202 Accepted and
-   includes the Set-txn header:
+   includes the set-txn header:
 
    HTTP/1.1 202 Accepted
-   Set-txn: 734f0614e3274f288f93ac74119dcf78
+   set-txn: 734f0614e3274f288f93ac74119dcf78
    Preference-Applied: respond-async
    Location:
      "/Users/2819c223-7f76-453a-919d-413861904646"
@@ -1049,7 +1049,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
    Section 3.7 of [RFC7644] provides the ability to submit multiple SCIM
    operations in a single "bulk" request.  When an asynchronous response
-   is requested, a single Asynchronous Request Completion Event SHALL be
+   is requested, a single Asynchronous Request Completion Event MUST be
    generated for each requested operation.  For example, if a single
    "bulk" request had 10 operations, then 10 Asynchronous Event
    completions events would be generated.
@@ -1068,10 +1068,10 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
    The "txn" claim MUST be set to the value originally returned to the
    requesting SCIM Client (see Section 2.5.1.1) appended with a colon
-   (":") followed by the array index number, starting from 0, of the
-   operation expressed in the Operations attribute in the original bulk
-   request.  The bulkId parameter SHALL NOT be used for this purpose as
-   it is a temporary identifier and is not required for every operation.
+   ":" and the zero-based array index of the operation expressed in the
+   Operations attribute of the original bulk request.  The bulkId
+   parameter MUST NOT be used for this purpose as it is a temporary
+   identifier and is not required for every operation.
 
    For example, if a SCIM Service Provider received a Bulk request with
    two or more operations, and had a "txn" claim value of
@@ -1081,12 +1081,11 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    operation has a value of 2d80e537a3f64622b0347b641ebc8f44:1, and so
    on.
 
-   If a SCIM Service Provider elects to optimize the sequence of
-   operations (per Section 3.7 of [RFC7644]), the Asynchronous Request
-   Completion events generated MAY also be generated out of sequence
-   from the order of operations in the original request.  In this case,
-   the "txn" claims generated SHALL use operation numbers that
-   correspond to the original request order.
+   If a SCIM Service Provider optimizes the sequence of operations (per
+   Section 3.7 of [RFC7644]), the Asynchronous Request Completion events
+   generated MAY be generated out of sequence from the original request.
+   In this case, the "txn" claims in those events MUST use operation
+   numbers that correspond to the order in the original request.
 
 2.5.1.3.  urn:ietf:params:scim:event:misc:asyncresp
 
@@ -1094,8 +1093,9 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    request.  The event payload contains the attributes defined in SCIM
    Bulk Section 3.7 of [RFC7644] and is the same as a single SCIM Bulk
    Response Operation as per Section 3.7.3.  In the event, the "txn"
-   claim must be set to the value originally returned to the requesting
+   claim MUST be set to the value originally returned to the requesting
    SCIM Client (see Section 2.5.1.1).
+
 
 
 
@@ -1145,13 +1145,13 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
             Figure 14: Example SCIM Asynchronous Response Event
 
-   An error may occur in the SCIM Service Provider's asynchronous
-   processing of the SCIM request.  In that case, the event's operation
-   MUST include a "response" attribute to indicate a non-200-series HTTP
-   status as defined in Section 3.7 of [RFC7644].  The response
-   attribute MUST contain the sub-attributes defined in Section 3.12 of
-   [RFC7644].  Note that the "status" attribute of the event operation
-   should match the "status" attribute of the response.
+   If an error occurs during asynchronous processing, the event
+   operation MUST include a response attribute indicating a non-
+   200-series HTTP status as defined in Section 3.7 of [RFC7644], and
+   that response attribute MUST contain the sub-attributes defined in
+   Section 3.12 of [RFC7644].  The "status" attribute of the event
+   operation typically matches the "status" attribute of the response.
+
 
 
 
@@ -1346,14 +1346,13 @@ Hunt, et al.              Expires 16 April 2026                [Page 24]
 Internet-Draft           draft-ietf-scim-events             October 2025
 
 
-3.  Set-txn HTTP Response Header for Asynchronous Requests
+3.  set-txn HTTP Response Header for Asynchronous Requests
 
    This specification defines a new HTTP Header field set-txn which
    serves the purpose of conveying request completion information to
    SCIM HTTP clients that request an asynchronous response as described
-   in Section 2.5.1.1.  The header field SHALL only be used in SCIM
-   Responses when HTTP Status 202 Accepted is being returned with no
-   message body.
+   in Section 2.5.1.1.  The header field MUST be used in SCIM Responses
+   when HTTP Status 202 Accepted is being returned with no message body.
 
    The set-txn HTTP Header field value is a unique STRING (e.g., a GUID)
    used by the SCIM HTTP client to look for a matching SET event with a
@@ -1392,8 +1391,9 @@ Internet-Draft           draft-ietf-scim-events             October 2025
             asynchronously at its discretion (e.g.  based on a max wait
             time);
 
-         *  "request" indicates the request SHALL complete
+         *  "request" indicates the server MUST complete requests
             asynchronously when requested by the SCIM Client.
+
 
 
 
@@ -1425,10 +1425,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    SETs may contain sensitive information, including Personally
    Identifiable Information (PII).  In such cases, SET Transmitters and
    SET Recipients MUST protect the confidentiality of the SET contents
-   in transit.  Deployments and implementations MUST support TLS.  They
-   MUST follow the guidance in [BCP195], which provides recommendations
-   and requirements for improving the security of deployed services that
-   use TLS.
+   in transit using TLS [BCP195].
 
    When co-ordinating provisioning between entities, the long-term
    series of changes may be critical to the information integrity and
@@ -1445,11 +1442,14 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    this, access to event recovery and forwarding MUST be limited to the
    parties needed to support recovery or SET forwarding.
 
-   When SET Events are transferred in such a way as the Event Publisher
-   is not communicating directly to the Event Receiver, it may become
-   possible for an attacker or other system to insert an event.  To
-   mitigate, the use of JWS [RFC7515] signed SET Events MUST be used to
-   verify the originator of a SET Event.  Validating event signatures is
+
+
+
+
+
+
+
+
 
 
 
@@ -1458,11 +1458,16 @@ Hunt, et al.              Expires 16 April 2026                [Page 26]
 Internet-Draft           draft-ietf-scim-events             October 2025
 
 
-   both useful on the initial transfer of SET Events, and may also be
-   useful for auditing purposes.  Signed SET Events are protected from
-   tampering in the event that an intermediate system, such as a TLS-
-   terminating proxy, decrypts the SET payload before sending it onward
-   to its intended recipient.
+   When SET Events are transferred in such a way as the Event Publisher
+   is not communicating directly to the Event Receiver, it may become
+   possible for an attacker or other system to insert an event.  To
+   mitigate, Event Receivers MUST verify the originator of a SET using
+   JWS [RFC7515] signatures when the Event Publisher is not
+   communicating directly with the Event Receiver.  Validating event
+   signatures may also be useful for auditing purposes as signed SET
+   Events are protected from tampering in the event that an intermediate
+   system, such as a TLS-terminating proxy, decrypts the SET payload
+   before sending it onward to its intended recipient.
 
    In operation, some SCIM Resources such as SCIM Groups may have a high
    rate of change.  For examples groups with more than a few thousand
@@ -1498,13 +1503,8 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    protected requiring an HTTP Authorization header or some other form
    of client authentication.
 
-6.  Privacy Considerations
 
-   As this specification is based upon the Security Event Tokens and the
-   associated delivery specifications the following Privacy
-   Considerations are also applicable to this specification:
 
-   *  Section 6 of [RFC8417] (Security Event Token)
 
 
 
@@ -1513,6 +1513,14 @@ Hunt, et al.              Expires 16 April 2026                [Page 27]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
+
+6.  Privacy Considerations
+
+   As this specification is based upon the Security Event Tokens and the
+   associated delivery specifications the following Privacy
+   Considerations are also applicable to this specification:
+
+   *  Section 6 of [RFC8417] (Security Event Token)
 
    *  Section 6 of [RFC8935] (Push-based Delivery Using HTTP)
 
@@ -1547,19 +1555,11 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 7.1.  SCIM Asynchronous Txn Header Registration
 
-   This specification registers the HTTP Set-txn field name in the "HTTP
+   This specification registers the HTTP set-txn field name in the "HTTP
    Field Name Registry" defined in Section 16.3.1 of [RFC9110].
 
    Field name:
-      Set-txn
-
-   Status:
-      Permanent
-
-   Specification Document:
-      See Section Section 3 of this document.
-
-
+      set-txn
 
 
 
@@ -1569,6 +1569,12 @@ Hunt, et al.              Expires 16 April 2026                [Page 28]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
+
+   Status:
+      Permanent
+
+   Specification Document:
+      See Section Section 3 of this document.
 
 7.2.  Registering Event Capability with Scim Service Provider Config
 
@@ -1593,7 +1599,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
    Syntactic Structure:
       The Namespace Specific String (NSS) of all URNs that use the
-      "event" Namespace ID SHALL have the following structure:
+      "event" Namespace ID has the following structure:
 
       "urn:ietf:params:scim:event:{class}:{name}:{other}
 
@@ -1612,12 +1618,6 @@ Internet-Draft           draft-ietf-scim-events             October 2025
          requirements (see [RFC8141]) and serves as an additional sub-
          category or qualifier.  For example "full" and "notice".
 
-   Identifier Uniqueness Considerations:
-      The designated contact shall be responsible for reviewing and
-      enforcing uniqueness.
-
-
-
 
 
 
@@ -1625,6 +1625,10 @@ Hunt, et al.              Expires 16 April 2026                [Page 29]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
+
+   Identifier Uniqueness Considerations:
+      The designated contact is responsible for reviewing and enforcing
+      uniqueness.
 
    Identifier Persistence Considerations:
       Once a name has been allocated it MUST NOT be re-allocated for a
@@ -1670,10 +1674,6 @@ Internet-Draft           draft-ietf-scim-events             October 2025
     |urn:ietf:params:scim:event:prov:create:   |New Resource|Section  |
     |full                                      |Event (full |2.4.1 of |
     |                                          |data)       |this     |
-    |                                          |            |document.|
-    +------------------------------------------+------------+---------+
-    |urn:ietf:params:scim:event:prov:patch:    |Resource    |Section  |
-    |notice                                    |Patch Event |2.4.2 of |
 
 
 
@@ -1682,6 +1682,10 @@ Hunt, et al.              Expires 16 April 2026                [Page 30]
 Internet-Draft           draft-ietf-scim-events             October 2025
 
 
+    |                                          |            |document.|
+    +------------------------------------------+------------+---------+
+    |urn:ietf:params:scim:event:prov:patch:    |Resource    |Section  |
+    |notice                                    |Patch Event |2.4.2 of |
     |                                          |(notice     |this     |
     |                                          |only)       |document.|
     +------------------------------------------+------------+---------+
@@ -1727,16 +1731,16 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 8.1.  Normative References
 
-   [BCP195]   Best Current Practice 195,
-              <https://www.rfc-editor.org/info/bcp195>.
-              At the time of writing, this BCP comprises the following:
-
 
 
 Hunt, et al.              Expires 16 April 2026                [Page 31]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
+
+   [BCP195]   Best Current Practice 195,
+              <https://www.rfc-editor.org/info/bcp195>.
+              At the time of writing, this BCP comprises the following:
 
               Moriarty, K. and S. Farrell, "Deprecating TLS 1.0 and TLS
               1.1", BCP 195, RFC 8996, DOI 10.17487/RFC8996, March 2021,
@@ -1782,10 +1786,6 @@ Internet-Draft           draft-ietf-scim-events             October 2025
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-
-
-
 
 
 

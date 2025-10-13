@@ -255,14 +255,13 @@
             <section anchor="sub-id" numbered="true" toc="default">
                 <name>Identifying the Subject of an Event</name>
                 <t>
-                    SCIM Events SHALL use the "sub_id" claim defined by <xref target="RFC9493">Subject Identifiers for
-                    Security Event Tokens</xref> specification to identify the subject of events. The <tt>sub_id</tt>
-                    claim MUST be contained within the main JWT claims body and SHALL NOT be located within an Event
+                    SCIM Events MUST use the <tt>sub_id</tt> claim, defined by <xref target="RFC9493"/>, to identify the
+                    subject of events. The <tt>sub_id</tt> claim MUST be contained within the main JWT claims body and MUST NOT be located within an event
                     payload within the <tt>events</tt> claim. A SET with multiple event URIs indicates that the events
                     arise from the same transaction or resource state change for a single resource or subject.
                 </t>
                 <t>
-                    The JWT "sub" claim SHALL NOT be used to identify subjects to prevent confusion with JWT
+                    The JWT "sub" claim MUST NOT be used to identify subjects to prevent confusion with JWT
                     authorization tokens (originally recommended in Section 3 of <xref target="RFC8417"/>).
                 </t>
                 <figure anchor="example_subid">
@@ -324,7 +323,7 @@
                 <name>Common Event Attributes</name>
                 <t>The following attributes are available for all events defined. Some attributes are defined as SET/JWT
                     claims, while others are "Event Payload" claims as defined in Section 1.2 of <xref target="RFC8417"/>.
-                    Only one of <tt>data</tt> or <tt>attributes</tt> claims SHALL be provided depending on the event
+                    Only one of <tt>data</tt> or <tt>attributes</tt> claims MUST be provided depending on the event
                     definition.
                 </t>
                 <dl newline="true" spacing="normal">
@@ -440,12 +439,13 @@
                 </t>
                 <t>
                     For each of the following events when the <tt>data</tt> payload attribute is included, the
-                    event URI SHALL end with <tt>full</tt>, otherwise the event URI ends with <tt>notice</tt>. In
+                    event URI MUST end with <tt>full</tt>, otherwise the event URI ends with <tt>notice</tt>. In
                     <tt>full</tt> mode, the set of values reflecting the final representation of the resource (such as would
                     be returned in a SCIM protocol response) at the Service Provider
                     are provided using the <tt>data</tt> attribute (see <xref target="exampleCreateEvent"/>). In <tt>notice</tt> mode, the
                     <tt>attributes</tt> attribute is returned listing the set of attributes created or modified in the
-                    request (see <xref target="exampleCreateEventDef"/>).
+                    request (see <xref target="exampleCreateEventDef"/>). Exactly one of the payload attributes <tt>data</tt>
+                    or <tt>attributes</tt>, MUST be present. Both MUST NOT be present simultaneously.
                 </t>
                 <section anchor="provCreate" numbered="true" toc="default">
                     <name>urn:ietf:params:scim:event:prov:create:{notice|full}</name>
@@ -747,27 +747,24 @@
                         </t>
                         <t>
                             To initiate an asynchronous SCIM request, a normal SCIM protocol POST, PUT,
-                            PATCH, or DELETE request is performed with the HTTP Header <tt>Prefer</tt> with a value of
-                            <tt>respond-async</tt> as defined in Section 4.1 of <xref target="RFC7240"/>. The HTTP <tt>Accept</tt>
-                            header SHALL be ignored. Additionally, per Section 4.3 of <xref target="RFC7240"/>, the <tt>wait</tt>
-                            preference SHOULD be supported which establishes an amount of time before a SCIM Service Provider
-                            MAY choose respond with asynchronous completion as defined for <tt>respond-async</tt>.
+                            PATCH, or DELETE request is performed with the HTTP <tt>Prefer</tt> Header set to
+                            <tt>respond-async</tt> (Section 4.1 of <xref target="RFC7240"/>). The HTTP <tt>Accept</tt>
+                            header MUST be ignored for purposes of an asynchronous response. Additionally, per
+                            Section 4.3 of <xref target="RFC7240"/>, the <tt>wait</tt>
+                            preference SHOULD be supported to establish a maximum time
+                            before a SCIM Service Provider MAY choose to respond asynchronously.
                         </t>
                         <t>
-                            In response, and as indicated in the SCIM Service Provider Configuration (see
-                            <xref target="serviceProviderConfig"/>), the SCIM Service Provider responds with either a
-                            normal SCIM response or asynchronously by returning HTTP Status 202 Accepted.
-                            The asynchronous response SHOULD contain no response body. To enable correlation of the
+                            In response, the SCIM Service Provider either returns a normal SCIM response or returns
+                            HTTP Status 202 (Accepted).
+                            The asynchronous response MUST contain no response body. To enable correlation of the
                             future event, the HTTP response header "set-txn" (see <xref target="settxnheader"/>) is
-                            returned with a value corresponding to a future Security Event Token to be received whose
-                            "txn" claim SHALL match. Per Section 3 of <xref target="RFC7240"/>, the response will also
-                            include the header <tt>Preference-Applied</tt>. The <tt>Location</tt> header returned SHALL
-                            be one of the following:
+                            returned with a value that MUST match the <tt>txn</tt> claim in a subsequent Security Event
+                            Token. Per <xref target="RFC7240"/>, Section 3, the response will also include the
+                            <tt>Preference-Applied</tt> header. The <tt>Location</tt> header value MUST be one of the
+                            following: (a) a URI where the completion SCIM Event Token MAY be retrieved using HTTP GET,
+                            or (b) the normal SCIM location header response specified by <xref target="RFC7644"/>.
                         </t>
-                        <ul>
-                            <li>A location URI where the completion SCIM Event Token MAY be retrieved using HTTP GET</li>
-                            <li>The normal SCIM location header response specified by <xref target="RFC7644"/></li>
-                        </ul>
                         <t keepWithNext="true">
                             In the following non-normative example, a "Prefer" header is set to "respond-async":
                         </t>
@@ -799,13 +796,13 @@ Authorization: Bearer h480djs93hd8
 
                         </figure>
                         <t keepWithNext="true">
-                            The SCIM Service Provider responds with HTTP 202 Accepted and includes the Set-txn header:
+                            The SCIM Service Provider responds with HTTP 202 Accepted and includes the set-txn header:
                         </t>
                         <figure align="left" alt="" height="" suppress-title="false"
                                 title="" width="">
                             <artwork align="left" alt="" height="" name="" type="" width=""
                                      xml:space="preserve">HTTP/1.1 202 Accepted
-Set-txn: 734f0614e3274f288f93ac74119dcf78
+set-txn: 734f0614e3274f288f93ac74119dcf78
 Preference-Applied: respond-async
 Location:
   "/Users/2819c223-7f76-453a-919d-413861904646"
@@ -817,15 +814,15 @@ Location:
                         <t>
                             Section 3.7 of <xref target="RFC7644"/> provides the ability to submit multiple
                             SCIM operations in a single "bulk" request. When an asynchronous response is requested, a single
-                            Asynchronous Request Completion Event SHALL be generated for each requested operation. For example,
+                            Asynchronous Request Completion Event MUST be generated for each requested operation. For example,
                             if a single "bulk" request had 10 operations, then 10 Asynchronous Event completions events
                             would be generated.
                         </t>
                         <t>
                             The "txn" claim MUST be set to the value originally returned to the requesting SCIM Client (see
-                            <xref target="asyncRequest"/>) appended with a colon (":") followed by the array index number,
-                            starting from 0, of the operation expressed in the <tt>Operations</tt> attribute in the
-                            original bulk request. The <tt>bulkId</tt> parameter SHALL NOT be used for this purpose as
+                            <xref target="asyncRequest"/>) appended with a colon ":" and the zero-based array index of
+                            the operation expressed in the <tt>Operations</tt> attribute of the
+                            original bulk request. The <tt>bulkId</tt> parameter MUST NOT be used for this purpose as
                             it is a temporary identifier and is not required for every operation.
                         </t>
                         <t>
@@ -836,11 +833,11 @@ Location:
                             <tt>2d80e537a3f64622b0347b641ebc8f44:1</tt>, and so on.
                         </t>
                         <t>
-                            If a SCIM Service Provider elects
-                            to optimize the sequence of operations (per Section 3.7 of <xref target="RFC7644"/>), the
-                            Asynchronous Request Completion events generated MAY also be generated out of sequence from the
-                            order of operations in the original request. In this case, the "txn" claims generated SHALL
-                            use operation numbers that correspond to the original request order.
+                            If a SCIM Service Provider optimizes the sequence of operations (per Section 3.7 of <xref target="RFC7644"/>), the
+                            Asynchronous Request Completion events generated MAY be generated out of sequence from the
+                            original request.  In this
+                            case, the "txn" claims in those events MUST use operation numbers that correspond to the
+                            order in the original request.
                         </t>
                     </section>
                     <section>
@@ -848,7 +845,7 @@ Location:
                     <t>
                         The Asynchronous Response event signals the completion of a SCIM request. The event payload contains
                         the attributes defined in SCIM Bulk Section 3.7 of <xref target="RFC7644"/> and is the same as a
-                        single SCIM Bulk Response Operation as per Section 3.7.3. In the event, the "txn" claim must be
+                        single SCIM Bulk Response Operation as per Section 3.7.3. In the event, the "txn" claim MUST be
                         set to the value originally returned to the requesting SCIM Client (see <xref target="asyncRequest"/>).
                     </t>
 
@@ -877,11 +874,11 @@ Location:
                     </figure>
 
                     <t>
-                        An error may occur in the SCIM Service Provider's asynchronous processing of the SCIM request. In that case,
-                        the event's operation MUST include a "response" attribute to indicate a non-200-series HTTP status
-                        as defined in Section 3.7 of <xref target="RFC7644"/>. The response attribute MUST contain the
-                        sub-attributes defined in Section 3.12 of <xref target="RFC7644"/>. Note that the "status" attribute
-                        of the event operation should match the "status" attribute of the response.
+                        If an error occurs during asynchronous processing,
+                        the event operation MUST include a <tt>response</tt> attribute indicating a non-200-series HTTP status
+                        as defined in Section 3.7 of <xref target="RFC7644"/>, and that <tt>response</tt> attribute MUST contain the
+                        sub-attributes defined in Section 3.12 of <xref target="RFC7644"/>. The "status" attribute
+                        of the event operation typically matches the "status" attribute of the response.
                     </t>
                     <figure anchor="exampleAsyncErrorEvent">
                         <name>Example SCIM Asynchronous Error Response Event</name>
@@ -1016,11 +1013,11 @@ Location:
         </section>
 
         <section anchor="settxnheader" numbered="true" toc="default">
-            <name>Set-txn HTTP Response Header for Asynchronous Requests</name>
+            <name>set-txn HTTP Response Header for Asynchronous Requests</name>
             <t>
                 This specification defines a new HTTP Header field <tt>set-txn</tt> which serves the purpose of conveying
                 request completion information to SCIM HTTP clients that request an asynchronous response as described
-                in <xref target="asyncRequest"/>.  The header field SHALL only be used in SCIM Responses when HTTP
+                in <xref target="asyncRequest"/>.  The header field MUST be used in SCIM Responses when HTTP
                 Status 202 Accepted is being returned with no message body.
             </t>
             <t>
@@ -1060,7 +1057,7 @@ Location:
                                     <li>"none" indicates asynchronous SCIM requests defined in <xref target="asyncRequest"/> are not supported; </li>
                                     <li>"long" indicates the SCIM Service Provider MAY complete asynchronously at its discretion (e.g.
                                     based on a max wait time);</li>
-                                    <li>"request" indicates the request SHALL complete asynchronously when requested by
+                                    <li>"request" indicates the server MUST complete requests asynchronously when requested by
                                         the SCIM Client.</li>
                                 </ul>
                         </dd>
@@ -1092,9 +1089,8 @@ Location:
             </ul>
             <t>
                 SETs may contain sensitive information, including Personally Identifiable Information (PII). In such
-                cases, SET Transmitters and SET Recipients MUST protect the confidentiality of the SET contents in transit.
-                Deployments and implementations MUST support TLS. They MUST follow the guidance in <xref target="BCP195"/>,
-                which provides recommendations and requirements for improving the security of deployed services that use TLS.
+                cases, SET Transmitters and SET Recipients MUST protect the confidentiality of the SET contents in transit
+                using TLS <xref target="BCP195"/>.
             </t>
             <t>
                 When co-ordinating provisioning between entities, the long-term series of changes may be critical to the
@@ -1111,10 +1107,10 @@ Location:
             </t>
             <t>
                 When SET Events are transferred in such a way as the Event Publisher is not communicating directly to the
-                Event Receiver, it may become possible for an attacker or other system to insert an event. To mitigate,
-                the use of JWS <xref target="RFC7515"/> signed SET Events MUST be used to verify the originator of
-                a SET Event. Validating event signatures is both useful on the initial transfer of SET Events, and
-                may also be useful for auditing purposes. Signed SET Events are protected from tampering in the event that
+                Event Receiver, it may become possible for an attacker or other system to insert an event.
+                To mitigate, Event Receivers MUST verify the originator of a SET using JWS <xref target="RFC7515"/>
+                signatures when the Event Publisher is not communicating directly with the Event Receiver.
+                Validating event signatures may also be useful for auditing purposes as signed SET Events are protected from tampering in the event that
                 an intermediate system, such as a TLS-terminating proxy, decrypts the SET payload before sending it onward 
                 to its intended recipient.
             </t>
@@ -1188,10 +1184,10 @@ Location:
             <section anchor="IANAheader" numbered="true" toc="default">
                 <name>SCIM Asynchronous Txn Header Registration</name>
                 <t>
-                    This specification registers the HTTP <tt>Set-txn</tt> field name in the "HTTP Field Name Registry" defined in Section 16.3.1 of <xref target="RFC9110"/>.
+                    This specification registers the HTTP <tt>set-txn</tt> field name in the "HTTP Field Name Registry" defined in Section 16.3.1 of <xref target="RFC9110"/>.
                 </t>
                 <dl newline="true" spacing="normal">
-                    <dt>Field name:</dt><dd>Set-txn</dd>
+                    <dt>Field name:</dt><dd>set-txn</dd>
                     <dt>Status:</dt><dd>Permanent</dd>
                     <dt>Specification Document:</dt><dd>See Section <xref target="settxnheader"/> of this document.</dd>
                 </dl>
@@ -1222,7 +1218,7 @@ Location:
                     </dd>
                     <dt>Syntactic Structure:</dt>
                     <dd>
-                        <t>The Namespace Specific String (NSS) of all URNs that use the "event" Namespace ID SHALL have the
+                        <t>The Namespace Specific String (NSS) of all URNs that use the "event" Namespace ID has the
                             following structure:</t>
                         <sourcecode>"urn:ietf:params:scim:event:{class}:{name}:{other}</sourcecode>
                         <t>The keywords have the following meaning:</t>
@@ -1238,7 +1234,7 @@ Location:
                         </dl>
                     </dd>
                     <dt>Identifier Uniqueness Considerations:</dt>
-                    <dd>The designated contact shall be responsible for reviewing and enforcing uniqueness.</dd>
+                    <dd>The designated contact is responsible for reviewing and enforcing uniqueness.</dd>
                     <dt>Identifier Persistence Considerations:</dt>
                     <dd>Once a name has been allocated it MUST NOT be
                         re-allocated for a different purpose. The rules provided for
