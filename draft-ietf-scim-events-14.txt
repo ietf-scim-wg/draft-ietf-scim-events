@@ -6,11 +6,11 @@ SCIM                                                        P. Hunt, Ed.
 Internet-Draft                                            Independent Id
 Updates: 7643, 7644 (if approved)                          N. Cam-Winget
 Intended status: Standards Track                           Cisco Systems
-Expires: 22 April 2026                                          M. Kiser
+Expires: 23 April 2026                                          M. Kiser
                                                                Sailpoint
                                                             J. Schreiber
                                                                  Workday
-                                                         19 October 2025
+                                                         20 October 2025
 
 
                  SCIM Profile for Security Event Tokens
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 April 2026.
+   This Internet-Draft will expire on 23 April 2026.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Hunt, et al.              Expires 22 April 2026                 [Page 1]
+Hunt, et al.              Expires 23 April 2026                 [Page 1]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Hunt, et al.              Expires 22 April 2026                 [Page 2]
+Hunt, et al.              Expires 23 April 2026                 [Page 2]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -165,7 +165,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                 [Page 3]
+Hunt, et al.              Expires 23 April 2026                 [Page 3]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -221,7 +221,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                 [Page 4]
+Hunt, et al.              Expires 23 April 2026                 [Page 4]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -277,7 +277,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                 [Page 5]
+Hunt, et al.              Expires 23 April 2026                 [Page 5]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -333,7 +333,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                 [Page 6]
+Hunt, et al.              Expires 23 April 2026                 [Page 6]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -389,7 +389,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                 [Page 7]
+Hunt, et al.              Expires 23 April 2026                 [Page 7]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -445,7 +445,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                 [Page 8]
+Hunt, et al.              Expires 23 April 2026                 [Page 8]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -501,7 +501,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                 [Page 9]
+Hunt, et al.              Expires 23 April 2026                 [Page 9]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -557,7 +557,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 10]
+Hunt, et al.              Expires 23 April 2026                [Page 10]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -613,7 +613,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 11]
+Hunt, et al.              Expires 23 April 2026                [Page 11]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -669,7 +669,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 12]
+Hunt, et al.              Expires 23 April 2026                [Page 12]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -725,7 +725,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 13]
+Hunt, et al.              Expires 23 April 2026                [Page 13]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -781,7 +781,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 14]
+Hunt, et al.              Expires 23 April 2026                [Page 14]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -837,7 +837,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 15]
+Hunt, et al.              Expires 23 April 2026                [Page 15]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -893,7 +893,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 16]
+Hunt, et al.              Expires 23 April 2026                [Page 16]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -949,7 +949,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 17]
+Hunt, et al.              Expires 23 April 2026                [Page 17]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1005,7 +1005,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 18]
+Hunt, et al.              Expires 23 April 2026                [Page 18]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1061,7 +1061,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 19]
+Hunt, et al.              Expires 23 April 2026                [Page 19]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1117,7 +1117,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 20]
+Hunt, et al.              Expires 23 April 2026                [Page 20]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1173,7 +1173,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 21]
+Hunt, et al.              Expires 23 April 2026                [Page 21]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1229,7 +1229,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 22]
+Hunt, et al.              Expires 23 April 2026                [Page 22]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1285,7 +1285,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 23]
+Hunt, et al.              Expires 23 April 2026                [Page 23]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1341,7 +1341,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 24]
+Hunt, et al.              Expires 23 April 2026                [Page 24]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1397,7 +1397,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 25]
+Hunt, et al.              Expires 23 April 2026                [Page 25]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1453,7 +1453,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 26]
+Hunt, et al.              Expires 23 April 2026                [Page 26]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1509,7 +1509,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 27]
+Hunt, et al.              Expires 23 April 2026                [Page 27]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1565,7 +1565,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 28]
+Hunt, et al.              Expires 23 April 2026                [Page 28]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1621,7 +1621,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 29]
+Hunt, et al.              Expires 23 April 2026                [Page 29]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1677,7 +1677,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 30]
+Hunt, et al.              Expires 23 April 2026                [Page 30]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1733,7 +1733,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 31]
+Hunt, et al.              Expires 23 April 2026                [Page 31]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1789,7 +1789,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 32]
+Hunt, et al.              Expires 23 April 2026                [Page 32]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1845,7 +1845,7 @@ Appendix A.  Use Cases
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 33]
+Hunt, et al.              Expires 23 April 2026                [Page 33]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1901,7 +1901,7 @@ A.1.  Domain Based Replication
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 34]
+Hunt, et al.              Expires 23 April 2026                [Page 34]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -1957,7 +1957,7 @@ A.2.  Co-ordinated Provisioning
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 35]
+Hunt, et al.              Expires 23 April 2026                [Page 35]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -2013,7 +2013,7 @@ Internet-Draft           draft-ietf-scim-events             October 2025
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 36]
+Hunt, et al.              Expires 23 April 2026                [Page 36]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -2069,7 +2069,7 @@ Change Log
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 37]
+Hunt, et al.              Expires 23 April 2026                [Page 37]
 
 Internet-Draft           draft-ietf-scim-events             October 2025
 
@@ -2125,4 +2125,4 @@ Authors' Addresses
 
 
 
-Hunt, et al.              Expires 22 April 2026                [Page 38]
+Hunt, et al.              Expires 23 April 2026                [Page 38]
